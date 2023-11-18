@@ -7,10 +7,10 @@ import (
 	"strings"
 )
 
-//go:embed inputs/Day1/PartAExample.txt
+//go:embed inputs/example.txt
 var exampleInput string
 
-//go:embed inputs/Day1/PartA.txt
+//go:embed inputs/complete.txt
 var input string
 
 func getInput(useExample bool) []string {
