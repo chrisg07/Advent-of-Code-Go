@@ -6,5 +6,5 @@ import (
 
 func Solutions() {
 	fmt.Println("Advent of Code 2021 Solutions:")
-	Day1PartA()
+	Day1PartA(true)
 }
