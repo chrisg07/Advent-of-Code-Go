@@ -25,7 +25,32 @@ func getInput(useExample bool) []string {
 	return lines
 }
 
-func Day1PartA(useExample bool) int {
+func PartA(useExample bool) int {
+	lines := getInput(useExample)
+
+	previousDepth := 10000
+	descents := 0
+
+	for _, line := range lines {
+		depth, parseErr := strconv.Atoi(line)
+
+		if parseErr != nil {
+			log.Fatal(parseErr)
+		}
+
+		didDescend := depth > previousDepth
+
+		if didDescend {
+			descents += 1
+		}
+
+		previousDepth = depth
+	}
+
+	return descents
+}
+
+func PartB(useExample bool) int {
 	lines := getInput(useExample)
 
 	previousDepth := 10000
