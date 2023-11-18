@@ -2,6 +2,8 @@ package AoC2021
 
 import (
 	"fmt"
+
+	"github.com/chrisg07/Advent-of-Code-Go/utils"
 )
 
 func DayNumberPartLetter() {

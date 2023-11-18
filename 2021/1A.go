@@ -1,22 +1,26 @@
 package AoC2021
 
 import (
-	"fmt"
+	_ "embed"
 	"log"
 	"strconv"
-
-	"github.com/chrisg07/Advent-of-Code-Go/utils"
+	"strings"
 )
 
-func getInput(useExample bool) []string {
-	lines := []string{}
-	if useExample {
-		utils.FormatMessage("Day 1 Part A example:")
-		lines = utils.ReadAoCInput("./2021/inputs/Day1/PartAExample.txt")
-	} else {
-		utils.FormatMessage("Day 1 Part A:")
-		lines = utils.ReadAoCInput("./2021/inputs/Day1/PartA.txt")
+//go:embed inputs/Day1/PartAExample.txt
+var exampleInput string
 
+//go:embed inputs/Day1/PartA.txt
+var input string
+
+func getInput(useExample bool) []string {
+	var lines []string
+	if useExample {
+		exampleInput = strings.TrimRight(exampleInput, "\n")
+		lines = strings.Split(exampleInput, "\n")
+	} else {
+		input = strings.TrimRight(input, "\n")
+		lines = strings.Split(input, "\n")
 	}
 	return lines
 }
@@ -35,17 +39,13 @@ func Day1PartA(useExample bool) int {
 		}
 
 		didDescend := depth > previousDepth
-		status := "decreased"
 
 		if didDescend {
 			descents += 1
-			status = "increased"
 		}
 
 		previousDepth = depth
-		fmt.Printf("%s (%s)\n", line, status)
 	}
 
-	fmt.Printf("Number of descents: %d\n", descents)
 	return descents
 }

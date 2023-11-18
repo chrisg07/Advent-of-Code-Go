@@ -10,15 +10,16 @@ func TestDay1PartAExample(t *testing.T) {
 	answer := 7
 	solution := Day1PartA(true)
 	if solution != answer {
-		t.Fatalf(`Example solution = %q, want match for %#q, nil`, solution, answer)
+		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
 	}
 }
 
 // TestHelloEmpty calls greetings.Hello with an empty string,
 // checking for an error.
-// func TestDay1PartA(t *testing.T) {
-//     msg, err := Hello("")
-//     if msg != "" || err == nil {
-//         t.Fatalf(`Hello("") = %q, %v, want "", error`, msg, err)
-//     }
-// }
+func TestDay1PartA(t *testing.T) {
+	answer := 1342
+	solution := Day1PartA(false)
+	if solution != answer {
+		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+	}
+}
