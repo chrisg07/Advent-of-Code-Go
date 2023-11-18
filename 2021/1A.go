@@ -1,10 +1,11 @@
 package AoC2021
 
 import (
-	"advent-of-code/utils"
 	"fmt"
 	"log"
 	"strconv"
+
+	"github.com/chrisg07/Advent-of-Code-Go/utils"
 )
 
 func getInput(useExample bool) []string {

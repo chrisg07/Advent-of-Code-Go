@@ -1,8 +1,9 @@
 package main
 
 import (
-	"advent-of-code/AoC2021"
 	"fmt"
+
+	AoC2021 "github.com/chrisg07/Advent-of-Code-Go/2021"
 )
 
 func main() {

@@ -1,7 +1,6 @@
 package AoC2021
 
 import (
-	"advent-of-code/utils"
 	"fmt"
 )
 
