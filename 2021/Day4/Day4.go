@@ -66,36 +66,7 @@ func SumOfUnmarkedNumbers(board BingoBoard, draws []int) int {
 func Day4PartA2021(useExample bool) int {
 	lines := getInput(useExample)
 
-	draws := []int{}
-	boards := []BingoBoard{}
-	for index, line := range lines {
-		if index == 0 {
-			drawOrder := strings.Split(line, ",")
-
-			for _, draw := range drawOrder {
-				number, _ := strconv.Atoi(draw)
-				draws = append(draws, number)
-			}
-		} else if index == 2 || (index%6)-2 == 0 {
-			rows := [][]int{
-				Utils.SplitStringToInts(lines[index], " "),
-				Utils.SplitStringToInts(lines[index+1], " "),
-				Utils.SplitStringToInts(lines[index+2], " "),
-				Utils.SplitStringToInts(lines[index+3], " "),
-				Utils.SplitStringToInts(lines[index+4], " "),
-			}
-			columns := [][]int{
-				{rows[0][0], rows[1][0], rows[2][0], rows[3][0], rows[4][0]},
-				{rows[0][1], rows[1][1], rows[2][1], rows[3][1], rows[4][1]},
-				{rows[0][2], rows[1][2], rows[2][2], rows[3][2], rows[4][2]},
-				{rows[0][3], rows[1][3], rows[2][3], rows[3][3], rows[4][3]},
-				{rows[0][4], rows[1][4], rows[2][4], rows[3][4], rows[4][4]},
-			}
-
-			board := BingoBoard{rows, columns, false}
-			boards = append(boards, board)
-		}
-	}
+	draws, boards := createState(lines)
 
 	boardHasWon := false
 	winningBoard := BingoBoard{}
@@ -123,36 +94,7 @@ func Day4PartA2021(useExample bool) int {
 func Day4PartB2021(useExample bool) int {
 	lines := getInput(useExample)
 
-	draws := []int{}
-	boards := []BingoBoard{}
-	for index, line := range lines {
-		if index == 0 {
-			drawOrder := strings.Split(line, ",")
-
-			for _, draw := range drawOrder {
-				number, _ := strconv.Atoi(draw)
-				draws = append(draws, number)
-			}
-		} else if index == 2 || (index%6)-2 == 0 {
-			rows := [][]int{
-				Utils.SplitStringToInts(lines[index], " "),
-				Utils.SplitStringToInts(lines[index+1], " "),
-				Utils.SplitStringToInts(lines[index+2], " "),
-				Utils.SplitStringToInts(lines[index+3], " "),
-				Utils.SplitStringToInts(lines[index+4], " "),
-			}
-			columns := [][]int{
-				{rows[0][0], rows[1][0], rows[2][0], rows[3][0], rows[4][0]},
-				{rows[0][1], rows[1][1], rows[2][1], rows[3][1], rows[4][1]},
-				{rows[0][2], rows[1][2], rows[2][2], rows[3][2], rows[4][2]},
-				{rows[0][3], rows[1][3], rows[2][3], rows[3][3], rows[4][3]},
-				{rows[0][4], rows[1][4], rows[2][4], rows[3][4], rows[4][4]},
-			}
-
-			board := BingoBoard{rows, columns, false}
-			boards = append(boards, board)
-		}
-	}
+	draws, boards := createState(lines)
 
 	boardHasWon := false
 	numWinningBoards := 0
@@ -188,4 +130,38 @@ func Day4PartB2021(useExample bool) int {
 
 	sumOfUnmarkedCells := SumOfUnmarkedNumbers(winningBoard, winningDraws)
 	return sumOfUnmarkedCells * winningDraws[len(winningDraws)-1]
+}
+
+func createState(lines []string) ([]int, []BingoBoard) {
+	draws := []int{}
+	boards := []BingoBoard{}
+	for index, line := range lines {
+		if index == 0 {
+			drawOrder := strings.Split(line, ",")
+
+			for _, draw := range drawOrder {
+				number, _ := strconv.Atoi(draw)
+				draws = append(draws, number)
+			}
+		} else if index == 2 || (index%6)-2 == 0 {
+			rows := [][]int{
+				Utils.SplitStringToInts(lines[index], " "),
+				Utils.SplitStringToInts(lines[index+1], " "),
+				Utils.SplitStringToInts(lines[index+2], " "),
+				Utils.SplitStringToInts(lines[index+3], " "),
+				Utils.SplitStringToInts(lines[index+4], " "),
+			}
+			columns := [][]int{
+				{rows[0][0], rows[1][0], rows[2][0], rows[3][0], rows[4][0]},
+				{rows[0][1], rows[1][1], rows[2][1], rows[3][1], rows[4][1]},
+				{rows[0][2], rows[1][2], rows[2][2], rows[3][2], rows[4][2]},
+				{rows[0][3], rows[1][3], rows[2][3], rows[3][3], rows[4][3]},
+				{rows[0][4], rows[1][4], rows[2][4], rows[3][4], rows[4][4]},
+			}
+
+			board := BingoBoard{rows, columns, false}
+			boards = append(boards, board)
+		}
+	}
+	return draws, boards
 }
