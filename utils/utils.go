@@ -86,3 +86,16 @@ func FlipBitArray(arr []int) []int {
 
 	return flippedBitArray
 }
+
+func RemoveIndex[T constraints.Ordered](arr []T, index int) []T {
+	return append(arr[:index], arr[index+1:]...)
+}
+
+func DuplicateMatrix[T constraints.Ordered](matrix [][]T) [][]T {
+	duplicate := make([][]T, len(matrix))
+	for i := range matrix {
+		duplicate[i] = make([]T, len(matrix[i]))
+		copy(duplicate[i], matrix[i])
+	}
+	return duplicate
+}

@@ -75,3 +75,21 @@ func TestFlipBitArray(t *testing.T) {
 		t.Fatalf(`Flipped array = %v, {0, 1, 0, 1, 0} flipped is = %v`, solution, answer)
 	}
 }
+
+func TestRemoveIndex(t *testing.T) {
+	answer := []int{0, 1, 1, 0}
+	arr := []int{0, 1, 0, 1, 0}
+	solution := RemoveIndex(arr, 2)
+	if !reflect.DeepEqual(solution, answer) {
+		t.Fatalf(`Actual = %v, expected = %v`, solution, answer)
+	}
+}
+
+func TestDuplicateMatrix(t *testing.T) {
+	answer := [][]int{{0, 0, 0, 0, 0}, {1, 0, 1, 0, 1}, {1, 1, 1, 1, 1}}
+	arr := [][]int{{0, 0, 0, 0, 0}, {1, 0, 1, 0, 1}, {1, 1, 1, 1, 1}}
+	solution := DuplicateMatrix(arr)
+	if !reflect.DeepEqual(solution, answer) && &answer != &solution {
+		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+	}
+}
