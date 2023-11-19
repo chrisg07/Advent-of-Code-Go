@@ -49,12 +49,27 @@ func PartA(useExample bool) int {
 }
 
 func PartB(useExample bool) int {
-	// lines := getInput(useExample)
+	lines := getInput(useExample)
 
-	answer := 0
+	xPos := 0
+	yPos := 0
+	aim := 0
 
-	// for _, line := range lines {
-	// }
+	for _, line := range lines {
+		command := strings.Split(line, " ")
 
-	return answer
+		distance, _ := strconv.Atoi(command[1])
+
+		switch command[0] {
+		case "forward":
+			xPos += distance
+			yPos += aim * distance
+		case "up":
+			aim -= distance
+		case "down":
+			aim += distance
+		}
+	}
+
+	return xPos * yPos
 }
