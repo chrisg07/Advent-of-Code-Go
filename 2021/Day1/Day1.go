@@ -5,6 +5,8 @@ import (
 	"log"
 	"strconv"
 	"strings"
+
+	Utils "github.com/chrisg07/Advent-of-Code-Go/Utils"
 )
 
 //go:embed inputs/example.txt
@@ -53,23 +55,27 @@ func PartA(useExample bool) int {
 func PartB(useExample bool) int {
 	lines := getInput(useExample)
 
-	previousDepth := 10000
 	descents := 0
+	measurements := []int{}
 
 	for _, line := range lines {
-		depth, parseErr := strconv.Atoi(line)
+		currentDepth, parseErr := strconv.Atoi(line)
 
 		if parseErr != nil {
 			log.Fatal(parseErr)
 		}
 
-		didDescend := depth > previousDepth
-
-		if didDescend {
-			descents += 1
+		var previousDepthWindow int
+		var currentDepthWindow int
+		measurements = append(measurements, currentDepth)
+		var measurementsLength = len(measurements)
+		if measurementsLength >= 4 {
+			previousDepthWindow = Utils.SumArray(measurements[measurementsLength-4 : measurementsLength-1])
+			currentDepthWindow = Utils.SumArray(measurements[measurementsLength-3 : measurementsLength])
+			if currentDepthWindow > previousDepthWindow {
+				descents += 1
+			}
 		}
-
-		previousDepth = depth
 	}
 
 	return descents

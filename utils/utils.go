@@ -1,4 +1,4 @@
-package utils
+package Utils
 
 import (
 	"fmt"
@@ -24,4 +24,12 @@ func ReadAoCInput(file string) []string {
 
 func FormatMessage(message string) {
 	fmt.Println(message)
+}
+
+func SumArray(arr []int) int {
+	sum := 0
+	for _, value := range arr {
+		sum += value
+	}
+	return sum
 }

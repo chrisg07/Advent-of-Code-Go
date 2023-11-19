@@ -1,12 +1,10 @@
 package AoC2021
 
 import (
-	"fmt"
-
 	_ "embed"
 	"strings"
 
-	"github.com/chrisg07/Advent-of-Code-Go/utils"
+	Utils "github.com/chrisg07/Advent-of-Code-Go/Utils"
 )
 
 //go:embed inputs/example.txt
@@ -27,11 +25,5 @@ func getInput(useExample bool) []string {
 	return lines
 }
 func DayNumberPartLetter() {
-	utils.FormatMessage("Insert message here")
-
-	lines := utils.ReadAoCInput("./2021/inputs/Day1/PartAExample.txt")
-
-	for _, line := range lines {
-		fmt.Println(line)
-	}
+	Utils.FormatMessage("Insert message here")
 }
