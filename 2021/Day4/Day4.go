@@ -2,7 +2,7 @@ package AoC2021
 
 import (
 	_ "embed"
-	"fmt"
+	"log"
 	"slices"
 	"strconv"
 	"strings"
@@ -37,13 +37,13 @@ type BingoBoard struct {
 func CheckBoardWinCondition(board BingoBoard, draws []int) bool {
 	for _, row := range board.rows {
 		if Utils.ArrayContainsArray[int](draws, row) {
-			fmt.Printf("Winning row: %d\n", row)
+			log.Printf("[DEBUG] Winning row: %d\n", row)
 			return true
 		}
 	}
 	for _, column := range board.columns {
 		if Utils.ArrayContainsArray[int](draws, column) {
-			fmt.Printf("Winning column: %d\n", column)
+			log.Printf("[DEBUG] Winning column: %d\n", column)
 			return true
 		}
 	}
@@ -59,7 +59,7 @@ func SumOfUnmarkedNumbers(board BingoBoard, draws []int) int {
 			}
 		}
 	}
-	fmt.Printf("Sum of unmarked cells: %d\n", sumOfUnmarkedCells)
+	log.Printf("[DEBUG] Sum of unmarked cells: %d\n", sumOfUnmarkedCells)
 	return sumOfUnmarkedCells
 }
 
@@ -168,19 +168,20 @@ func Day4PartB2021(useExample bool) int {
 					numWinningBoards += 1
 					winningBoard = board
 					winningDraws = currentDraws
-					fmt.Printf("Final board won. # of winning boards: %d\nBoard: %v\nDraws: %v\n", numWinningBoards, board, currentDraws)
+
+					log.Printf("[DEBUG] Final board won. # of winning boards: %d\nBoard: %v\nDraws: %v\n", numWinningBoards, board, currentDraws)
 					break
 				} else if boardHasWon && !board.markedWon {
 					boards[boardIndex].markedWon = true
 					numWinningBoards += 1
-					fmt.Printf("Board won. # of winning boards: %d\nBoard: %v\nDraws: %v\n", numWinningBoards, board, currentDraws)
+					log.Printf("[DEBUG] Board won. # of winning boards: %d\nBoard: %v\nDraws: %v\n", numWinningBoards, board, currentDraws)
 				}
 			}
 
 		}
 
 		if len(winningDraws) > 0 {
-			fmt.Println("Winning board found. Breaking loop")
+			log.Println("[DEBUG] Winning board found. Breaking loop")
 			break
 		}
 	}

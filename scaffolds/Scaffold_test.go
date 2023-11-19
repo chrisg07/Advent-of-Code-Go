@@ -1,8 +1,21 @@
 package AoC2021
 
 import (
+	"log"
+	"os"
 	"testing"
+
+	"github.com/hashicorp/logutils"
 )
+
+func init() {
+	filter := &logutils.LevelFilter{
+		Levels:   []logutils.LogLevel{"DEBUG", "WARN", "ERROR"},
+		MinLevel: logutils.LogLevel("WARN"),
+		Writer:   os.Stderr,
+	}
+	log.SetOutput(filter)
+}
 
 func TestDayXPartA2021Example(t *testing.T) {
 	answer := 0
