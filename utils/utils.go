@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"slices"
+	"strconv"
 	"strings"
 
 	"golang.org/x/exp/constraints"
@@ -98,4 +100,29 @@ func DuplicateMatrix[T constraints.Ordered](matrix [][]T) [][]T {
 		copy(duplicate[i], matrix[i])
 	}
 	return duplicate
+}
+
+func SplitStringToInts(stringToSplit string, delimeter string) []int {
+	splitStrings := []string{}
+	if delimeter == " " {
+		splitStrings = strings.Fields(stringToSplit)
+	} else {
+		splitStrings = strings.Split(stringToSplit, delimeter)
+	}
+	numbers := []int{}
+	for _, str := range splitStrings {
+		number, _ := strconv.Atoi(str)
+		numbers = append(numbers, number)
+	}
+	return numbers
+}
+
+func ArrayContainsArray[T constraints.Ordered](haystack []T, needles []T) bool {
+	for _, needle := range needles {
+		if !slices.Contains(haystack, needle) {
+			return false
+		}
+	}
+
+	return true
 }

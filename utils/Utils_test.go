@@ -93,3 +93,32 @@ func TestDuplicateMatrix(t *testing.T) {
 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
 	}
 }
+
+func TestSplitStringToInts(t *testing.T) {
+	answer := []int{8, 2, 23, 4, 24}
+	str := " 8  2 23  4 24"
+	solution := SplitStringToInts(str, " ")
+	if !reflect.DeepEqual(solution, answer) {
+		t.Fatalf(`Actual = %v, expected = %v`, solution, answer)
+	}
+}
+
+func TestArrayContainsArrayTrue(t *testing.T) {
+	expected := true
+	haystack := []int{14, 21, 17, 24, 4}
+	needles := []int{4, 24, 17, 21, 14}
+	actual := ArrayContainsArray(haystack, needles)
+	if actual != expected {
+		t.Fatalf(`Actual = %v, expected = %v`, actual, expected)
+	}
+}
+
+func TestArrayContainsArrayFalse(t *testing.T) {
+	expected := false
+	haystack := []int{14, 21, 17, 24, 4}
+	needles := []int{4, 1337}
+	actual := ArrayContainsArray(haystack, needles)
+	if actual != expected {
+		t.Fatalf(`Actual = %v, expected = %v`, actual, expected)
+	}
+}
