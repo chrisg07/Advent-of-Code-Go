@@ -5,6 +5,8 @@ import (
 	"log"
 	"os"
 	"strings"
+
+	"golang.org/x/exp/constraints"
 )
 
 func ReadAoCInput(file string) []string {
@@ -32,4 +34,55 @@ func SumArray(arr []int) int {
 		sum += value
 	}
 	return sum
+}
+
+func ReverseArray[T constraints.Ordered](arr []T) []T {
+	for i, j := 0, len(arr)-1; i < j; i, j = i+1, j-1 {
+		arr[i], arr[j] = arr[j], arr[i]
+	}
+
+	return arr
+}
+
+func ToPower(number int, exponent int) int {
+	if exponent == 0 {
+		return 1
+	}
+	answer := number
+	for i := 1; i < exponent; i += 1 {
+		answer *= number
+	}
+	return answer
+}
+
+func BitArrayToDecimal(arr []int) int {
+	decimalRepresentation := 0
+
+	reversedBitArray := ReverseArray(arr)
+
+	for index, value := range reversedBitArray {
+		if value == 1 {
+			amountToAdd := ToPower(2, index)
+			decimalRepresentation += amountToAdd
+		}
+	}
+
+	ReverseArray(arr)
+
+	return decimalRepresentation
+}
+
+func FlipBitArray(arr []int) []int {
+	flippedBitArray := []int{}
+
+	for index, value := range arr {
+		flippedBitArray = append(flippedBitArray, 0)
+		if value == 1 {
+			flippedBitArray[index] = 0
+		} else {
+			flippedBitArray[index] = 1
+		}
+	}
+
+	return flippedBitArray
 }
