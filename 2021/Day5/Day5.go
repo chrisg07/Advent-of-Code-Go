@@ -6,6 +6,8 @@ import (
 	"log"
 	"strconv"
 	"strings"
+
+	"github.com/chrisg07/Advent-of-Code-Go/Utils"
 )
 
 //go:embed inputs/example.txt
@@ -42,7 +44,7 @@ func drawLine(matrix [1000][1000]int, x1 int, y1 int, x2 int, y2 int) [1000][100
 
 	for x := xMin; x <= xMax; x += 1 {
 		for y := yMin; y <= yMax; y += 1 {
-			log.Printf("[DEBUG] Drawing vent at %d,%d\n", x, y)
+			// log.Printf("[DEBUG] Drawing vent at %d,%d\n", x, y)
 			matrix[x][y] += 1
 		}
 	}
@@ -51,9 +53,19 @@ func drawLine(matrix [1000][1000]int, x1 int, y1 int, x2 int, y2 int) [1000][100
 }
 
 func prettyPrintMatrix(matrix [1000][1000]int) {
-	// for _, row := range matrix {
-	// 	// log.Printf("[DEBUG] %v\n", row)
-	// }
+	log.Printf("[DEBUG] --- Displaying map of sea vents ---\n\n")
+
+	matrixToTranspose := [][]int{}
+	for x := 9; x >= 0; x -= 1 {
+		matrixToTranspose = append(matrixToTranspose, matrix[x][:10])
+	}
+
+	transposedMatrix := Utils.Transpose(matrixToTranspose)
+	for x := 0; x < 10; x += 1 {
+		arrayForDisplay := Utils.ReverseArray[int](transposedMatrix[x][:10])
+		log.Printf("[DEBUG]       %v\n", arrayForDisplay)
+	}
+	log.Printf("[DEBUG] -----------------------------------\n")
 }
 
 func countOverlaps(matrix [1000][1000]int) int {
@@ -85,7 +97,9 @@ func Day5PartA2021(useExample bool) int {
 			matrix = drawLine(matrix, x1, y1, x2, y2)
 		}
 
-		prettyPrintMatrix(matrix)
+		if useExample {
+			prettyPrintMatrix(matrix)
+		}
 	}
 
 	return countOverlaps(matrix)
