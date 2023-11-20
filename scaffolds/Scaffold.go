@@ -14,12 +14,13 @@ var input string
 
 func getInput(useExample bool) []string {
 	var lines []string
+	var unsplitLines string
 	if useExample {
-		input = strings.TrimRight(exampleInput, "\n")
+		unsplitLines = strings.TrimRight(exampleInput, "\n")
 	} else {
-		input = strings.TrimRight(input, "\n")
+		unsplitLines = strings.TrimRight(input, "\n")
 	}
-	lines = strings.Split(input, "\n")
+	lines = strings.Split(unsplitLines, "\n")
 	return lines
 }
 
