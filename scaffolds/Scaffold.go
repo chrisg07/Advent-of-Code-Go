@@ -2,7 +2,7 @@ package AoC2021
 
 import (
 	_ "embed"
-	"fmt"
+	"log"
 	"strings"
 )
 
@@ -28,9 +28,9 @@ func DayXPartA2021(useExample bool) int {
 	lines := getInput(useExample)
 	for _, line := range lines {
 		for _, char := range line {
-			fmt.Print(string(char))
+			log.Print(string(char))
 		}
-		fmt.Println("")
+		log.Println("")
 	}
 
 	return 0
@@ -40,9 +40,9 @@ func DayXPartB2021(useExample bool) int {
 	lines := getInput(useExample)
 	for _, line := range lines {
 		for _, char := range line {
-			fmt.Print(string(char))
+			log.Print(string(char))
 		}
-		fmt.Println("")
+		log.Println("")
 	}
 
 	return 0
