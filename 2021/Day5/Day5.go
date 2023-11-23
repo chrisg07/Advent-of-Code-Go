@@ -50,9 +50,9 @@ func drawStraightLine(matrix [1000][1000]int, x1 int, y1 int, x2 int, y2 int) [1
 }
 
 func drawDiagonalLine(matrix [1000][1000]int, x1 int, y1 int, x2 int, y2 int) [1000][1000]int {
-	northEast := x1 < x2 && y1 < y2 // done
-	southEast := x1 > x2 && y1 < y2 // done
-	southWest := x1 > x2 && y1 > y2 // done
+	northEast := x1 < x2 && y1 < y2
+	southEast := x1 > x2 && y1 < y2
+	southWest := x1 > x2 && y1 > y2
 	northWest := x1 < x2 && y1 > y2
 
 	if northEast {
@@ -88,11 +88,6 @@ func drawDiagonalLine(matrix [1000][1000]int, x1 int, y1 int, x2 int, y2 int) [1
 			}
 		}
 	}
-	// for x := xMin; x <= xMax; x += 1 {
-	// 	for y := yMin; y <= yMax; y += 1 {
-	// 		matrix[x][y] += 1
-	// 	}
-	// }
 
 	return matrix
 }
@@ -129,13 +124,7 @@ func Day5PartA2021(useExample bool) int {
 	lines := getInput(useExample)
 	matrix := [1000][1000]int{}
 	for _, line := range lines {
-		positions := strings.Split(line, " -> ")
-		startCoords := strings.Split(positions[0], ",")
-		endCoords := strings.Split(positions[1], ",")
-		x1, _ := strconv.Atoi(startCoords[0])
-		y1, _ := strconv.Atoi(startCoords[1])
-		x2, _ := strconv.Atoi(endCoords[0])
-		y2, _ := strconv.Atoi(endCoords[1])
+		x1, y1, x2, y2 := parseCoordinates(line)
 		if x1 == x2 || y1 == y2 {
 			matrix = drawStraightLine(matrix, x1, y1, x2, y2)
 		}
@@ -152,13 +141,7 @@ func Day5PartB2021(useExample bool) int {
 	lines := getInput(useExample)
 	matrix := [1000][1000]int{}
 	for _, line := range lines {
-		positions := strings.Split(line, " -> ")
-		startCoords := strings.Split(positions[0], ",")
-		endCoords := strings.Split(positions[1], ",")
-		x1, _ := strconv.Atoi(startCoords[0])
-		y1, _ := strconv.Atoi(startCoords[1])
-		x2, _ := strconv.Atoi(endCoords[0])
-		y2, _ := strconv.Atoi(endCoords[1])
+		x1, y1, x2, y2 := parseCoordinates(line)
 		if x1 == x2 || y1 == y2 {
 			matrix = drawStraightLine(matrix, x1, y1, x2, y2)
 		} else {
@@ -171,4 +154,15 @@ func Day5PartB2021(useExample bool) int {
 	}
 
 	return countOverlaps(matrix)
+}
+
+func parseCoordinates(line string) (int, int, int, int) {
+	positions := strings.Split(line, " -> ")
+	startCoords := strings.Split(positions[0], ",")
+	endCoords := strings.Split(positions[1], ",")
+	x1, _ := strconv.Atoi(startCoords[0])
+	y1, _ := strconv.Atoi(startCoords[1])
+	x2, _ := strconv.Atoi(endCoords[0])
+	y2, _ := strconv.Atoi(endCoords[1])
+	return x1, y1, x2, y2
 }
