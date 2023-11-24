@@ -3,6 +3,7 @@ package AoC2021
 import (
 	_ "embed"
 	"log"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -80,17 +81,87 @@ func Day9PartA2021(useExample bool) int {
 			}
 		}
 	}
+
 	return risk
+}
+
+func calculateBasinSize(matrix [100][100]int) int {
+	size := 0
+	for x := range matrix {
+		for y := range matrix[x] {
+			if matrix[x][y] == 1 {
+				size += 1
+			}
+		}
+	}
+	return size
+}
+
+func calculateBasin(matrix [][]int, visited [100][100]int, x int, y int) [100][100]int {
+	point := matrix[x][y]
+
+	xLen := len(matrix)
+	yLen := len(matrix[0])
+
+	log.Printf("[WARN] Location: %d,%d height: %d", x, y, point)
+
+	if visited[x][y] == 1 {
+		panic("basin had already been visited")
+	}
+	visited[x][y] = 1
+	if point < 8 {
+		// north
+		if y != yLen-1 && point == matrix[x][y+1]-1 && visited[x][y+1] == 0 {
+			visited = calculateBasin(matrix, visited, x, y+1)
+		}
+		// east
+		if x != xLen-1 && point == matrix[x+1][y]-1 && visited[x+1][y] == 0 {
+			visited = calculateBasin(matrix, visited, x+1, y)
+		}
+		// south
+		if y != 0 && point == matrix[x][y-1]-1 && visited[x][y-1] == 0 {
+			visited = calculateBasin(matrix, visited, x, y-1)
+		}
+		// west
+		if x != 0 && point == matrix[x-1][y]-1 && visited[x-1][y] == 0 {
+			visited = calculateBasin(matrix, visited, x-1, y)
+		}
+	}
+
+	return visited
 }
 
 func Day9PartB2021(useExample bool) int {
 	lines := getInput(useExample)
+
+	matrix := [][]int{}
 	for _, line := range lines {
+		row := []int{}
 		for _, char := range line {
-			log.Print(string(char))
+			value, _ := strconv.Atoi(string(char))
+			row = append(row, value)
 		}
-		log.Println("")
+		matrix = append(matrix, row)
 	}
 
-	return 0
+	Utils.PrettyPrint(matrix)
+
+	basins := []int{}
+	visited := [100][100]int{}
+	for x := range matrix {
+		for y := range matrix[x] {
+			if isLowPoint(matrix, x, y) {
+				basin := calculateBasin(matrix, visited, x, y)
+
+				basins = append(basins, calculateBasinSize(basin))
+			}
+		}
+	}
+
+	sort.Ints(basins)
+
+	Utils.PrettyPrint(basins)
+
+	numBasins := len(basins)
+	return basins[numBasins-3] * basins[numBasins-2] * basins[numBasins-1]
 }
