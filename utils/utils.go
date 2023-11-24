@@ -1,6 +1,7 @@
 package Utils
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -140,4 +141,12 @@ func Transpose(slice [][]int) [][]int {
 		}
 	}
 	return result
+}
+
+func PrettyPrint(v interface{}) (err error) {
+	b, err := json.MarshalIndent(v, "", "  ")
+	if err == nil {
+		log.Println("[WARN] " + string(b))
+	}
+	return
 }
