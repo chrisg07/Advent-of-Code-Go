@@ -103,32 +103,72 @@ func calculateBasin(matrix [][]int, visited [100][100]int, x int, y int) [100][1
 	xLen := len(matrix)
 	yLen := len(matrix[0])
 
-	log.Printf("[WARN] Location: %d,%d height: %d", x, y, point)
+	// log.Printf("[WARN] Location: %d,%d height: %d", x, y, point)
 
-	if visited[x][y] == 1 {
-		panic("basin had already been visited")
+	if visited[x][y] == 1 || visited[x][y] == 9 {
+		panic("basin had already been visited or is too large")
 	}
-	visited[x][y] = 1
-	if point < 8 {
+
+	if point <= 8 {
+		visited[x][y] = 1
 		// north
-		if y != yLen-1 && point == matrix[x][y+1]-1 && visited[x][y+1] == 0 {
+		if (y != yLen-1 && point <= matrix[x][y+1]-1) && visited[x][y+1] == 0 {
 			visited = calculateBasin(matrix, visited, x, y+1)
 		}
 		// east
-		if x != xLen-1 && point == matrix[x+1][y]-1 && visited[x+1][y] == 0 {
+		if x != xLen-1 && (point <= matrix[x+1][y]-1) && visited[x+1][y] == 0 {
 			visited = calculateBasin(matrix, visited, x+1, y)
 		}
 		// south
-		if y != 0 && point == matrix[x][y-1]-1 && visited[x][y-1] == 0 {
+		if y != 0 && (point <= matrix[x][y-1]-1) && visited[x][y-1] == 0 {
 			visited = calculateBasin(matrix, visited, x, y-1)
 		}
 		// west
-		if x != 0 && point == matrix[x-1][y]-1 && visited[x-1][y] == 0 {
+		if x != 0 && (point <= matrix[x-1][y]-1) && visited[x-1][y] == 0 {
 			visited = calculateBasin(matrix, visited, x-1, y)
 		}
 	}
 
 	return visited
+}
+
+func printBasin(matrix [][]int, visited [100][100]int) {
+	visitedXMin := 100
+	visitedXMax := 0
+	visitedYMin := 100
+	visitedYMax := 0
+
+	for x := range visited {
+		for y := range visited[x] {
+			if visited[x][y] == 1 {
+				if x < visitedXMin {
+					visitedXMin = x
+				}
+				if x > visitedXMax {
+					visitedXMax = x
+				}
+				if y < visitedYMin {
+					visitedYMin = y
+				}
+				if y > visitedYMax {
+					visitedYMax = y
+				}
+			}
+		}
+	}
+
+	for x := visitedXMin; x <= visitedXMax; x++ {
+		printStr := ""
+		for y := visitedYMin; y <= visitedYMax; y++ {
+			if visited[x][y] == 1 {
+				str := strconv.Itoa(matrix[x][y])
+				printStr += str
+			} else {
+				printStr += "-"
+			}
+		}
+		log.Printf("[WARN] x: %2d | "+printStr, x)
+	}
 }
 
 func Day9PartB2021(useExample bool) int {
@@ -144,7 +184,7 @@ func Day9PartB2021(useExample bool) int {
 		matrix = append(matrix, row)
 	}
 
-	Utils.PrettyPrint(matrix)
+	// Utils.PrettyPrint(matrix)
 
 	basins := []int{}
 	visited := [100][100]int{}
@@ -152,8 +192,10 @@ func Day9PartB2021(useExample bool) int {
 		for y := range matrix[x] {
 			if isLowPoint(matrix, x, y) {
 				basin := calculateBasin(matrix, visited, x, y)
-
-				basins = append(basins, calculateBasinSize(basin))
+				basinSize := calculateBasinSize(basin)
+				printBasin(matrix, basin)
+				basins = append(basins, basinSize)
+				log.Printf("[WARN] Discovered basin of size: %d at %d,%d", basinSize, x, y)
 			}
 		}
 	}
@@ -162,6 +204,9 @@ func Day9PartB2021(useExample bool) int {
 
 	Utils.PrettyPrint(basins)
 
+	// log.Printf("[WARN] Visited: %v", visited)
+
 	numBasins := len(basins)
-	return basins[numBasins-3] * basins[numBasins-2] * basins[numBasins-1]
+	basinSizes := basins[numBasins-3] * basins[numBasins-2] * basins[numBasins-1]
+	return basinSizes
 }
