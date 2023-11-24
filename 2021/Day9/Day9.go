@@ -202,10 +202,6 @@ func Day9PartB2021(useExample bool) int {
 
 	sort.Ints(basins)
 
-	Utils.PrettyPrint(basins)
-
-	// log.Printf("[WARN] Visited: %v", visited)
-
 	numBasins := len(basins)
 	basinSizes := basins[numBasins-3] * basins[numBasins-2] * basins[numBasins-1]
 	return basinSizes
