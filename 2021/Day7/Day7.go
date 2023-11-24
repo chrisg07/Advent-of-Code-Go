@@ -26,7 +26,7 @@ func getInput(useExample bool) []string {
 	return lines
 }
 
-func CalculateFuel(crabs []int, xPos int) int {
+func CalculateFuelPartA(crabs []int, xPos int) int {
 	fuelCost := 0
 	for _, crab := range crabs {
 		if crab-xPos < 0 {
@@ -55,7 +55,7 @@ func Day7PartA2021(useExample bool) int {
 
 	fuelCosts := []int{}
 	for x := 0; x < crabs[len(crabs)-1]; x++ {
-		fuelCost := CalculateFuel(crabs, x)
+		fuelCost := CalculateFuelPartA(crabs, x)
 		fuelCosts = append(fuelCosts, fuelCost)
 	}
 
@@ -65,14 +65,51 @@ func Day7PartA2021(useExample bool) int {
 	return fuelCosts[0]
 }
 
+func CalculateFuelForDistance(distance int) int {
+	fuelCost := 0
+	for x := 0; x < distance; x++ {
+		fuelCost += (x + 1)
+	}
+	return fuelCost
+}
+
+func CalculateFuelPartB(crabs []int, xPos int) int {
+	fuelCost := 0
+	for _, crab := range crabs {
+		distance := 0
+		if crab-xPos < 0 {
+			distance += (crab - xPos) * -1
+		} else {
+			distance += (crab - xPos)
+		}
+		fuelCost += CalculateFuelForDistance(distance)
+	}
+	return fuelCost
+}
+
 func Day7PartB2021(useExample bool) int {
 	lines := getInput(useExample)
+	crabs := []int{}
 	for _, line := range lines {
-		for _, char := range line {
-			log.Print(string(char))
+		crabsStr := strings.Split(line, ",")
+		for _, str := range crabsStr {
+			log.Print(string(str))
+			value, _ := strconv.Atoi(string(str))
+			crabs = append(crabs, value)
 		}
 		log.Println("")
 	}
 
-	return 0
+	sort.Ints(crabs)
+
+	fuelCosts := []int{}
+	for x := 0; x < crabs[len(crabs)-1]; x++ {
+		fuelCost := CalculateFuelPartB(crabs, x)
+		fuelCosts = append(fuelCosts, fuelCost)
+	}
+
+	sort.Ints(fuelCosts)
+
+	log.Printf("[WARN] %v", crabs)
+	return fuelCosts[0]
 }
