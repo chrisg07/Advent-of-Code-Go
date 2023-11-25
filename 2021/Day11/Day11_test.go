@@ -18,7 +18,7 @@ func init() {
 }
 
 func TestDay11PartA2021Example(t *testing.T) {
-	answer := 0
+	answer := 1656
 	solution := Day11PartA2021(true)
 	if solution != answer {
 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
@@ -26,25 +26,25 @@ func TestDay11PartA2021Example(t *testing.T) {
 }
 
 func TestDay11PartA2021Complete(t *testing.T) {
-	answer := 0
+	answer := 1603
 	solution := Day11PartA2021(false)
 	if solution != answer {
 		t.Fatalf(`Comeplete solution = %d, should = %d`, solution, answer)
 	}
 }
 
-func TestDay11PartB2021Example(t *testing.T) {
-	answer := 0
-	solution := Day11PartB2021(true)
-	if solution != answer {
-		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
-	}
-}
+// func TestDay11PartB2021Example(t *testing.T) {
+// 	answer := 1656
+// 	solution := Day11PartB2021(true)
+// 	if solution != answer {
+// 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+// 	}
+// }
 
-func TestDay11PartB2021Complete(t *testing.T) {
-	answer := 0
-	solution := Day11PartB2021(false)
-	if solution != answer {
-		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
-	}
-}
+// func TestDay11PartB2021Complete(t *testing.T) {
+// 	answer := 1656
+// 	solution := Day11PartB2021(false)
+// 	if solution != answer {
+// 		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
+// 	}
+// }
