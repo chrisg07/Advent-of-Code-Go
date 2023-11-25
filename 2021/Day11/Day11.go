@@ -83,9 +83,6 @@ func Day11PartA2021(useExample bool) int {
 	buildNeighbors(octopi)
 
 	for step := 0; step < 100; step++ {
-		// step 1, increase value of all octopi by 1
-		// step 2, any octopus with an energy level of 9 or above flashes
-		// step 3, any octopus that has flashed has it's energy set to 0
 		flashes = takeStep(step, octopi, flashes)
 	}
 	return flashes
@@ -95,16 +92,19 @@ func takeStep(step int, octopi []*octopus, flashes int) int {
 	log.Printf("[WARN] |  After step %d:\n\n", step)
 	printOctopi(octopi)
 
+	// step 1, increase value of all octopi by 1
 	for index, _ := range octopi {
 		octopi[index].energy += 1
 	}
 
+	// step 2, any octopus with an energy level of 9 or above flashes
 	for index, _ := range octopi {
 		if octopi[index].energy > 9 && !octopi[index].hasFlashed {
 			flashOctopus(octopi[index])
 		}
 	}
 
+	// step 3, any octopus that has flashed has it's energy set to 0
 	for index, _ := range octopi {
 		if octopi[index].hasFlashed {
 			flashes += 1
@@ -148,12 +148,21 @@ func buildNeighbors(octopi []*octopus) {
 
 func Day11PartB2021(useExample bool) int {
 	lines := getInput(useExample)
-	for _, line := range lines {
-		for _, char := range line {
-			log.Print(string(char))
+	octopi := []*octopus{}
+
+	octopi = setState(lines, octopi)
+	buildNeighbors(octopi)
+
+	step := 0
+	notAllOctopiHaveFlashed := true
+	for notAllOctopiHaveFlashed {
+		flashes := takeStep(step, octopi, 0)
+		step += 1
+
+		if flashes == 100 {
+			notAllOctopiHaveFlashed = false
 		}
-		log.Println("")
 	}
 
-	return 0
+	return step
 }
