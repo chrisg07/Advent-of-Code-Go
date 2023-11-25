@@ -69,7 +69,7 @@ func linkNodes(a *node, b *node) {
 
 var paths = []string{}
 
-func dfsRecursive(nodes []*node, vertex *node, path []*node) {
+func dfsRecursivePartA(nodes []*node, vertex *node, path []*node) {
 	path = append(path, vertex)
 	if vertex.value == "end" {
 		readablePath := ""
@@ -85,7 +85,7 @@ func dfsRecursive(nodes []*node, vertex *node, path []*node) {
 	for _, neighbor := range vertex.neighbors {
 		pathContainsNeighbor := slices.Contains(path, neighbor)
 		if !neighbor.isSmallCave || (neighbor.isSmallCave && !pathContainsNeighbor) || neighbor.value == "end" {
-			dfsRecursive(nodes[:], neighbor, path)
+			dfsRecursivePartA(nodes[:], neighbor, path)
 		}
 	}
 
@@ -94,6 +94,23 @@ func dfsRecursive(nodes []*node, vertex *node, path []*node) {
 func Day12PartA2021(useExample bool) int {
 	lines := getInput(useExample)
 
+	nodes := buildNodes(lines)
+
+	startNodeIndex := listContainsNode(nodes, "start")
+	startNode := nodes[startNodeIndex]
+
+	dfsRecursivePartA(nodes[:], startNode, []*node{})
+
+	for index, readablePath := range paths {
+		log.Printf("[DEBUG] Path %2d: %s", index, readablePath)
+	}
+
+	numberOfPaths := len(paths)
+	paths = []string{}
+	return numberOfPaths
+}
+
+func buildNodes(lines []string) []*node {
 	nodes := []*node{}
 
 	for _, line := range lines {
@@ -119,32 +136,52 @@ func Day12PartA2021(useExample bool) int {
 
 		linkNodes(nodeA, nodeB)
 	}
+	return nodes
+}
 
-	for _, node := range nodes {
-		log.Printf("[WARN] Node: %v\n", node)
+func dfsRecursivePartB(nodes []*node, vertex *node, path []*node, smallCaveVisitedTwice bool) {
+	path = append(path, vertex)
+	if vertex.value == "end" {
+		readablePath := ""
+
+		for _, step := range path {
+			readablePath += step.value + "-"
+		}
+		readablePath = readablePath[:len(readablePath)-2]
+		paths = append(paths, readablePath)
+		return
 	}
 
-	// depth first traversal
-
-	startNodeIndex := listContainsNode(nodes, "start")
-	startNode := nodes[startNodeIndex]
-
-	dfsRecursive(nodes[:], startNode, []*node{})
-
-	for index, readablePath := range paths {
-		log.Printf("[WARN] Path %2d: %s", index, readablePath)
+	for _, neighbor := range vertex.neighbors {
+		if neighbor.value != "start" {
+			pathContainsNeighbor := slices.Contains(path, neighbor)
+			if !neighbor.isSmallCave || neighbor.value == "end" {
+				dfsRecursivePartB(nodes[:], neighbor, path, smallCaveVisitedTwice)
+			} else if neighbor.isSmallCave && !pathContainsNeighbor {
+				dfsRecursivePartB(nodes[:], neighbor, path, smallCaveVisitedTwice)
+			} else if !smallCaveVisitedTwice && neighbor.isSmallCave && pathContainsNeighbor {
+				dfsRecursivePartB(nodes[:], neighbor, path, true)
+			}
+		}
 	}
-	return len(paths)
+
 }
 
 func Day12PartB2021(useExample bool) int {
 	lines := getInput(useExample)
-	for _, line := range lines {
-		for _, char := range line {
-			log.Print(string(char))
-		}
-		log.Println("")
+
+	nodes := buildNodes(lines)
+
+	startNodeIndex := listContainsNode(nodes, "start")
+	startNode := nodes[startNodeIndex]
+
+	dfsRecursivePartB(nodes[:], startNode, []*node{}, false)
+
+	for index, readablePath := range paths {
+		log.Printf("[DEBUG] Path %2d: %s", index, readablePath)
 	}
 
-	return 0
+	numberOfPaths := len(paths)
+	paths = []string{}
+	return numberOfPaths
 }
