@@ -78,6 +78,44 @@ func Day11PartA2021(useExample bool) int {
 	octopi := []*octopus{}
 	flashes := 0
 
+	octopi = setState(lines, octopi)
+
+	buildNeighbors(octopi)
+
+	for step := 0; step < 100; step++ {
+		// step 1, increase value of all octopi by 1
+		// step 2, any octopus with an energy level of 9 or above flashes
+		// step 3, any octopus that has flashed has it's energy set to 0
+		flashes = takeStep(step, octopi, flashes)
+	}
+	return flashes
+}
+
+func takeStep(step int, octopi []*octopus, flashes int) int {
+	log.Printf("[WARN] |  After step %d:\n\n", step)
+	printOctopi(octopi)
+
+	for index, _ := range octopi {
+		octopi[index].energy += 1
+	}
+
+	for index, _ := range octopi {
+		if octopi[index].energy > 9 && !octopi[index].hasFlashed {
+			flashOctopus(octopi[index])
+		}
+	}
+
+	for index, _ := range octopi {
+		if octopi[index].hasFlashed {
+			flashes += 1
+			octopi[index].hasFlashed = false
+			octopi[index].energy = 0
+		}
+	}
+	return flashes
+}
+
+func setState(lines []string, octopi []*octopus) []*octopus {
 	for x, line := range lines {
 		for y, char := range line {
 			energy, _ := strconv.Atoi(string(char))
@@ -86,7 +124,10 @@ func Day11PartA2021(useExample bool) int {
 			octopi = append(octopi, cephalopod)
 		}
 	}
+	return octopi
+}
 
+func buildNeighbors(octopi []*octopus) {
 	for index, cephalopod := range octopi {
 		neighborIndexOffsets := []int{}
 		if index%10 == 0 {
@@ -103,34 +144,6 @@ func Day11PartA2021(useExample bool) int {
 			}
 		}
 	}
-
-	for step := 0; step < 100; step++ {
-		log.Printf("[WARN] |  After step %d:\n\n", step)
-		printOctopi(octopi)
-
-		// step 1, increase value of all octopi by 1
-		for index, _ := range octopi {
-			octopi[index].energy += 1
-		}
-
-		// step 2, any octopus with an energy level of 9 or above flashes
-		for index, _ := range octopi {
-			if octopi[index].energy > 9 && !octopi[index].hasFlashed {
-				flashOctopus(octopi[index])
-			}
-		}
-
-		// step 3, any octopus that has flashed has it's energy set to 0
-		for index, _ := range octopi {
-			if octopi[index].hasFlashed {
-				flashes += 1
-				octopi[index].hasFlashed = false
-				octopi[index].energy = 0
-			}
-		}
-	}
-	// log.Printf("[WARN] octopi: %v\n", octopi)
-	return flashes
 }
 
 func Day11PartB2021(useExample bool) int {
