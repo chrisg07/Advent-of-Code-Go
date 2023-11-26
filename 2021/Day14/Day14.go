@@ -25,7 +25,7 @@ func getInput(useExample bool) []string {
 	return lines
 }
 
-func Day14PartA2021(useExample bool, steps int) int {
+func Day142021(useExample bool, steps int) int {
 	lines := getInput(useExample)
 	insertionRules := make(map[string]string)
 	pairQuantities := make(map[string]int)
@@ -101,16 +101,4 @@ func step(pairQuantities map[string]int, elementQuantities map[string]int, inser
 	}
 
 	return updatedPairQuantities, updatedElementQuantities
-}
-
-func Day14PartB2021(useExample bool) int {
-	lines := getInput(useExample)
-	for _, line := range lines {
-		for _, char := range line {
-			log.Print(string(char))
-		}
-		log.Println("")
-	}
-
-	return 0
 }
