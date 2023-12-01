@@ -49,18 +49,26 @@ func TestDay1PartA2021Complete(t *testing.T) {
 	}
 }
 
-// func TestDayXPartB2021Example(t *testing.T) {
-// 	answer := 0
-// 	solution := DayXPartB2021(true)
-// 	if solution != answer {
-// 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
-// 	}
-// }
+func TestParseKeyFromStringPartB(t *testing.T) {
+	answer := 29
+	solution := ParseKeyFromStringPartB("two1nine")
+	if solution != answer {
+		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+	}
+}
 
-// func TestDayXPartB2021Complete(t *testing.T) {
-// 	answer := 0
-// 	solution := DayXPartB2021(false)
-// 	if solution != answer {
-// 		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
-// 	}
-// }
+func TestDay1PartB2021Example(t *testing.T) {
+	answer := 281
+	solution := Day1PartB2021(true)
+	if solution != answer {
+		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+	}
+}
+
+func TestDay1PartB2021Complete(t *testing.T) {
+	answer := 281
+	solution := Day1PartB2021(false)
+	if solution != answer {
+		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
+	}
+}
