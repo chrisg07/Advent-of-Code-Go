@@ -122,3 +122,11 @@ func TestArrayContainsArrayFalse(t *testing.T) {
 		t.Fatalf(`Actual = %v, expected = %v`, actual, expected)
 	}
 }
+
+func TestReverseString(t *testing.T) {
+	expected := "cba"
+	actual := ReverseString("abc")
+	if actual != expected {
+		t.Fatalf(`Actual = %s, expected = %s`, actual, expected)
+	}
+}

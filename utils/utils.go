@@ -158,3 +158,11 @@ func CopyMap(mapToCopy map[string]int) map[string]int {
 	}
 	return copy
 }
+
+func ReverseString(str string) string {
+	reverseStr := ""
+	for i := len(str) - 1; i >= 0; i-- {
+		reverseStr += string(str[i])
+	}
+	return reverseStr
+}

@@ -99,7 +99,6 @@ func ParseDigitAndWordsFromString(str string) string {
 }
 func ParseDigitAndWordsFromReverseString(str string) string {
 	for i := len(str) - 1; i >= 0; i-- {
-		// for index, char := range str {
 		charStr := string(str[i])
 		slice := string(str[i:])
 		wordFromString := GetDigitWordFromString(slice)
