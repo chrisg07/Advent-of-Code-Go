@@ -5,6 +5,8 @@ import (
 	"log"
 	"strconv"
 	"strings"
+
+	Utils "github.com/chrisg07/Advent-of-Code-Go/utils"
 )
 
 //go:embed inputs/example.txt
@@ -37,10 +39,7 @@ func ParseDigitFromString(str string) string {
 }
 
 func ParseKeyFromString(str string) int {
-	reverseStr := ""
-	for i := len(str) - 1; i >= 0; i-- {
-		reverseStr += string(str[i])
-	}
+	reverseStr := Utils.ReverseString(str)
 	key, _ := strconv.Atoi(ParseDigitFromString(str) + ParseDigitFromString(reverseStr))
 	return key
 }
