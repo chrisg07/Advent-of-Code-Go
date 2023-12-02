@@ -91,12 +91,50 @@ func Day2PartA2021(useExample bool) int {
 
 func Day2PartB2021(useExample bool) int {
 	lines := getInput(useExample)
-	for _, line := range lines {
-		for _, char := range line {
-			log.Print(string(char))
-		}
-		log.Println("")
+
+	minimumCubes := Cubes{
+		red:   0,
+		green: 0,
+		blue:  0,
 	}
 
-	return 0
+	sumOfIDs := 0
+	for _, line := range lines {
+		parts := strings.Split(line, ": ")
+		sets := strings.Split(parts[1], "; ")
+
+		log.Printf("[WARN] Sets: %v\n", sets)
+		for _, set := range sets {
+			cubes := strings.Split(set, ", ")
+			for _, cube := range cubes {
+				cubeParts := strings.Split(cube, " ")
+				value, _ := strconv.Atoi(cubeParts[0])
+				switch cubeParts[1] {
+				case "red":
+					if value > minimumCubes.red {
+						minimumCubes.red = value
+					}
+				case "blue":
+					if value > minimumCubes.blue {
+						minimumCubes.blue = value
+					}
+				case "green":
+					if value > minimumCubes.green {
+						minimumCubes.green = value
+					}
+				}
+				log.Printf("[WARN] Cube parts: %v\n", cubeParts)
+			}
+		}
+
+		sumOfIDs += (minimumCubes.blue * minimumCubes.red * minimumCubes.green)
+		minimumCubes = Cubes{
+			red:   0,
+			green: 0,
+			blue:  0,
+		}
+
+	}
+
+	return sumOfIDs
 }
