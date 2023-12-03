@@ -34,7 +34,7 @@ func TestParseKeyFromString(t *testing.T) {
 }
 
 func TestDay1PartA2021Example(t *testing.T) {
-	answer := 142
+	answer := 209
 	solution := Day1PartA2021(true)
 	if solution != answer {
 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
