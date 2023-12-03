@@ -72,7 +72,6 @@ func Day3PartA2023(useExample bool) int {
 				symbol := Point{x: x, y: y}
 				symbols = append(symbols, symbol)
 			}
-			log.Print(string(char))
 		}
 		if number > 0 {
 			end = Point{x: x, y: len(line) - 1}
@@ -111,12 +110,81 @@ func Day3PartA2023(useExample bool) int {
 
 func Day3PartB2023(useExample bool) int {
 	lines := getInput(useExample)
-	for _, line := range lines {
-		for _, char := range line {
-			log.Print(string(char))
+	engineNumbers := []EngineNumber{}
+	symbols := []Point{}
+	for x, line := range lines {
+		number := 0
+		start := Point{0, 0}
+		end := Point{0, 0}
+		for y, char := range line {
+			parsedInt, parseErr := strconv.Atoi(string(char))
+			if parseErr == nil && number == 0 {
+				log.Printf("[WARN] Parse error is nil and value is 0\n")
+				if number == 0 {
+					start = Point{x: x, y: y}
+				}
+				number *= 10
+				number += parsedInt
+			} else if parseErr == nil && number > 0 {
+				log.Printf("[WARN] Parse error is nil and value is: %d\n", parsedInt)
+				number *= 10
+				number += parsedInt
+			} else if parseErr != nil && number > 0 {
+				log.Printf("[WARN] Parse error is not nil and value is: %d\n", parsedInt)
+				end = Point{x: x, y: y - 1}
+				engineNumber := EngineNumber{
+					start: start,
+					end:   end,
+					value: number,
+				}
+				engineNumbers = append(engineNumbers, engineNumber)
+				number = 0
+			}
+			if parseErr != nil && string(char) != "." {
+				symbol := Point{x: x, y: y}
+				symbols = append(symbols, symbol)
+			}
 		}
-		log.Println("")
+		if number > 0 {
+			end = Point{x: x, y: len(line) - 1}
+			engineNumber := EngineNumber{
+				start: start,
+				end:   end,
+				value: number,
+			}
+			engineNumbers = append(engineNumbers, engineNumber)
+			number = 0
+		}
+	}
+	log.Printf("[WARN] Engine Numbers: %v\n", engineNumbers)
+	log.Printf("[WARN] Symbols: %v\n", symbols)
+
+	gearRatios := []int{}
+	for _, symbol := range symbols {
+		numNumbersAdjacent := 0
+		gearRatio := 0
+		for _, engineNumber := range engineNumbers {
+			withinRangeX := symbol.x >= engineNumber.start.x-1 && symbol.x <= engineNumber.end.x+1
+			withingRangeY := symbol.y >= engineNumber.start.y-1 && symbol.y <= engineNumber.end.y+1
+			symbolIsAdjacent := withinRangeX && withingRangeY
+			if symbolIsAdjacent {
+				numNumbersAdjacent += 1
+				if gearRatio == 0 {
+					gearRatio += engineNumber.value
+				} else {
+					gearRatio *= engineNumber.value
+				}
+			}
+		}
+		if numNumbersAdjacent == 2 {
+			gearRatios = append(gearRatios, gearRatio)
+		}
 	}
 
-	return 0
+	log.Printf("[WARN] Part Numbers: %v\n", gearRatios)
+	sum := 0
+	for _, gearRatio := range gearRatios {
+		sum += gearRatio
+	}
+	return sum
 }
