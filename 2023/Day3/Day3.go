@@ -5,6 +5,8 @@ import (
 	"log"
 	"strconv"
 	"strings"
+
+	"github.com/chrisg07/Advent-of-Code-Go/Utils"
 )
 
 //go:embed inputs/example.txt
@@ -36,8 +38,7 @@ type EngineNumber struct {
 	value int
 }
 
-func Day3PartA2023(useExample bool) int {
-	lines := getInput(useExample)
+func buildState(lines []string) ([]EngineNumber, []Point) {
 	engineNumbers := []EngineNumber{}
 	symbols := []Point{}
 	for x, line := range lines {
@@ -84,23 +85,30 @@ func Day3PartA2023(useExample bool) int {
 			number = 0
 		}
 	}
-	log.Printf("[WARN] Engine Numbers: %v\n", engineNumbers)
-	log.Printf("[WARN] Symbols: %v\n", symbols)
+	return engineNumbers, symbols
+}
+
+func symbolIsAdjacentToNumber(symbol Point, engineNumber EngineNumber) bool {
+	withinRangeX := symbol.x >= engineNumber.start.x-1 && symbol.x <= engineNumber.end.x+1
+	withingRangeY := symbol.y >= engineNumber.start.y-1 && symbol.y <= engineNumber.end.y+1
+	return withinRangeX && withingRangeY
+}
+
+func Day3PartA2023(useExample bool) int {
+	lines := getInput(useExample)
+
+	engineNumbers, symbols := buildState(lines)
 
 	partNumbers := []EngineNumber{}
 	for _, engineNumber := range engineNumbers {
 		for _, symbol := range symbols {
-			withinRangeX := symbol.x >= engineNumber.start.x-1 && symbol.x <= engineNumber.end.x+1
-			withingRangeY := symbol.y >= engineNumber.start.y-1 && symbol.y <= engineNumber.end.y+1
-			symbolIsAdjacent := withinRangeX && withingRangeY
-			if symbolIsAdjacent {
+			if symbolIsAdjacentToNumber(symbol, engineNumber) {
 				partNumbers = append(partNumbers, engineNumber)
 				break
 			}
 		}
 	}
 
-	log.Printf("[WARN] Part Numbers: %v\n", partNumbers)
 	sum := 0
 	for _, partNumber := range partNumbers {
 		sum += partNumber.value
@@ -110,64 +118,15 @@ func Day3PartA2023(useExample bool) int {
 
 func Day3PartB2023(useExample bool) int {
 	lines := getInput(useExample)
-	engineNumbers := []EngineNumber{}
-	symbols := []Point{}
-	for x, line := range lines {
-		number := 0
-		start := Point{0, 0}
-		end := Point{0, 0}
-		for y, char := range line {
-			parsedInt, parseErr := strconv.Atoi(string(char))
-			if parseErr == nil && number == 0 {
-				log.Printf("[WARN] Parse error is nil and value is 0\n")
-				if number == 0 {
-					start = Point{x: x, y: y}
-				}
-				number *= 10
-				number += parsedInt
-			} else if parseErr == nil && number > 0 {
-				log.Printf("[WARN] Parse error is nil and value is: %d\n", parsedInt)
-				number *= 10
-				number += parsedInt
-			} else if parseErr != nil && number > 0 {
-				log.Printf("[WARN] Parse error is not nil and value is: %d\n", parsedInt)
-				end = Point{x: x, y: y - 1}
-				engineNumber := EngineNumber{
-					start: start,
-					end:   end,
-					value: number,
-				}
-				engineNumbers = append(engineNumbers, engineNumber)
-				number = 0
-			}
-			if parseErr != nil && string(char) != "." {
-				symbol := Point{x: x, y: y}
-				symbols = append(symbols, symbol)
-			}
-		}
-		if number > 0 {
-			end = Point{x: x, y: len(line) - 1}
-			engineNumber := EngineNumber{
-				start: start,
-				end:   end,
-				value: number,
-			}
-			engineNumbers = append(engineNumbers, engineNumber)
-			number = 0
-		}
-	}
-	log.Printf("[WARN] Engine Numbers: %v\n", engineNumbers)
-	log.Printf("[WARN] Symbols: %v\n", symbols)
+
+	engineNumbers, symbols := buildState(lines)
 
 	gearRatios := []int{}
 	for _, symbol := range symbols {
 		numNumbersAdjacent := 0
 		gearRatio := 0
 		for _, engineNumber := range engineNumbers {
-			withinRangeX := symbol.x >= engineNumber.start.x-1 && symbol.x <= engineNumber.end.x+1
-			withingRangeY := symbol.y >= engineNumber.start.y-1 && symbol.y <= engineNumber.end.y+1
-			symbolIsAdjacent := withinRangeX && withingRangeY
-			if symbolIsAdjacent {
+			if symbolIsAdjacentToNumber(symbol, engineNumber) {
 				numNumbersAdjacent += 1
 				if gearRatio == 0 {
 					gearRatio += engineNumber.value
@@ -181,10 +140,5 @@ func Day3PartB2023(useExample bool) int {
 		}
 	}
 
-	log.Printf("[WARN] Part Numbers: %v\n", gearRatios)
-	sum := 0
-	for _, gearRatio := range gearRatios {
-		sum += gearRatio
-	}
-	return sum
+	return Utils.SumArray(gearRatios)
 }
