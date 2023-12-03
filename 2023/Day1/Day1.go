@@ -29,10 +29,9 @@ func getInput(useExample bool) []string {
 
 func ParseDigitFromString(str string) string {
 	for _, char := range str {
-		charStr := string(char)
-		_, err := strconv.Atoi(charStr)
+		_, err := strconv.Atoi(string(char))
 		if err == nil {
-			return charStr
+			return string(char)
 		}
 	}
 	return "false"
