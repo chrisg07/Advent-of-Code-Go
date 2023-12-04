@@ -94,22 +94,18 @@ func Day4PartB2023(useExample bool) int {
 	cards := buildState(lines)
 
 	for index, card := range cards {
-		copiesToAdd := 0
 		for _, cardNumber := range card.cardNumbers {
 			if slices.Contains(card.winningNumbers, cardNumber) && cardNumber != 0 {
 				cards[index].matchingNumbers += 1
 			}
-			copiesToAdd += cards[index].matchingNumbers
 		}
-	}
-
-	for i := 0; i < len(cards); i++ {
-		for numWins := 0; numWins < cards[i].matchingNumbers; numWins++ {
-			if i+1+numWins < len(cards) {
-				cards[i+1+numWins].copies += cards[i].copies
+		for numWins := 0; numWins < cards[index].matchingNumbers; numWins++ {
+			if index+1+numWins < len(cards) {
+				cards[index+1+numWins].copies += cards[index].copies
 			}
 		}
 	}
+
 	sum := 0
 
 	for index, card := range cards {
