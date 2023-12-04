@@ -27,37 +27,16 @@ func getInput(useExample bool) []string {
 }
 
 type Game struct {
-	cardNumbers    []int
-	winningNumbers []int
+	cardNumbers     []int
+	winningNumbers  []int
+	copies          int
+	matchingNumbers int
 }
 
 func Day4PartA2023(useExample bool) int {
 	lines := getInput(useExample)
 
-	cards := []Game{}
-	for _, line := range lines {
-		parts := strings.Split(line, ": ")
-		numbersStrs := strings.Split(parts[1], " | ")
-		winningNumbersStr := strings.Split(numbersStrs[0], " ")
-		winningNumbers := []int{}
-		for _, str := range winningNumbersStr {
-			str = strings.TrimSpace(str)
-			value, _ := strconv.Atoi(str)
-			winningNumbers = append(winningNumbers, value)
-		}
-		cardNumbersStr := strings.Split(numbersStrs[1], " ")
-		cardNumbers := []int{}
-		for _, str := range cardNumbersStr {
-			str = strings.TrimSpace(str)
-			value, _ := strconv.Atoi(str)
-			cardNumbers = append(cardNumbers, value)
-		}
-		card := Game{
-			winningNumbers: winningNumbers,
-			cardNumbers:    cardNumbers,
-		}
-		cards = append(cards, card)
-	}
+	cards := buildState(lines)
 
 	sum := 0
 	// for each game determine win
@@ -79,14 +58,63 @@ func Day4PartA2023(useExample bool) int {
 	return sum
 }
 
+func buildState(lines []string) []Game {
+	cards := []Game{}
+	for _, line := range lines {
+		parts := strings.Split(line, ": ")
+		numbersStrs := strings.Split(parts[1], " | ")
+		winningNumbersStr := strings.Split(numbersStrs[0], " ")
+		winningNumbers := []int{}
+		for _, str := range winningNumbersStr {
+			str = strings.TrimSpace(str)
+			value, _ := strconv.Atoi(str)
+			winningNumbers = append(winningNumbers, value)
+		}
+		cardNumbersStr := strings.Split(numbersStrs[1], " ")
+		cardNumbers := []int{}
+		for _, str := range cardNumbersStr {
+			str = strings.TrimSpace(str)
+			value, _ := strconv.Atoi(str)
+			cardNumbers = append(cardNumbers, value)
+		}
+		card := Game{
+			winningNumbers:  winningNumbers,
+			cardNumbers:     cardNumbers,
+			copies:          1,
+			matchingNumbers: 0,
+		}
+		cards = append(cards, card)
+	}
+	return cards
+}
+
 func Day4PartB2023(useExample bool) int {
 	lines := getInput(useExample)
-	for _, line := range lines {
-		for _, char := range line {
-			log.Print(string(char))
+
+	cards := buildState(lines)
+
+	for index, card := range cards {
+		copiesToAdd := 0
+		for _, cardNumber := range card.cardNumbers {
+			if slices.Contains(card.winningNumbers, cardNumber) && cardNumber != 0 {
+				cards[index].matchingNumbers += 1
+			}
+			copiesToAdd += cards[index].matchingNumbers
 		}
-		log.Println("")
 	}
 
-	return 0
+	for i := 0; i < len(cards); i++ {
+		for numWins := 0; numWins < cards[i].matchingNumbers; numWins++ {
+			if i+1+numWins < len(cards) {
+				cards[i+1+numWins].copies += cards[i].copies
+			}
+		}
+	}
+	sum := 0
+
+	for index, card := range cards {
+		log.Printf("[WARN] Card %d has %d copies and won %d times\n", index+1, card.copies, card.matchingNumbers)
+		sum += card.copies
+	}
+	return sum
 }
