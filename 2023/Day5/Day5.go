@@ -41,12 +41,8 @@ type AlmanacMap struct {
 }
 
 func mapValue(value int, almanacMap AlmanacMap) int {
-	if len(almanacMap.destinations) != len(almanacMap.sources) {
-		panic("Map lengths don't match")
-	}
 	for index, sourceRange := range almanacMap.sources {
 		if isInRange(value, sourceRange) {
-			log.Printf("[WARN] Seed was in range\n")
 			delta := value - sourceRange.start
 			return almanacMap.destinations[index].start + delta
 		}
@@ -57,6 +53,23 @@ func mapValue(value int, almanacMap AlmanacMap) int {
 func Day5PartA2023(useExample bool) int {
 	lines := getInput(useExample)
 
+	seeds, almanac := buildState(lines)
+
+	locations := []int{}
+
+	for _, seed := range seeds {
+		location := seed
+		for _, almanacMap := range almanac {
+			location = mapValue(location, almanacMap)
+
+		}
+		locations = append(locations, location)
+	}
+
+	return slices.Min(locations)
+}
+
+func buildState(lines []string) ([]int, []AlmanacMap) {
 	seeds := []int{}
 
 	almanac := []AlmanacMap{}
@@ -82,41 +95,22 @@ func Day5PartA2023(useExample bool) int {
 				value, _ := strconv.Atoi(str)
 				values = append(values, value)
 			}
-			// create source range
+
 			sourceRange := Range{
 				start:  values[1],
 				length: values[2],
 			}
-			// create destination range
+
 			destinationRange := Range{
 				start:  values[0],
 				length: values[2],
 			}
 
-			// append ranges to current map
 			almanac[len(almanac)-1].sources = append(almanac[len(almanac)-1].sources, sourceRange)
 			almanac[len(almanac)-1].destinations = append(almanac[len(almanac)-1].destinations, destinationRange)
 		}
 	}
-
-	log.Printf("[WARN] Seeds: %v", seeds)
-	log.Printf("[WARN] Almanac: %v", almanac)
-
-	locations := []int{}
-
-	for _, seed := range seeds {
-		// map that seed through all almanac maps
-		location := seed
-		for _, almanacMap := range almanac {
-			newValue := mapValue(location, almanacMap)
-			log.Printf("[WARN] Seed mapped from %d to %d\n", location, newValue)
-			location = newValue
-		}
-		locations = append(locations, location)
-		log.Printf("[WARN] Seed mapped from %d to %d\n", seed, location)
-	}
-
-	return slices.Min(locations)
+	return seeds, almanac
 }
 
 func Day5PartB2023(useExample bool) int {
