@@ -115,12 +115,44 @@ func buildState(lines []string) ([]int, []AlmanacMap) {
 
 func Day5PartB2023(useExample bool) int {
 	lines := getInput(useExample)
-	for _, line := range lines {
-		for _, char := range line {
-			log.Print(string(char))
+
+	seeds, almanac := buildState(lines)
+
+	seedRanges := []Range{}
+	lastSeed := 0
+	for i := 0; i < len(seeds); i += 2 {
+		seedRange := Range{
+			start:  seeds[i],
+			length: seeds[i+1],
 		}
-		log.Println("")
+		seedRanges = append(seedRanges, seedRange)
+		if seedRange.start+seedRange.length > lastSeed {
+			lastSeed = seedRange.start + seedRange.length
+		}
 	}
 
-	return 0
+	// locations := []int{}
+
+	largeSeeds := make([]int, lastSeed)
+
+	log.Printf("[WARN] Length of large seeds: %v\n", len(largeSeeds))
+
+	for _, seedRange := range seedRanges {
+		log.Printf("[WARN] Seed range: %v\n", seedRange)
+		location := seedRange.start
+		for i := 0; i < seedRange.start+seedRange.length; i++ {
+			for _, almanacMap := range almanac {
+				location = mapValue(location, almanacMap)
+			}
+			largeSeeds[i] = location
+			// locations = append(locations, location)
+		}
+	}
+	minLocation := 1000000000000
+	for _, location := range largeSeeds {
+		if location > 0 && location < minLocation {
+			minLocation = location
+		}
+	}
+	return minLocation
 }
