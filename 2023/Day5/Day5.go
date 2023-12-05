@@ -2,7 +2,6 @@ package AoC2021
 
 import (
 	_ "embed"
-	"log"
 	"slices"
 	"strconv"
 	"strings"
@@ -131,27 +130,17 @@ func Day5PartB2023(useExample bool) int {
 		}
 	}
 
-	// locations := []int{}
-
-	largeSeeds := make([]int, lastSeed)
-
-	log.Printf("[WARN] Length of large seeds: %v\n", len(largeSeeds))
+	minLocation := 1000000000000
 
 	for _, seedRange := range seedRanges {
-		log.Printf("[WARN] Seed range: %v\n", seedRange)
-		location := seedRange.start
-		for i := 0; i < seedRange.start+seedRange.length; i++ {
+		for i := seedRange.start; i < seedRange.start+seedRange.length; i++ {
+			location := i
 			for _, almanacMap := range almanac {
 				location = mapValue(location, almanacMap)
 			}
-			largeSeeds[i] = location
-			// locations = append(locations, location)
-		}
-	}
-	minLocation := 1000000000000
-	for _, location := range largeSeeds {
-		if location > 0 && location < minLocation {
-			minLocation = location
+			if location < minLocation {
+				minLocation = location
+			}
 		}
 	}
 	return minLocation
