@@ -32,11 +32,32 @@ func FormatMessage(message string) {
 }
 
 func SumArray(arr []int) int {
-	sum := 0
+	total := 0
 	for _, value := range arr {
-		sum += value
+		total += value
 	}
-	return sum
+	return total
+}
+
+func ArrayFromString(str string, delimiter string) []int {
+	numbers := []int{}
+	str = strings.TrimSpace(str)
+	numberStrs := strings.Split(str, delimiter)
+	for _, str := range numberStrs {
+		value, err := strconv.Atoi(str)
+		if err == nil {
+			numbers = append(numbers, value)
+		}
+	}
+	return numbers
+}
+
+func MultiplyArray(arr []int) int {
+	total := 1
+	for _, value := range arr {
+		total *= value
+	}
+	return total
 }
 
 func ReverseArray[T constraints.Ordered](arr []T) []T {
