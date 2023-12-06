@@ -3,6 +3,7 @@ package AoC2021
 import (
 	_ "embed"
 	"log"
+	"strconv"
 	"strings"
 
 	"github.com/chrisg07/Advent-of-Code-Go/Utils"
@@ -27,12 +28,11 @@ func getInput(useExample bool) []string {
 }
 
 func solveRace(time int, distanceTraveled int, velocity int, distanceToBeat int) int {
-	if distanceTraveled > distanceToBeat {
+	distanceAbleToBeTraveled := time * velocity
+	if distanceAbleToBeTraveled > distanceToBeat {
 		return 1
-	} else if time == 0 {
-		return 0
 	} else {
-		return solveRace(time-1, distanceTraveled+velocity, velocity, distanceToBeat)
+		return 0
 	}
 }
 
@@ -40,6 +40,7 @@ func Day6PartA2023(useExample bool) int {
 	lines := getInput(useExample)
 	times := []int{}
 	distances := []int{}
+
 	for _, line := range lines {
 		if strings.Contains(line, "Time") {
 			parts := strings.Split(line, ":")
@@ -50,9 +51,12 @@ func Day6PartA2023(useExample bool) int {
 		}
 	}
 
-	log.Printf("[WARN] Times: %v\n", times)
-	log.Printf("[WARN] Distances: %v\n", distances)
+	marginOfError := findMarginOfError(times, distances)
 
+	return marginOfError
+}
+
+func findMarginOfError(times []int, distances []int) int {
 	waysToBeatRecords := []int{}
 	for index, time := range times {
 		distance := distances[index]
@@ -64,18 +68,32 @@ func Day6PartA2023(useExample bool) int {
 	}
 
 	log.Printf("[WARN] Ways to beat the record in each race: %v\n", waysToBeatRecords)
-
-	return Utils.MultiplyArray(waysToBeatRecords)
+	marginOfError := Utils.MultiplyArray(waysToBeatRecords)
+	return marginOfError
 }
 
 func Day6PartB2023(useExample bool) int {
 	lines := getInput(useExample)
+	times := []int{}
+	distances := []int{}
+
 	for _, line := range lines {
-		for _, char := range line {
-			log.Print(string(char))
+		if strings.Contains(line, "Time") {
+			parts := strings.Split(line, ":")
+			splitTimes := strings.Split(parts[1], " ")
+			singleTime := strings.Join(splitTimes, "")
+			time, _ := strconv.Atoi(singleTime)
+			times = append(times, time)
+		} else if strings.Contains(line, "Distance") {
+			parts := strings.Split(line, ":")
+			splitRecords := strings.Split(parts[1], " ")
+			singleRecord := strings.Join(splitRecords, "")
+			distance, _ := strconv.Atoi(singleRecord)
+			distances = append(distances, distance)
 		}
-		log.Println("")
 	}
 
-	return 0
+	marginOfError := findMarginOfError(times, distances)
+
+	return marginOfError
 }
