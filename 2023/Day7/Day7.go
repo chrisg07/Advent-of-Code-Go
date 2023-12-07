@@ -3,6 +3,8 @@ package AoC2021
 import (
 	_ "embed"
 	"log"
+	"slices"
+	"strconv"
 	"strings"
 )
 
@@ -24,26 +26,173 @@ func getInput(useExample bool) []string {
 	return lines
 }
 
+var cards = []string{"2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"}
+
+func determineCardRank(card string) int {
+	return slices.Index(cards, card)
+}
+
+type PokerHand struct {
+	hand         string
+	cardValues   []int
+	fiveOfAKind  bool
+	fourOfAKind  bool
+	fullHouse    bool
+	threeOfAKind bool
+	twoPair      bool
+	onePair      bool
+	highCard     bool // all labels distinct
+	bet          int
+}
+
+func countOccurences(haystack string, needle string) int {
+	return strings.Count(haystack, needle)
+}
+
+func isNOfAKind(hand PokerHand, n int) bool {
+	for _, card := range cards {
+		if countOccurences(hand.hand, card) == n {
+			return true
+		}
+	}
+	return false
+}
+
+func countPairs(hand PokerHand) int {
+	pairs := 0
+	for _, card := range cards {
+		if countOccurences(hand.hand, card) == 2 {
+			pairs += 1
+		}
+	}
+	return pairs
+}
+
+func createPokerHand(hand string, bet int) PokerHand {
+	pokerHand := PokerHand{
+		hand: hand,
+		bet:  bet,
+	}
+	for _, char := range hand {
+		cardValue := determineCardRank(string(char))
+		pokerHand.cardValues = append(pokerHand.cardValues, cardValue)
+	}
+	pokerHand.fiveOfAKind = isNOfAKind(pokerHand, 5)
+	pokerHand.fourOfAKind = isNOfAKind(pokerHand, 4)
+	pokerHand.threeOfAKind = isNOfAKind(pokerHand, 3)
+	pokerHand.fullHouse = isNOfAKind(pokerHand, 3) && isNOfAKind(pokerHand, 2)
+	pokerHand.twoPair = countPairs(pokerHand) == 2
+	pokerHand.onePair = countPairs(pokerHand) == 1
+	return pokerHand
+}
+
+func compareHandsCardsInOrder(a PokerHand, b PokerHand) int {
+	for index := range a.cardValues {
+		if a.cardValues[index] != b.cardValues[index] {
+			return a.cardValues[index] - b.cardValues[index]
+		}
+	}
+	return 0
+}
+
+func compareHands(a PokerHand, b PokerHand) int {
+	// if five of a kind
+	if a.fiveOfAKind && !b.fiveOfAKind {
+		return 1
+	} else if !a.fiveOfAKind && b.fiveOfAKind {
+		return -1
+	} else if a.fiveOfAKind && b.fiveOfAKind {
+		return compareHandsCardsInOrder(a, b)
+	}
+	// if four of a kind
+	if a.fourOfAKind && !b.fourOfAKind {
+		return 1
+	} else if !a.fourOfAKind && b.fourOfAKind {
+		return -1
+	} else if a.fourOfAKind && b.fourOfAKind {
+		return compareHandsCardsInOrder(a, b)
+	}
+	// if full house
+	if a.fullHouse && !b.fullHouse {
+		return 1
+	} else if !a.fullHouse && b.fullHouse {
+		return -1
+	} else if a.fullHouse && b.fullHouse {
+		return compareHandsCardsInOrder(a, b)
+	}
+	// if three of a kind
+	if a.threeOfAKind && !b.threeOfAKind {
+		return 1
+	} else if !a.threeOfAKind && b.threeOfAKind {
+		return -1
+	} else if a.threeOfAKind && b.threeOfAKind {
+		return compareHandsCardsInOrder(a, b)
+	}
+	// if two pair
+	if a.twoPair && !b.twoPair {
+		return 1
+	} else if !a.twoPair && b.twoPair {
+		return -1
+	} else if a.twoPair && b.twoPair {
+		return compareHandsCardsInOrder(a, b)
+	}
+	// if one pair
+	if a.onePair && !b.onePair {
+		return 1
+	} else if !a.onePair && b.onePair {
+		return -1
+	} else if a.onePair && b.onePair {
+		return compareHandsCardsInOrder(a, b)
+	}
+	// if high card
+	return compareHandsCardsInOrder(a, b)
+}
+
 func Day7PartA2023(useExample bool) int {
 	lines := getInput(useExample)
+	hands := []PokerHand{}
 	for _, line := range lines {
-		for _, char := range line {
-			log.Print(string(char))
-		}
-		log.Println("")
+		parts := strings.Split(line, " ")
+		bet, _ := strconv.Atoi(parts[1])
+		hand := createPokerHand(parts[0], bet)
+		sortedPosition := findPosition(hands, hand)
+		hands = slices.Insert(hands, sortedPosition, hand)
 	}
 
-	return 0
+	log.Printf("[WARN] hands: %v\n", hands)
+
+	totalWinnings := 0
+	for index, hand := range hands {
+		totalWinnings += (index + 1) * hand.bet
+	}
+	return totalWinnings
+}
+
+func findPosition(hands []PokerHand, hand PokerHand) int {
+	for index := range hands {
+		if compareHands(hand, hands[index]) < 0 {
+			return index
+		}
+	}
+	return len(hands)
 }
 
 func Day7PartB2023(useExample bool) int {
 	lines := getInput(useExample)
+	hands := []PokerHand{}
 	for _, line := range lines {
-		for _, char := range line {
-			log.Print(string(char))
-		}
-		log.Println("")
+		parts := strings.Split(line, " ")
+		bet, _ := strconv.Atoi(parts[1])
+		hand := createPokerHand(parts[0], bet)
+		sortedPosition := findPosition(hands, hand)
+		hands = slices.Insert(hands, sortedPosition, hand)
 	}
 
-	return 0
+	log.Printf("[WARN] Cards: %v\n", cards)
+
+	totalWinnings := 0
+	for index, hand := range hands {
+		totalWinnings += (index + 1) * hand.bet
+	}
+	return totalWinnings
 }
