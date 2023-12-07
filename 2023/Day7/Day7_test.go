@@ -93,7 +93,7 @@ func TestCompareHands(t *testing.T) {
 }
 
 func TestDay7PartB2023Complete(t *testing.T) {
-	answer := 0
+	answer := 248781813
 	solution := Day7PartB2023(false)
 	if solution <= 248366140 {
 		t.Fatalf(`The answer is too low`)
