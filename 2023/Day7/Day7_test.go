@@ -41,9 +41,59 @@ func TestDay7PartB2023Example(t *testing.T) {
 	}
 }
 
+func TestCompareHands(t *testing.T) {
+	answer := true
+
+	// five of a kind against five of a kind with a joker
+	a := CreatePokerHandPartB("AAAAA", 0)
+	b := CreatePokerHandPartB("AAAAJ", 0)
+	solution := CompareHands(a, b) > 0
+	if solution != answer {
+		t.Fatalf(`Complete solution = %t, should = %t`, solution, answer)
+	}
+
+	// five of a kind against five of a kind with a joker
+	a = CreatePokerHandPartB("JAAAA", 0)
+	b = CreatePokerHandPartB("KKKKK", 0)
+	solution = CompareHands(a, b) < 0
+	if solution != answer {
+		t.Fatalf(`Complete solution = %t, should = %t`, solution, answer)
+	}
+
+	// true four of a kind against five of a kind with a joker
+	a = CreatePokerHandPartB("2AAAA", 0)
+	b = CreatePokerHandPartB("KKKKJ", 0)
+	solution = CompareHands(a, b) < 0
+	if solution != answer {
+		t.Fatalf(`Complete solution = %t, should = %t`, solution, answer)
+	}
+
+	// full house with a joker against a true four of a kind
+	a = CreatePokerHandPartB("AAKKJ", 0)
+	b = CreatePokerHandPartB("KKKK2", 0)
+	solution = CompareHands(a, b) < 0
+	if solution != answer {
+		t.Fatalf(`Complete solution = %t, should = %t`, solution, answer)
+	}
+
+	// full house with a joker against a true four of a kind
+	a = CreatePokerHandPartB("K3333", 0)
+	b = CreatePokerHandPartB("A2222", 0)
+	solution = CompareHands(a, b) < 0
+	if solution != answer {
+		t.Fatalf(`Complete solution = %t, should = %t`, solution, answer)
+	}
+}
+
 func TestDay7PartB2023Complete(t *testing.T) {
 	answer := 0
 	solution := Day7PartB2023(false)
+	if solution <= 248366140 {
+		t.Fatalf(`The answer is too low`)
+	}
+	if solution == 248274675 || solution == 248469178 || solution == 248366724 || solution == 248914224 {
+		t.Fatalf(`This is the same as a previous answer`)
+	}
 	if solution != answer {
 		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
 	}

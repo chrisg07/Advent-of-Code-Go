@@ -55,9 +55,9 @@ func countOccurences(haystack string, needle string) int {
 	return strings.Count(haystack, needle)
 }
 
-func isNOfAKind(hand PokerHand, n int) bool {
+func isNOfAKind(hand PokerHand, n int, numJokers int) bool {
 	for _, card := range cardsPartA {
-		if countOccurences(hand.hand, card) == n-hand.numJokers {
+		if countOccurences(hand.hand, card) == n-numJokers {
 			return true
 		}
 	}
@@ -83,31 +83,32 @@ func createPokerHandPartA(hand string, bet int) PokerHand {
 		cardValue := determineCardRankPartA(string(char))
 		pokerHand.cardValues = append(pokerHand.cardValues, cardValue)
 	}
-	pokerHand.fiveOfAKind = isNOfAKind(pokerHand, 5)
-	pokerHand.fourOfAKind = isNOfAKind(pokerHand, 4)
-	pokerHand.threeOfAKind = isNOfAKind(pokerHand, 3)
-	pokerHand.fullHouse = isNOfAKind(pokerHand, 3) && isNOfAKind(pokerHand, 2)
+	pokerHand.fiveOfAKind = isNOfAKind(pokerHand, 5, 0)
+	pokerHand.fourOfAKind = isNOfAKind(pokerHand, 4, 0)
+	pokerHand.fullHouse = isNOfAKind(pokerHand, 3, 0) && isNOfAKind(pokerHand, 2, 0)
+	pokerHand.threeOfAKind = isNOfAKind(pokerHand, 3, 0)
 	pokerHand.twoPair = countPairs(pokerHand) == 2
 	pokerHand.onePair = countPairs(pokerHand) == 1
 	return pokerHand
 }
 
-func createPokerHandPartB(hand string, bet int) PokerHand {
+func CreatePokerHandPartB(hand string, bet int) PokerHand {
 	pokerHand := PokerHand{
 		hand: hand,
 		bet:  bet,
 	}
 	for _, char := range hand {
-		cardValue := determineCardRankPartA(string(char))
+		cardValue := determineCardRankPartB(string(char))
 		pokerHand.cardValues = append(pokerHand.cardValues, cardValue)
 	}
 	pokerHand.numJokers = countOccurences(pokerHand.hand, "J")
-	pokerHand.fiveOfAKind = isNOfAKind(pokerHand, 5)
-	pokerHand.fourOfAKind = isNOfAKind(pokerHand, 4)
-	pokerHand.threeOfAKind = isNOfAKind(pokerHand, 3)
-	pokerHand.fullHouse = isNOfAKind(pokerHand, 3) && isNOfAKind(pokerHand, 2)
+	pokerHand.fiveOfAKind = isNOfAKind(pokerHand, 5, pokerHand.numJokers)
+	pokerHand.fourOfAKind = isNOfAKind(pokerHand, 4, pokerHand.numJokers)
+	pokerHand.fullHouse = isNOfAKind(pokerHand, 3, 0) && isNOfAKind(pokerHand, 2, 0)
+	pokerHand.threeOfAKind = isNOfAKind(pokerHand, 3, pokerHand.numJokers)
 	pokerHand.twoPair = countPairs(pokerHand) == 2
-	pokerHand.onePair = countPairs(pokerHand) == 1
+	pokerHand.onePair = countPairs(pokerHand) == 1 || pokerHand.numJokers == 1
+	pokerHand.fullHouse = (isNOfAKind(pokerHand, 3, 0) && isNOfAKind(pokerHand, 2, 0)) || (pokerHand.twoPair && pokerHand.numJokers == 1)
 	return pokerHand
 }
 
@@ -120,7 +121,7 @@ func compareHandsCardsInOrder(a PokerHand, b PokerHand) int {
 	return 0
 }
 
-func compareHands(a PokerHand, b PokerHand) int {
+func CompareHands(a PokerHand, b PokerHand) int {
 	// if five of a kind
 	if a.fiveOfAKind && !b.fiveOfAKind {
 		return 1
@@ -180,7 +181,7 @@ func Day7PartA2023(useExample bool) int {
 		parts := strings.Split(line, " ")
 		bet, _ := strconv.Atoi(parts[1])
 		hand := createPokerHandPartA(parts[0], bet)
-		sortedPosition := findPositionPartA(hands, hand)
+		sortedPosition := findPosition(hands, hand)
 		hands = slices.Insert(hands, sortedPosition, hand)
 	}
 
@@ -193,9 +194,9 @@ func Day7PartA2023(useExample bool) int {
 	return totalWinnings
 }
 
-func findPositionPartA(hands []PokerHand, hand PokerHand) int {
+func findPosition(hands []PokerHand, hand PokerHand) int {
 	for index := range hands {
-		if compareHands(hand, hands[index]) < 0 {
+		if CompareHands(hand, hands[index]) < 0 {
 			return index
 		}
 	}
@@ -208,16 +209,24 @@ func Day7PartB2023(useExample bool) int {
 	for _, line := range lines {
 		parts := strings.Split(line, " ")
 		bet, _ := strconv.Atoi(parts[1])
-		hand := createPokerHandPartB(parts[0], bet)
-		sortedPosition := findPositionPartA(hands, hand)
+		hand := CreatePokerHandPartB(parts[0], bet)
+		sortedPosition := findPosition(hands, hand)
 		hands = slices.Insert(hands, sortedPosition, hand)
 	}
 
-	log.Printf("[WARN] Cards: %v\n", cardsPartA)
+	log.Printf("[WARN] Cards: %v\n", cardsPartB)
 
 	totalWinnings := 0
 	for index, hand := range hands {
 		totalWinnings += (index + 1) * hand.bet
+		log.Printf("[WARN] Hand:\n")
+		log.Printf("[WARN] -- Cards: %s\n", hand.hand)
+		log.Printf("[WARN] -- Values: %v\n", hand.cardValues)
+		log.Printf("[WARN] -- Is 5 of a kind: %t\n", hand.fiveOfAKind)
+		log.Printf("[WARN] -- Is 4 of a kind: %t\n", hand.fourOfAKind)
+		log.Printf("[WARN] -- Is a full house: %t\n", hand.fullHouse)
+		log.Printf("[WARN] -- Is 3 of a kind: %t\n", hand.threeOfAKind)
 	}
+
 	return totalWinnings
 }
