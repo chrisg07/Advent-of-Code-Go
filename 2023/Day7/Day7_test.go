@@ -83,6 +83,13 @@ func TestCompareHands(t *testing.T) {
 	if solution != answer {
 		t.Fatalf(`Complete solution = %t, should = %t`, solution, answer)
 	}
+
+	a = CreatePokerHandPartB("JKKK2", 0)
+	b = CreatePokerHandPartB("QQQQ2", 0)
+	solution = CompareHands(a, b) < 0
+	if solution != answer {
+		t.Fatalf(`Complete solution = %t, should = %t`, solution, answer)
+	}
 }
 
 func TestDay7PartB2023Complete(t *testing.T) {
