@@ -33,18 +33,18 @@ func TestDay7PartA2023Complete(t *testing.T) {
 	}
 }
 
-// func TestDay7PartB2023Example(t *testing.T) {
-// 	answer := 0
-// 	solution := Day7PartB2023(true)
-// 	if solution != answer {
-// 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
-// 	}
-// }
+func TestDay7PartB2023Example(t *testing.T) {
+	answer := 5905
+	solution := Day7PartB2023(true)
+	if solution != answer {
+		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+	}
+}
 
-// func TestDay7PartB2023Complete(t *testing.T) {
-// 	answer := 0
-// 	solution := Day7PartB2023(false)
-// 	if solution != answer {
-// 		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
-// 	}
-// }
+func TestDay7PartB2023Complete(t *testing.T) {
+	answer := 0
+	solution := Day7PartB2023(false)
+	if solution != answer {
+		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
+	}
+}
