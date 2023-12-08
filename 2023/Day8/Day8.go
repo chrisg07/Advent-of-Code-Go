@@ -24,16 +24,66 @@ func getInput(useExample bool) []string {
 	return lines
 }
 
+type Node struct {
+	id      string
+	leftId  string
+	left    *Node
+	rightId string
+	right   *Node
+}
+
+func createNode(id string, leftId string, rightId string) *Node {
+	return &Node{id: id, leftId: leftId, rightId: rightId}
+}
+
 func Day8PartA2023(useExample bool) int {
 	lines := getInput(useExample)
-	for _, line := range lines {
-		for _, char := range line {
-			log.Print(string(char))
+	nodes := make(map[string]*Node)
+	instructions := ""
+	for index, line := range lines {
+		if index == 0 {
+			instructions = line
 		}
-		log.Println("")
+		if index > 1 {
+			parts := strings.Split(line, " = (")
+			id := parts[0]
+			rightParts := strings.Split(parts[1], ", ")
+			leftId := rightParts[0][:3]
+			rightId := rightParts[1][:3]
+			if nodes[id] == nil {
+				nodes[id] = createNode(id, leftId, rightId)
+			}
+			log.Printf("[WARN] Node id: %s with left: %s and right: %s\n", id, leftId, rightId)
+		}
+
+	}
+	log.Printf("[WARN] Nodes: %v\n", nodes)
+	// build tree
+	for _, node := range nodes {
+		node.left = nodes[node.leftId]
+		node.right = nodes[node.rightId]
 	}
 
-	return 0
+	log.Printf("[WARN] Nodes: %v\n", nodes)
+
+	zNodeFound := false
+	currentNode := nodes["AAA"]
+	steps := 0
+	for !zNodeFound {
+		for _, instructionRune := range instructions {
+			instruction := string(instructionRune)
+			if instruction == "R" {
+				currentNode = currentNode.right
+			} else if instruction == "L" {
+				currentNode = currentNode.left
+			}
+			steps += 1
+		}
+		if currentNode.id == "ZZZ" {
+			zNodeFound = true
+		}
+	}
+	return steps
 }
 
 func Day8PartB2023(useExample bool) int {

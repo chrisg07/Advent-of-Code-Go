@@ -18,7 +18,7 @@ func init() {
 }
 
 func TestDay8PartA2023Example(t *testing.T) {
-	answer := 0
+	answer := 6
 	solution := Day8PartA2023(true)
 	if solution != answer {
 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
@@ -26,7 +26,7 @@ func TestDay8PartA2023Example(t *testing.T) {
 }
 
 func TestDay8PartA2023Complete(t *testing.T) {
-	answer := 0
+	answer := 16697
 	solution := Day8PartA2023(false)
 	if solution != answer {
 		t.Fatalf(`Comeplete solution = %d, should = %d`, solution, answer)

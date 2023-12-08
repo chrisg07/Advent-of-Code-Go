@@ -46,16 +46,11 @@ type PokerHand struct {
 	threeOfAKind bool
 	twoPair      bool
 	onePair      bool
-	highCard     bool // all labels distinct
 	bet          int
 	numJokers    int
 }
 
 func countOccurences(haystack string, needle string) int {
-	return strings.Count(haystack, needle)
-}
-
-func countOccurencesOfNonJokers(haystack string, needle string) int {
 	return strings.Count(haystack, needle)
 }
 
@@ -70,9 +65,7 @@ func isNOfAKindPartA(hand PokerHand, n int) bool {
 
 func isNOfAKindPartB(hand PokerHand, n int, numJokers int) bool {
 	for _, card := range cardsPartA {
-		// fails at rank 805
 		if card == "J" {
-
 			if countOccurences(hand.hand, card) == n {
 				return true
 			}
