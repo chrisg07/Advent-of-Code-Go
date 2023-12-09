@@ -45,11 +45,15 @@ func containsAllZeroes(array []int) bool {
 	return isZero
 }
 
-func Day9PartA2023(useExample bool) int {
+func Day92023(useExample bool, reverse bool) int {
 	lines := getInput(useExample)
 	histories := [][]int{}
 	for _, line := range lines {
-		histories = append(histories, Utils.ArrayFromString(line, " "))
+		array := Utils.ArrayFromString(line, " ")
+		if reverse {
+			array = Utils.ReverseArray[int](array)
+		}
+		histories = append(histories, array)
 	}
 
 	nextValuesInHistory := []int{}
