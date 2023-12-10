@@ -226,37 +226,42 @@ func positionIsInPath(position Point, path []Point) bool {
 	}
 	return false
 }
-func pointsNorthAndSouth(position Point, path []Point) (int, int) {
-	pointsNorth := 0
-	pointsSouth := 0
-	for _, tile := range path {
-		if tile.x < position.x && tile.y == position.y && !positionIsInPath(position, path) {
-			pointsNorth += 1
-		}
-		if tile.x > position.x && tile.y == position.y && !positionIsInPath(position, path) {
-			pointsSouth += 1
+
+func rangesNorthAndSouth(position Point, path []Point) (int, int) {
+	rangesNorth := 0
+	for x := 0; x < position.x-1; x++ {
+		if positionIsInPath(Point{x, position.y}, path) && !positionIsInPath(Point{x + 1, position.y}, path) {
+			rangesNorth += 1
 		}
 	}
-	return pointsNorth, pointsSouth
+	rangesSouth := 0
+	for x := position.x + 1; x < 145; x++ {
+		if positionIsInPath(Point{x, position.y}, path) && !positionIsInPath(Point{x + 1, position.y}, path) {
+			rangesSouth += 1
+		}
+	}
+	return rangesNorth, rangesSouth
 }
 
-func pointsEastAndWest(position Point, path []Point) (int, int) {
-	pointsEast := 0
-	pointsWest := 0
-	for _, tile := range path {
-		if tile.y < position.y && tile.x == position.x && !positionIsInPath(position, path) {
-			pointsWest += 1
-		}
-		if tile.y > position.y && tile.x == position.x && !positionIsInPath(position, path) {
-			pointsEast += 1
+func rangesEastAndWest(position Point, path []Point) (int, int) {
+	rangesEast := 0
+	for y := 0; y < position.y-1; y++ {
+		if positionIsInPath(Point{position.x, y}, path) && !positionIsInPath(Point{position.x, y + 1}, path) {
+			rangesEast += 1
 		}
 	}
-	return pointsEast, pointsWest
+	rangesWest := 0
+	for y := position.y + 1; y < 145; y++ {
+		if positionIsInPath(Point{position.x, y}, path) && !positionIsInPath(Point{position.x, y + 1}, path) {
+			rangesWest += 1
+		}
+	}
+	return rangesEast, rangesWest
 }
 
 func postionIsContainedInPath(position Point, path []Point) bool {
-	pointsToNorth, pointsToSouth := pointsNorthAndSouth(position, path)
-	pointsToEast, pointsToWest := pointsEastAndWest(position, path)
+	pointsToNorth, pointsToSouth := rangesNorthAndSouth(position, path)
+	pointsToEast, pointsToWest := rangesEastAndWest(position, path)
 	positionIsContained := pointsToNorth%2 == 1 && pointsToSouth%2 == 1 && pointsToEast%2 == 1 && pointsToWest%2 == 1
 	if positionIsContained {
 		log.Printf("[WARN] Position: %v is contained by path\n", position)

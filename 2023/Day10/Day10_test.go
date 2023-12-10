@@ -34,7 +34,7 @@ func TestDay10PartA2023Complete(t *testing.T) {
 }
 
 func TestDay10PartB2023Example(t *testing.T) {
-	answer := 10
+	answer := 4
 	solution := Day10PartB2023(true)
 	if solution != answer {
 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
