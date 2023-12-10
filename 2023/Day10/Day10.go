@@ -3,7 +3,6 @@ package AoC2021
 import (
 	_ "embed"
 	"log"
-	"slices"
 	"strings"
 )
 
@@ -46,166 +45,142 @@ func getWest(point Point) Point {
 	return Point{point.x, point.y - 1}
 }
 
-func isValidTile(tile string, validTiles []string) bool {
-	return slices.Index(validTiles, tile) >= 0
-}
-
-func validateLoop(tiles [][]string, position Point, direction rune, length int) (int, bool) {
+func validateLoop(tiles [][]string, position Point, direction rune, path []Point) ([]Point, bool) {
 	// determine next position according to current position
 	switch tiles[position.x][position.y] {
 	case "S": // starting location
 		switch direction {
 		case 'N':
-			return moveFromSouthToNorth(position, tiles, length)
+			return moveFromSouthToNorth(position, tiles, path)
 		case 'E':
-			return moveFromWestToEast(position, tiles, length)
+			return moveFromWestToEast(position, tiles, path)
 		case 'S':
-			return moveFromNorthToSouth(position, tiles, length)
+			return moveFromNorthToSouth(position, tiles, path)
 		case 'W':
-			return moveFromEastToWest(position, tiles, length)
+			return moveFromEastToWest(position, tiles, path)
 		}
 	case "|": // vertical pipe
 		switch direction {
 		case 'N':
-			return moveFromSouthToNorth(position, tiles, length)
-		case 'E':
-			return length, false
+			return moveFromSouthToNorth(position, tiles, path)
 		case 'S':
-			return moveFromNorthToSouth(position, tiles, length)
-		case 'W':
-			return length, false
+			return moveFromNorthToSouth(position, tiles, path)
 		}
 	case "-": // horizontal pipe
 		switch direction {
 		case 'N':
-			return length, false
+			return path, false
 		case 'E':
-			return moveFromWestToEast(position, tiles, length)
+			return moveFromWestToEast(position, tiles, path)
 		case 'S':
-			return length, false
+			return path, false
 		case 'W':
-			return moveFromEastToWest(position, tiles, length)
+			return moveFromEastToWest(position, tiles, path)
 		}
 	case "L": // 90 degree bend North -> East
 		switch direction {
 		case 'N':
-			return moveFromSouthToNorth(position, tiles, length)
+			return moveFromSouthToNorth(position, tiles, path)
 		case 'E':
-			return moveFromWestToEast(position, tiles, length)
-		case 'S':
-			return length, false
-		case 'W':
-			return length, false
+			return moveFromWestToEast(position, tiles, path)
 		}
 	case "J": // 90 degree bend North -> West
 		switch direction {
 		case 'N':
-			return moveFromSouthToNorth(position, tiles, length)
-		case 'E':
-			return length, false
-		case 'S':
-			return length, false
+			return moveFromSouthToNorth(position, tiles, path)
 		case 'W':
-			return moveFromEastToWest(position, tiles, length)
+			return moveFromEastToWest(position, tiles, path)
 		}
 	case "7": // 90 degree bend South -> West
 		switch direction {
-		case 'N':
-			return length, false
-		case 'E':
-			return length, false
 		case 'S':
-			return moveFromNorthToSouth(position, tiles, length)
+			return moveFromNorthToSouth(position, tiles, path)
 		case 'W':
-			return moveFromEastToWest(position, tiles, length)
+			return moveFromEastToWest(position, tiles, path)
 		}
 	case "F": // 90 degree bend South -> East
 		switch direction {
-		case 'N':
-			return length, false
 		case 'E':
-			return moveFromWestToEast(position, tiles, length)
+			return moveFromWestToEast(position, tiles, path)
 		case 'S':
-			return moveFromNorthToSouth(position, tiles, length)
-		case 'W':
-			return length, false
+			return moveFromNorthToSouth(position, tiles, path)
 		}
 	case ".": // ground
-		return length + 1, false
+		return append(path, position), false
 	default:
-		return length, false
+		return path, false
 	}
 
-	return length, false
+	return path, false
 }
 
-func moveFromNorthToSouth(position Point, tiles [][]string, length int) (int, bool) {
+func moveFromNorthToSouth(position Point, tiles [][]string, path []Point) ([]Point, bool) {
 	nextPosition := getSouth(position)
 	southTile := tiles[nextPosition.x][nextPosition.y]
 
 	switch southTile {
 	case "|":
-		return validateLoop(tiles, nextPosition, 'S', length+1)
+		return validateLoop(tiles, nextPosition, 'S', append(path, nextPosition))
 	case "L":
-		return validateLoop(tiles, nextPosition, 'E', length+1)
+		return validateLoop(tiles, nextPosition, 'E', append(path, nextPosition))
 	case "J":
-		return validateLoop(tiles, nextPosition, 'W', length+1)
+		return validateLoop(tiles, nextPosition, 'W', append(path, nextPosition))
 	case "S":
-		return length + 1, true
+		return append(path, nextPosition), true
 	default:
-		return length, false
+		return path, false
 	}
 }
 
-func moveFromSouthToNorth(position Point, tiles [][]string, length int) (int, bool) {
+func moveFromSouthToNorth(position Point, tiles [][]string, path []Point) ([]Point, bool) {
 	nextPosition := getNorth(position)
 	northTile := tiles[nextPosition.x][nextPosition.y]
 
 	switch northTile {
 	case "|":
-		return validateLoop(tiles, nextPosition, 'N', length+1)
+		return validateLoop(tiles, nextPosition, 'N', append(path, nextPosition))
 	case "7":
-		return validateLoop(tiles, nextPosition, 'W', length+1)
+		return validateLoop(tiles, nextPosition, 'W', append(path, nextPosition))
 	case "F":
-		return validateLoop(tiles, nextPosition, 'E', length+1)
+		return validateLoop(tiles, nextPosition, 'E', append(path, nextPosition))
 	case "S":
-		return length + 1, true
+		return append(path, nextPosition), true
 	default:
-		return length, false
+		return path, false
 	}
 }
 
-func moveFromWestToEast(position Point, tiles [][]string, length int) (int, bool) {
+func moveFromWestToEast(position Point, tiles [][]string, path []Point) ([]Point, bool) {
 	nextPosition := getEast(position)
 	eastTile := tiles[nextPosition.x][nextPosition.y]
 	switch eastTile {
 	case "-":
-		return validateLoop(tiles, nextPosition, 'E', length+1)
+		return validateLoop(tiles, nextPosition, 'E', append(path, nextPosition))
 	case "J":
-		return validateLoop(tiles, nextPosition, 'N', length+1)
+		return validateLoop(tiles, nextPosition, 'N', append(path, nextPosition))
 	case "7":
-		return validateLoop(tiles, nextPosition, 'S', length+1)
+		return validateLoop(tiles, nextPosition, 'S', append(path, nextPosition))
 	case "S":
-		return length + 1, true
+		return append(path, nextPosition), true
 	default:
-		return length, false
+		return path, false
 	}
 }
 
-func moveFromEastToWest(position Point, tiles [][]string, length int) (int, bool) {
+func moveFromEastToWest(position Point, tiles [][]string, path []Point) ([]Point, bool) {
 	nextPosition := getWest(position)
 	westTile := tiles[nextPosition.x][nextPosition.y]
 	switch westTile {
 	case "-":
-		return validateLoop(tiles, nextPosition, 'W', length+1)
+		return validateLoop(tiles, nextPosition, 'W', append(path, nextPosition))
 	case "L":
-		return validateLoop(tiles, nextPosition, 'N', length+1)
+		return validateLoop(tiles, nextPosition, 'N', append(path, nextPosition))
 	case "F":
-		return validateLoop(tiles, nextPosition, 'S', length+1)
+		return validateLoop(tiles, nextPosition, 'S', append(path, nextPosition))
 	case "S":
-		return length + 1, true
+		return append(path, nextPosition), true
 	default:
-		return length, false
+		return path, false
 	}
 }
 
@@ -221,41 +196,114 @@ func Day10PartA2023(useExample bool) int {
 			}
 			tiles[x] = append(tiles[x], string(char))
 		}
-
-		log.Printf("[WARN] %v\n", tiles[x])
 	}
 
-	log.Printf("[WARN] Animal starting position: %v", animalStartingPos)
-
-	// only need to find valid pipes starting from North, East, South, and West of starting position
-	// A loop means two of these paths will be valid, we can return on the first valid loop
-	validLoopLengthNorth, northIsValidLoop := validateLoop(tiles, animalStartingPos, 'N', 0)
+	northPath, northIsValidLoop := validateLoop(tiles, animalStartingPos, 'N', []Point{})
 	if northIsValidLoop {
-		return (validLoopLengthNorth + 1) / 2
+		return (len(northPath) + 1) / 2
 	}
-	validLoopLengthEast, eastIsValidLoop := validateLoop(tiles, animalStartingPos, 'E', 0)
+	eastPath, eastIsValidLoop := validateLoop(tiles, animalStartingPos, 'E', []Point{})
 	if eastIsValidLoop {
-		return (validLoopLengthEast + 1) / 2
+		return (len(eastPath) + 1) / 2
 	}
-	validLoopLengthSouth, southIsValidLoop := validateLoop(tiles, animalStartingPos, 'S', 0)
+	southPath, southIsValidLoop := validateLoop(tiles, animalStartingPos, 'S', []Point{})
 	if southIsValidLoop {
-		return (validLoopLengthSouth + 1) / 2
+		return (len(southPath) + 1) / 2
 	}
-	validLoopLengthWest, westIsValidLoop := validateLoop(tiles, animalStartingPos, 'W', 0)
+	westPath, westIsValidLoop := validateLoop(tiles, animalStartingPos, 'W', []Point{})
 	if westIsValidLoop {
-		return (validLoopLengthWest + 1) / 2
+		return (len(westPath) + 1) / 2
 	}
 
 	return 0
 }
 
+func positionIsInPath(position Point, path []Point) bool {
+	for _, tile := range path {
+		if tile.x == position.x && tile.y == position.y {
+			return true
+		}
+	}
+	return false
+}
+func pointsNorthAndSouth(position Point, path []Point) (int, int) {
+	pointsNorth := 0
+	pointsSouth := 0
+	for _, tile := range path {
+		if tile.x < position.x && tile.y == position.y && !positionIsInPath(position, path) {
+			pointsNorth += 1
+		}
+		if tile.x > position.x && tile.y == position.y && !positionIsInPath(position, path) {
+			pointsSouth += 1
+		}
+	}
+	return pointsNorth, pointsSouth
+}
+
+func pointsEastAndWest(position Point, path []Point) (int, int) {
+	pointsEast := 0
+	pointsWest := 0
+	for _, tile := range path {
+		if tile.y < position.y && tile.x == position.x && !positionIsInPath(position, path) {
+			pointsWest += 1
+		}
+		if tile.y > position.y && tile.x == position.x && !positionIsInPath(position, path) {
+			pointsEast += 1
+		}
+	}
+	return pointsEast, pointsWest
+}
+
+func postionIsContainedInPath(position Point, path []Point) bool {
+	pointsToNorth, pointsToSouth := pointsNorthAndSouth(position, path)
+	pointsToEast, pointsToWest := pointsEastAndWest(position, path)
+	positionIsContained := pointsToNorth%2 == 1 && pointsToSouth%2 == 1 && pointsToEast%2 == 1 && pointsToWest%2 == 1
+	if positionIsContained {
+		log.Printf("[WARN] Position: %v is contained by path\n", position)
+	}
+	return positionIsContained
+}
+
+func countTilesContainedInPath(tilesWidth int, tilesHeight int, path []Point) int {
+	tilesContained := 0
+	for x := 0; x < tilesWidth; x++ {
+		for y := 0; y < tilesHeight; y++ {
+			if postionIsContainedInPath(Point{x, y}, path) {
+				tilesContained += 1
+			}
+		}
+	}
+	return tilesContained
+}
 func Day10PartB2023(useExample bool) int {
 	lines := getInput(useExample)
-	for _, line := range lines {
-		for _, char := range line {
-			log.Print(string(char))
+	tiles := [][]string{}
+	animalStartingPos := Point{0, 0}
+	for x, line := range lines {
+		tiles = append(tiles, []string{})
+		for y, char := range line {
+			if string(char) == "S" {
+				animalStartingPos = Point{x, y}
+			}
+			tiles[x] = append(tiles[x], string(char))
 		}
-		log.Println("")
+	}
+
+	northPath, northIsValidLoop := validateLoop(tiles, animalStartingPos, 'N', []Point{})
+	if northIsValidLoop {
+		return countTilesContainedInPath(len(tiles), len(tiles[0]), northPath)
+	}
+	eastPath, eastIsValidLoop := validateLoop(tiles, animalStartingPos, 'E', []Point{})
+	if eastIsValidLoop {
+		return countTilesContainedInPath(len(tiles), len(tiles[0]), eastPath)
+	}
+	southPath, southIsValidLoop := validateLoop(tiles, animalStartingPos, 'S', []Point{})
+	if southIsValidLoop {
+		return countTilesContainedInPath(len(tiles), len(tiles[0]), southPath)
+	}
+	westPath, westIsValidLoop := validateLoop(tiles, animalStartingPos, 'W', []Point{})
+	if westIsValidLoop {
+		return countTilesContainedInPath(len(tiles), len(tiles[0]), westPath)
 	}
 
 	return 0
