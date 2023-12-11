@@ -130,3 +130,19 @@ func TestReverseString(t *testing.T) {
 		t.Fatalf(`Actual = %s, expected = %s`, actual, expected)
 	}
 }
+
+func TestRotateMatrix(t *testing.T) {
+	expected := [][]int{
+		[]int{3, 1},
+		[]int{4, 2},
+	}
+	actual := [][]int{
+		[]int{1, 2},
+		[]int{3, 4},
+	}
+	actual = RotateMatrix[int](actual, len(actual))
+	if reflect.DeepEqual(actual, expected) {
+		t.Fatalf(`Actual = %v, expected = %v`, actual, expected)
+	}
+
+}

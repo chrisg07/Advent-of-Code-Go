@@ -149,12 +149,12 @@ func ArrayContainsArray[T constraints.Ordered](haystack []T, needles []T) bool {
 	return true
 }
 
-func Transpose(slice [][]int) [][]int {
+func Transpose[T constraints.Ordered](slice [][]T) [][]T {
 	xl := len(slice[0])
 	yl := len(slice)
-	result := make([][]int, xl)
+	result := make([][]T, xl)
 	for i := range result {
-		result[i] = make([]int, yl)
+		result[i] = make([]T, yl)
 	}
 	for i := 0; i < xl; i++ {
 		for j := 0; j < yl; j++ {
@@ -207,4 +207,17 @@ func LCM(integers []int) int {
 	}
 
 	return result
+}
+
+func RotateMatrix[T constraints.Ordered](X [][]T, n int) [][]T {
+	for i := 0; i < n; i++ {
+		for j := i; j < n-i-1; j++ {
+			temp := X[i][j]
+			X[i][j] = X[j][n-1-i]
+			X[j][n-1-i] = X[n-1-i][n-1-j]
+			X[n-1-i][n-1-j] = X[n-1-j][i]
+			X[n-1-j][i] = temp
+		}
+	}
+	return X
 }

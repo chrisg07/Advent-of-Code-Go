@@ -44,6 +44,9 @@ func TestDay10PartB2023Example(t *testing.T) {
 func TestDay10PartB2023Complete(t *testing.T) {
 	answer := 0
 	solution := Day10PartB2023(false)
+	if solution >= 721 {
+		t.Fatalf(`Answer is too high`)
+	}
 	if solution != answer {
 		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
 	}
