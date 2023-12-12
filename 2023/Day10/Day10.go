@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"log"
 	"strings"
-
-	"github.com/chrisg07/Advent-of-Code-Go/Utils"
 )
 
 //go:embed inputs/example.txt
@@ -279,14 +277,14 @@ func positionIsContainedInPath(position Point, path []Tile) bool {
 }
 
 func fillTilesLeftToRight(tiles [][]string, position Point, path []Tile) [][]string {
-	for x := 0; x < len(tiles); x++ {
+	for x := 0; x < len(tiles[0]); x++ {
 		crossedPath := false
-		for y := 0; y < len(tiles[0]); y++ {
-			if positionIsInPath(Point{x, y}, path) {
+		for y := 0; y < len(tiles); y++ {
+			if positionIsInPath(Point{x, y}, path) && tiles[x][y] == "|" {
 				crossedPath = true
 			}
-			if !crossedPath {
-				tiles[x][y] = "■"
+			if !crossedPath && tiles[x][y] != "■" && tiles[x][y] != "|" && tiles[x][y] != "-" {
+				tiles = fillTilesRightwardUntilPathEncounter(tiles, Point{x, y}, path)
 			}
 		}
 	}
@@ -297,11 +295,11 @@ func fillTilesTopToBottom(tiles [][]string, position Point, path []Tile) [][]str
 	for x := 0; x < len(tiles[0]); x++ {
 		crossedPath := false
 		for y := 0; y < len(tiles); y++ {
-			if positionIsInPath(Point{y, x}, path) {
+			if positionIsInPath(Point{y, x}, path) && tiles[y][x] == "-" {
 				crossedPath = true
 			}
-			if !crossedPath {
-				tiles[y][x] = "■"
+			if !crossedPath && tiles[y][x] != "■" && tiles[y][x] != "|" && tiles[y][x] != "-" {
+				tiles = fillTilesDownwardUntilPathEncounter(tiles, Point{y, x}, path)
 			}
 		}
 	}
@@ -316,7 +314,7 @@ func fillTilesRightToLeft(tiles [][]string, position Point, path []Tile) [][]str
 				crossedPath = true
 			}
 			if !crossedPath && tiles[x][y] != "■" && tiles[x][y] != "|" && tiles[x][y] != "-" {
-				tiles = fillTilesBackwardUntilPathEncounter(tiles, Point{x, y}, path)
+				tiles = fillTilesLeftwardUntilPathEncounter(tiles, Point{x, y}, path)
 			}
 		}
 	}
@@ -331,28 +329,85 @@ func fillTilesBottomToTop(tiles [][]string, position Point, path []Tile) [][]str
 				crossedPath = true
 			}
 			if !crossedPath && tiles[y][x] != "■" && tiles[y][x] != "|" && tiles[y][x] != "-" {
-				tiles = fillTilesBackwardUntilPathEncounter(tiles, Point{y, x}, path)
+				tiles = fillTilesUpwardUntilPathEncounter(tiles, Point{y, x}, path)
 			}
 		}
 	}
 	return tiles
 }
 
-func fillTilesBackwardUntilPathEncounter(tiles [][]string, position Point, path []Tile) [][]string {
+func fillTilesRightwardUntilPathEncounter(tiles [][]string, position Point, path []Tile) [][]string {
+	if !positionIsInPath(position, path) {
+		tiles[position.x][position.y] = "■"
+	}
+	if position.x > 0 && tiles[position.x-1][position.y] != "■" && !positionIsInPath(Point{position.x - 1, position.y}, path) {
+		tiles = fillTilesRightwardUntilPathEncounter(tiles, Point{position.x - 1, position.y}, path)
+	}
+	if position.x < len(tiles)-1 && tiles[position.x+1][position.y] != "■" && !positionIsInPath(Point{position.x + 1, position.y}, path) {
+		tiles = fillTilesRightwardUntilPathEncounter(tiles, Point{position.x + 1, position.y}, path)
+	}
+	if position.x > 0 && position.y < len(tiles)-1 && tiles[position.x-1][position.y+1] != "■" && !positionIsInPath(Point{position.x - 1, position.y + 1}, path) {
+		tiles = fillTilesRightwardUntilPathEncounter(tiles, Point{position.x - 1, position.y + 1}, path)
+	}
+	if position.y < len(tiles)-1 && position.x < len(tiles)-1 && tiles[position.x+1][position.y+1] != "■" && !positionIsInPath(Point{position.x + 1, position.y + 1}, path) {
+		tiles = fillTilesRightwardUntilPathEncounter(tiles, Point{position.x + 1, position.y + 1}, path)
+	}
+	return tiles
+}
+
+func fillTilesLeftwardUntilPathEncounter(tiles [][]string, position Point, path []Tile) [][]string {
+	if !positionIsInPath(position, path) {
+		tiles[position.x][position.y] = "■"
+	}
+	if position.x > 0 && tiles[position.x-1][position.y] != "■" && !positionIsInPath(Point{position.x - 1, position.y}, path) {
+		tiles = fillTilesLeftwardUntilPathEncounter(tiles, Point{position.x - 1, position.y}, path)
+	}
+	if position.x < len(tiles)-1 && tiles[position.x+1][position.y] != "■" && !positionIsInPath(Point{position.x + 1, position.y}, path) {
+		tiles = fillTilesLeftwardUntilPathEncounter(tiles, Point{position.x + 1, position.y}, path)
+	}
+	if position.x > 0 && position.y > 0 && tiles[position.x-1][position.y-1] != "■" && !positionIsInPath(Point{position.x - 1, position.y - 1}, path) {
+		tiles = fillTilesLeftwardUntilPathEncounter(tiles, Point{position.x - 1, position.y - 1}, path)
+	}
+	if position.y > 0 && position.x < len(tiles)-1 && tiles[position.x+1][position.y-1] != "■" && !positionIsInPath(Point{position.x + 1, position.y - 1}, path) {
+		tiles = fillTilesLeftwardUntilPathEncounter(tiles, Point{position.x + 1, position.y - 1}, path)
+	}
+	return tiles
+}
+
+func fillTilesDownwardUntilPathEncounter(tiles [][]string, position Point, path []Tile) [][]string {
 	if !positionIsInPath(position, path) {
 		tiles[position.x][position.y] = "■"
 	}
 	if position.y > 0 && tiles[position.x][position.y-1] != "■" && !positionIsInPath(Point{position.x, position.y - 1}, path) {
-		tiles = fillTilesBackwardUntilPathEncounter(tiles, Point{position.x, position.y - 1}, path)
+		tiles = fillTilesDownwardUntilPathEncounter(tiles, Point{position.x, position.y - 1}, path)
 	}
 	if position.y < len(tiles)-1 && tiles[position.x][position.y+1] != "■" && !positionIsInPath(Point{position.x, position.y + 1}, path) {
-		tiles = fillTilesBackwardUntilPathEncounter(tiles, Point{position.x, position.y + 1}, path)
+		tiles = fillTilesDownwardUntilPathEncounter(tiles, Point{position.x, position.y + 1}, path)
+	}
+	if position.y > 0 && position.x > 0 && tiles[position.x-1][position.y-1] != "■" && !positionIsInPath(Point{position.x - 1, position.y - 1}, path) {
+		tiles = fillTilesDownwardUntilPathEncounter(tiles, Point{position.x - 1, position.y - 1}, path)
+	}
+	if position.x > 0 && position.y < len(tiles)-1 && tiles[position.x-1][position.y+1] != "■" && !positionIsInPath(Point{position.x - 1, position.y + 1}, path) {
+		tiles = fillTilesDownwardUntilPathEncounter(tiles, Point{position.x - 1, position.y + 1}, path)
+	}
+	return tiles
+}
+
+func fillTilesUpwardUntilPathEncounter(tiles [][]string, position Point, path []Tile) [][]string {
+	if !positionIsInPath(position, path) {
+		tiles[position.x][position.y] = "■"
+	}
+	if position.y > 0 && tiles[position.x][position.y-1] != "■" && !positionIsInPath(Point{position.x, position.y - 1}, path) {
+		tiles = fillTilesUpwardUntilPathEncounter(tiles, Point{position.x, position.y - 1}, path)
+	}
+	if position.y < len(tiles)-1 && tiles[position.x][position.y+1] != "■" && !positionIsInPath(Point{position.x, position.y + 1}, path) {
+		tiles = fillTilesUpwardUntilPathEncounter(tiles, Point{position.x, position.y + 1}, path)
 	}
 	if position.y > 0 && position.x < len(tiles)-1 && tiles[position.x+1][position.y-1] != "■" && !positionIsInPath(Point{position.x + 1, position.y - 1}, path) {
-		tiles = fillTilesBackwardUntilPathEncounter(tiles, Point{position.x + 1, position.y - 1}, path)
+		tiles = fillTilesUpwardUntilPathEncounter(tiles, Point{position.x + 1, position.y - 1}, path)
 	}
 	if position.x < len(tiles)-1 && position.y < len(tiles)-1 && tiles[position.x+1][position.y+1] != "■" && !positionIsInPath(Point{position.x + 1, position.y + 1}, path) {
-		tiles = fillTilesBackwardUntilPathEncounter(tiles, Point{position.x + 1, position.y + 1}, path)
+		tiles = fillTilesUpwardUntilPathEncounter(tiles, Point{position.x + 1, position.y + 1}, path)
 	}
 	return tiles
 }
@@ -371,6 +426,30 @@ func countTilesNotContainedInPath(tiles [][]string, path []Tile) int {
 }
 
 func updateTilesNotContainedInPath(tiles [][]string, path []Tile) [][]string {
+	// for x := 0; x < len(tiles); x++ {
+	// 	for y := 0; y < len(tiles[0]); y++ {
+	// 		if positionIsInPath(Point{x, y}, path) && tiles[x][y] != "|" && tiles[x][y] != "-" {
+	// 			tiles[x][y] = "■"
+	// 		}
+	// 	}
+	// }
+	// tiles = fillTilesLeftToRight(tiles, Point{0, 0}, path)
+	// for _, tile := range path {
+	// 	tiles[tile.pos.x][tile.pos.y] = tile.value
+	// }
+
+	// for x := 0; x < len(tiles); x++ {
+	// 	for y := 0; y < len(tiles[0]); y++ {
+	// 		if positionIsInPath(Point{x, y}, path) && tiles[x][y] != "|" && tiles[x][y] != "-" {
+	// 			tiles[x][y] = "■"
+	// 		}
+	// 	}
+	// }
+	// tiles = fillTilesRightToLeft(tiles, Point{0, 0}, path)
+	// for _, tile := range path {
+	// 	tiles[tile.pos.x][tile.pos.y] = tile.value
+	// }
+
 	for x := 0; x < len(tiles); x++ {
 		for y := 0; y < len(tiles[0]); y++ {
 			if positionIsInPath(Point{x, y}, path) && tiles[x][y] != "|" && tiles[x][y] != "-" {
@@ -378,11 +457,22 @@ func updateTilesNotContainedInPath(tiles [][]string, path []Tile) [][]string {
 			}
 		}
 	}
+	tiles = fillTilesTopToBottom(tiles, Point{0, 0}, path)
+	for _, tile := range path {
+		tiles[tile.pos.x][tile.pos.y] = tile.value
+	}
 
-	// tiles = fillTilesLeftToRight(tiles, Point{0, 0}, path)
-	tiles = fillTilesRightToLeft(tiles, Point{0, 0}, path)
-	// tiles = fillTilesTopToBottom(tiles, Point{0, 0}, path)
-	tiles = fillTilesBottomToTop(tiles, Point{0, 0}, path)
+	// for x := 0; x < len(tiles); x++ {
+	// 	for y := 0; y < len(tiles[0]); y++ {
+	// 		if positionIsInPath(Point{x, y}, path) && tiles[x][y] != "|" && tiles[x][y] != "-" {
+	// 			tiles[x][y] = "■"
+	// 		}
+	// 	}
+	// }
+	// tiles = fillTilesBottomToTop(tiles, Point{0, 0}, path)
+	// for _, tile := range path {
+	// 	tiles[tile.pos.x][tile.pos.y] = tile.value
+	// }
 	for x := 0; x < len(tiles); x++ {
 		fmt.Printf("%v\n", tiles[x])
 	}
@@ -401,6 +491,30 @@ func findAnimalStartingPos(tiles [][]string) Point {
 	return Point{0, 0}
 }
 
+func updateRotatedTiles(tiles [][]string) [][]string {
+	for x, row := range tiles {
+		for y, tile := range row {
+			switch tile {
+			case "|":
+				tiles[x][y] = "-"
+			case "-":
+				tiles[x][y] = "|"
+			case "L":
+				tiles[x][y] = "F"
+			case "J":
+				tiles[x][y] = "L"
+			case "7":
+				tiles[x][y] = "J"
+			case "F":
+				tiles[x][y] = "7"
+			default:
+				tiles[x][y] = tiles[x][y]
+			}
+		}
+	}
+	return tiles
+}
+
 func Day10PartB2023(useExample bool) int {
 	lines := getInput(useExample)
 	tiles := [][]string{}
@@ -414,147 +528,53 @@ func Day10PartB2023(useExample bool) int {
 			tiles[x] = append(tiles[x], string(char))
 		}
 	}
-
 	northPath, northIsValidLoop := validateLoop(tiles, animalStartingPos, 'N', []Tile{})
 	if northIsValidLoop {
 		path := northPath[:]
-		tiles = updateTilesNotContainedInPath(tiles, northPath)
-
+		tiles = updateTilesNotContainedInPath(tiles, path)
 		for _, tile := range path {
-			tiles[tile.pos.x][tile.pos.y] = tile.value
-		}
-
-		tiles = Utils.RotateMatrix[string](tiles, len(tiles))
-		tiles = Utils.RotateMatrix[string](tiles, len(tiles))
-		southPath := []Tile{}
-		for x := 0; x < len(tiles); x++ {
-			for y := 0; y < len(tiles[x]); y++ {
-				if tiles[x][y] == "|" || tiles[x][y] == "-" || tiles[x][y] == "J" || tiles[x][y] == "F" || tiles[x][y] == "7" || tiles[x][y] == "L" || tiles[x][y] == "S" {
-					southPath = append(southPath, Tile{Point{x, y}, tiles[x][y]})
-				}
-			}
-		}
-		for x := 0; x < len(tiles); x++ {
-			fmt.Printf("%v\n", tiles[x])
-		}
-		animalStartingPos = findAnimalStartingPos(tiles)
-		validateLoop(tiles, animalStartingPos, 'S', []Tile{})
-		log.Printf("[WARN] South path: %v\n", southPath)
-		updateTilesNotContainedInPath(tiles, southPath)
-		for x := 0; x < len(tiles); x++ {
-			fmt.Printf("%v\n", tiles[x])
-		}
-		for _, tile := range southPath {
 			tiles[tile.pos.x][tile.pos.y] = "■"
 		}
-
-		return countTilesNotContainedInPath(tiles, southPath)
+		for x := 0; x < len(tiles); x++ {
+			fmt.Printf("%v\n", tiles[x])
+		}
+		return countTilesNotContainedInPath(tiles, path)
 	}
 	eastPath, eastIsValidLoop := validateLoop(tiles, animalStartingPos, 'E', []Tile{})
 	if eastIsValidLoop {
 		path := eastPath[:]
-		tiles = updateTilesNotContainedInPath(tiles, eastPath)
-
+		tiles = updateTilesNotContainedInPath(tiles, path)
 		for _, tile := range path {
-			tiles[tile.pos.x][tile.pos.y] = tile.value
-		}
-
-		tiles = Utils.RotateMatrix[string](tiles, len(tiles))
-		tiles = Utils.RotateMatrix[string](tiles, len(tiles))
-		westPath := []Tile{}
-		for x := 0; x < len(tiles); x++ {
-			for y := 0; y < len(tiles[x]); y++ {
-				if tiles[x][y] == "|" || tiles[x][y] == "-" || tiles[x][y] == "J" || tiles[x][y] == "F" || tiles[x][y] == "7" || tiles[x][y] == "L" || tiles[x][y] == "S" {
-					westPath = append(westPath, Tile{Point{x, y}, tiles[x][y]})
-				}
-			}
-		}
-		for x := 0; x < len(tiles); x++ {
-			fmt.Printf("%v\n", tiles[x])
-		}
-		animalStartingPos = findAnimalStartingPos(tiles)
-		// validateLoop(tiles, animalStartingPos, 'W', []Tile{})
-		log.Printf("[WARN] West path: %v\n", westPath)
-		updateTilesNotContainedInPath(tiles, westPath)
-		for x := 0; x < len(tiles); x++ {
-			fmt.Printf("%v\n", tiles[x])
-		}
-		for _, tile := range westPath {
 			tiles[tile.pos.x][tile.pos.y] = "■"
 		}
-
-		return countTilesNotContainedInPath(tiles, westPath)
+		for x := 0; x < len(tiles); x++ {
+			fmt.Printf("%v\n", tiles[x])
+		}
+		return countTilesNotContainedInPath(tiles, path)
 	}
 	southPath, southIsValidLoop := validateLoop(tiles, animalStartingPos, 'S', []Tile{})
 	if southIsValidLoop {
 		path := southPath[:]
-		tiles = updateTilesNotContainedInPath(tiles, southPath)
-
+		tiles = updateTilesNotContainedInPath(tiles, path)
 		for _, tile := range path {
-			tiles[tile.pos.x][tile.pos.y] = tile.value
-		}
-
-		tiles = Utils.RotateMatrix[string](tiles, len(tiles))
-		tiles = Utils.RotateMatrix[string](tiles, len(tiles))
-		northPath := []Tile{}
-		for x := 0; x < len(tiles); x++ {
-			for y := 0; y < len(tiles[x]); y++ {
-				if tiles[x][y] == "|" || tiles[x][y] == "-" || tiles[x][y] == "J" || tiles[x][y] == "F" || tiles[x][y] == "7" || tiles[x][y] == "L" || tiles[x][y] == "S" {
-					northPath = append(northPath, Tile{Point{x, y}, tiles[x][y]})
-				}
-			}
-		}
-		for x := 0; x < len(tiles); x++ {
-			fmt.Printf("%v\n", tiles[x])
-		}
-		animalStartingPos = findAnimalStartingPos(tiles)
-		validateLoop(tiles, animalStartingPos, 'N', []Tile{})
-		log.Printf("[WARN] North path: %v\n", northPath)
-		updateTilesNotContainedInPath(tiles, northPath)
-		for x := 0; x < len(tiles); x++ {
-			fmt.Printf("%v\n", tiles[x])
-		}
-		for _, tile := range northPath {
 			tiles[tile.pos.x][tile.pos.y] = "■"
 		}
-
-		return countTilesNotContainedInPath(tiles, northPath)
+		for x := 0; x < len(tiles); x++ {
+			fmt.Printf("%v\n", tiles[x])
+		}
+		return countTilesNotContainedInPath(tiles, path)
 	}
 	westPath, westIsValidLoop := validateLoop(tiles, animalStartingPos, 'W', []Tile{})
 	if westIsValidLoop {
 		path := westPath[:]
-		tiles = updateTilesNotContainedInPath(tiles, westPath)
-
+		tiles = updateTilesNotContainedInPath(tiles, path)
 		for _, tile := range path {
-			tiles[tile.pos.x][tile.pos.y] = tile.value
-		}
-
-		tiles = Utils.RotateMatrix[string](tiles, len(tiles))
-		tiles = Utils.RotateMatrix[string](tiles, len(tiles))
-		eastPath := []Tile{}
-		for x := 0; x < len(tiles); x++ {
-			for y := 0; y < len(tiles[x]); y++ {
-				if tiles[x][y] == "|" || tiles[x][y] == "-" || tiles[x][y] == "J" || tiles[x][y] == "F" || tiles[x][y] == "7" || tiles[x][y] == "L" || tiles[x][y] == "S" {
-					eastPath = append(eastPath, Tile{Point{x, y}, tiles[x][y]})
-				}
-			}
-		}
-		for x := 0; x < len(tiles); x++ {
-			fmt.Printf("%v\n", tiles[x])
-		}
-		animalStartingPos = findAnimalStartingPos(tiles)
-		validateLoop(tiles, animalStartingPos, 'E', []Tile{})
-		log.Printf("[WARN] East path: %v\n", eastPath)
-		updateTilesNotContainedInPath(tiles, eastPath)
-		for x := 0; x < len(tiles); x++ {
-			fmt.Printf("%v\n", tiles[x])
-		}
-		for _, tile := range eastPath {
 			tiles[tile.pos.x][tile.pos.y] = "■"
 		}
-
-		return countTilesNotContainedInPath(tiles, eastPath)
+		for x := 0; x < len(tiles); x++ {
+			fmt.Printf("%v\n", tiles[x])
+		}
+		return countTilesNotContainedInPath(tiles, path)
 	}
-
 	return 0
 }
