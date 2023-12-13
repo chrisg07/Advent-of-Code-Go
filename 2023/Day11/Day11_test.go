@@ -17,8 +17,34 @@ func init() {
 	log.SetOutput(filter)
 }
 
+func TestCalculateLengthOfLine(t *testing.T) {
+	answer := 17
+	solution := calculateLengthOfLine(Line{Point{0, 2}, Point{12, 7}})
+	if solution != answer {
+		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+	}
+
+	answer = 9
+	solution = calculateLengthOfLine(Line{Point{1, 6}, Point{5, 11}})
+	if solution != answer {
+		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+	}
+
+	answer = 15
+	solution = calculateLengthOfLine(Line{Point{4, 0}, Point{9, 10}})
+	if solution != answer {
+		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+	}
+
+	answer = 5
+	solution = calculateLengthOfLine(Line{Point{0, 11}, Point{5, 11}})
+	if solution != answer {
+		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+	}
+}
+
 func TestDay11PartA2023Example(t *testing.T) {
-	answer := 0
+	answer := 374
 	solution := Day11PartA2023(true)
 	if solution != answer {
 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
@@ -26,7 +52,7 @@ func TestDay11PartA2023Example(t *testing.T) {
 }
 
 func TestDay11PartA2023Complete(t *testing.T) {
-	answer := 0
+	answer := 374
 	solution := Day11PartA2023(false)
 	if solution != answer {
 		t.Fatalf(`Comeplete solution = %d, should = %d`, solution, answer)
