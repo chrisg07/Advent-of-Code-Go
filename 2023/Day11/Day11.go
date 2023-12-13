@@ -71,13 +71,16 @@ func Day11PartA2023(useExample bool) int {
 	log.Printf("[WARN] Empty rows: %v\n", emptyRows)
 	log.Printf("[WARN] Empty columns: %v\n", emptyColumns)
 
-	for index, galaxy := range galaxies {
-		for _, row := range Utils.ReverseArray[int](emptyRows) {
+	for _, row := range Utils.ReverseArray[int](emptyRows) {
+		for index, galaxy := range galaxies {
 			if row < galaxy.y {
 				galaxies[index].y += 1
 			}
 		}
-		for _, column := range Utils.ReverseArray[int](emptyColumns) {
+	}
+
+	for _, column := range Utils.ReverseArray[int](emptyColumns) {
+		for index, galaxy := range galaxies {
 			if column < galaxy.x {
 				galaxies[index].x += 1
 			}
