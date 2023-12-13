@@ -2,7 +2,6 @@ package AoC2021
 
 import (
 	_ "embed"
-	"log"
 	"strings"
 
 	"github.com/chrisg07/Advent-of-Code-Go/Utils"
@@ -36,7 +35,7 @@ type Line struct {
 	b Point
 }
 
-func Day11PartA2023(useExample bool) int {
+func Day112023(useExample bool, expansionFactor int) int {
 	lines := getInput(useExample)
 	galaxies := []*Point{}
 	emptyRows := []int{}
@@ -50,7 +49,6 @@ func Day11PartA2023(useExample bool) int {
 				galaxies = append(galaxies, &Point{x, y})
 			}
 		}
-		log.Println("")
 	}
 
 	for x := range lines[0] {
@@ -64,17 +62,11 @@ func Day11PartA2023(useExample bool) int {
 			emptyColumns = append(emptyColumns, x)
 		}
 	}
-	log.Printf("[WARN] Galaxies before expansion:\n")
-	for _, galaxy := range galaxies {
-		log.Printf("[WARN] -- [%d, %d]\n", galaxy.x, galaxy.y)
-	}
-	log.Printf("[WARN] Empty rows: %v\n", emptyRows)
-	log.Printf("[WARN] Empty columns: %v\n", emptyColumns)
 
 	for _, row := range Utils.ReverseArray[int](emptyRows) {
 		for index, galaxy := range galaxies {
 			if row < galaxy.y {
-				galaxies[index].y += 1
+				galaxies[index].y += (expansionFactor - 1)
 			}
 		}
 	}
@@ -82,12 +74,11 @@ func Day11PartA2023(useExample bool) int {
 	for _, column := range Utils.ReverseArray[int](emptyColumns) {
 		for index, galaxy := range galaxies {
 			if column < galaxy.x {
-				galaxies[index].x += 1
+				galaxies[index].x += (expansionFactor - 1)
 			}
 		}
 	}
 
-	// create pairs
 	pairs := []Line{}
 	for i := 0; i < len(galaxies)-1; i++ {
 		for j := i + 1; j < len(galaxies); j++ {
@@ -95,19 +86,12 @@ func Day11PartA2023(useExample bool) int {
 		}
 	}
 
-	log.Printf("[WARN] Galaxies after expansion:\n")
-	for _, galaxy := range galaxies {
-		log.Printf("[WARN] -- [%d, %d]\n", galaxy.x, galaxy.y)
-	}
-	// determine shortest distance between each point
 	sumOfShortestPaths := 0
-
-	log.Printf("[WARN] %d pairs:\n", len(pairs))
 	for _, pair := range pairs {
-		log.Printf("[WARN] -- %v\n", pair)
 		distance := calculateLengthOfLine(pair)
 		sumOfShortestPaths += distance
 	}
+
 	return sumOfShortestPaths
 }
 
@@ -121,16 +105,4 @@ func calculateLengthOfLine(pair Line) int {
 		yDistance *= -1
 	}
 	return xDistance + yDistance
-}
-
-func Day11PartB2023(useExample bool) int {
-	lines := getInput(useExample)
-	for _, line := range lines {
-		for _, char := range line {
-			log.Print(string(char))
-		}
-		log.Println("")
-	}
-
-	return 0
 }
