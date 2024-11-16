@@ -6,11 +6,11 @@ if [ -f .env ]; then
 fi
 
 # Advent of Code session token from .env file
-YEAR=2024
+YEAR=2021
 BASE_URL="https://adventofcode.com"
 
 # Loop through each day's directory (assuming directories are named day01, day02, etc.)
-for day_dir in 2024/day*/; do
+for day_dir in ${YEAR}/day*/; do
     # Extract the day number from the directory name (e.g., day01 -> 01)
     day=$(basename "$day_dir" | grep -oE '[0-9]+')
 
@@ -31,7 +31,7 @@ for day_dir in 2024/day*/; do
         fi
 
         # Create the inputs directory if it doesn't exist
-        mkdir -p "${day_dir}inputs"
+        mkdir -p "${day_dir}/inputs"
 
         # Write the fetched input to the complete.txt file
         echo "$response" > "$input_file"
