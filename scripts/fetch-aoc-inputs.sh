@@ -1,7 +1,11 @@
 #!/bin/bash
 
-# Replace with your Advent of Code session token
-SESSION_TOKEN="your-session-token-here"
+# Load environment variables from .env file
+if [ -f .env ]; then
+    export $(grep -v '^#' .env | xargs)
+fi
+
+# Advent of Code session token from .env file
 YEAR=2024
 BASE_URL="https://adventofcode.com"
 
