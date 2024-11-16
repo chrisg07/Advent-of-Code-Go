@@ -9,13 +9,13 @@ fi
 YEAR=2021
 BASE_URL="https://adventofcode.com"
 
-# Loop through each day's directory (assuming directories are named day01, day02, etc.)
-for day_dir in ${YEAR}/day*/; do
-    # Extract the day number from the directory name (e.g., day01 -> 01)
+# Loop through each day's directory (assuming directories are named Day1, Day2, etc.)
+for day_dir in ${YEAR}/Day*/; do
+    # Extract the day number from the directory name (e.g., Day1 -> 1)
     day=$(basename "$day_dir" | grep -oE '[0-9]+')
 
     # Define the input file path
-    input_file="${day_dir}inputs/complete.txt"
+    input_file="${day_dir}/inputs/complete.txt"
 
     # Check if the input file already has contents
     if [ ! -s "$input_file" ]; then
