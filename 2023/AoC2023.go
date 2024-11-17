@@ -7,6 +7,6 @@ import (
 )
 
 func Solutions() {
-	fmt.Println("Advent of Code 2021 Solutions:")
+	fmt.Println("Advent of Code 2023 Solutions:")
 	Day1.Day1PartA2023(true)
 }
