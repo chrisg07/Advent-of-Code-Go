@@ -5,7 +5,7 @@ import (
 	"log"
 	"strings"
 
-	Utils "github.com/chrisg07/Advent-of-Code-Go/utils"
+	"github.com/chrisg07/Advent-of-Code-Go/Utils"
 )
 
 //go:embed inputs/example.txt
