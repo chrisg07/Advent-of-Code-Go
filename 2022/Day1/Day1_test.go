@@ -14,6 +14,7 @@ func init() {
 		MinLevel: logutils.LogLevel("WARN"),
 		Writer:   os.Stderr,
 	}
+	log.SetFlags(0)
 	log.SetOutput(filter)
 	log.Print("[CONSOLE] --------------------------\n")
 	log.Print("[CONSOLE] Advent of Code 2022 Day 1:\n")
