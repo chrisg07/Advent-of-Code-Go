@@ -16,6 +16,7 @@ for day_dir in ${YEAR}/Day*/; do
 
     # Define the input file path
     input_file="${day_dir}/inputs/complete.txt"
+    example_file="${day_dir}/inputs/example.txt"
 
     # Check if the input file already has contents
     if [ ! -s "$input_file" ]; then
@@ -38,6 +39,12 @@ for day_dir in ${YEAR}/Day*/; do
         echo "Input for Day $day saved to ${input_file}."
     else
         echo "Input for Day $day already exists, skipping..."
+    fi
+
+    # Create an empty example.txt file if it doesn't exist
+    if [ ! -f "$example_file" ]; then
+        touch "$example_file"
+        echo "Empty example.txt file created at ${example_file}."
     fi
 done
 
