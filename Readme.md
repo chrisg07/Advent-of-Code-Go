@@ -12,7 +12,7 @@ Each solution's directory requires an `input` directory with two files, `example
 
 ### Fetching AoC Inputs
 
-The script found in `scripts/fetch-aoc-inputs.sh` can fetch and create `complete.txt` files in `input` folders for days defined according to the structure defined above.
+The script found in `scripts/fetch_aoc_inputs.sh` can fetch and create `complete.txt` files in `input` folders for days defined according to the structure defined above.
 
 This script requires the creation of an `.env` file at the root directory with a `SESSION_TOKEN` variable. You can grab this from the cookie set in your browser after authenticating with the Advent of Code website.
 
@@ -28,10 +28,9 @@ This script requires the creation of an `.env` file at the root directory with a
 - Run 2021 tests: `go test ./2021/... -run 'TestDay[0-9]+Part[AB]2021Complete'`
 - Run 2023 tests: `go test ./2023/... -run 'TestDay[0-9]+Part[AB]2023Complete'`
     - Day 5 Part B takes a while to run (~5 mins)
- 
 
 ## Solutions with visualizations
-d
+
 ### 2021 
 
 #### Day 9
