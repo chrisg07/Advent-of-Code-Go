@@ -21,34 +21,49 @@ func init() {
 	log.Print("[CONSOLE] --------------------------\n")
 }
 
-func TestPartAExample(t *testing.T) {
-	answer := 1
-	solution := PartA(true)
+func TestFuelCalculation(t *testing.T) {
+	answer := 2
+	solution := calculateFuelCost(12)
+	if solution != answer {
+		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+	}
+	answer = 2
+	solution = calculateFuelCost(14)
+	if solution != answer {
+		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+	}
+	answer = 654
+	solution = calculateFuelCost(1969)
+	if solution != answer {
+		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+	}
+	answer = 33583
+	solution = calculateFuelCost(100756)
 	if solution != answer {
 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
 	}
 }
 
 func TestPartAComplete(t *testing.T) {
-	answer := 1
+	answer := 3262991
 	solution := PartA(false)
 	if solution != answer {
 		t.Fatalf(`Comeplete solution = %d, should = %d`, solution, answer)
 	}
 }
 
-func TestPartBExample(t *testing.T) {
-	answer := 1
-	solution := PartB(true)
-	if solution != answer {
-		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
-	}
-}
+// func TestPartBExample(t *testing.T) {
+// 	answer := 1
+// 	solution := PartB(true)
+// 	if solution != answer {
+// 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+// 	}
+// }
 
-func TestPartBComplete(t *testing.T) {
-	answer := 1
-	solution := PartB(false)
-	if solution != answer {
-		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
-	}
-}
+// func TestPartBComplete(t *testing.T) {
+// 	answer := 1
+// 	solution := PartB(false)
+// 	if solution != answer {
+// 		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
+// 	}
+// }
