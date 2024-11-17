@@ -37,12 +37,14 @@ create_directory "$day_dir"
 # Copy scaffold files (excluding input directory and files)
 for file in $scaffold_dir/*; do
     if [ -f "$file" ]; then
-        cp "$file" "$day_dir/"
-        echo "Copied $(basename "$file") to $day_dir."
+        base_name=$(basename "$file")
+        new_name=$(echo "$base_name" | sed "s/Scaffold/Day${day}/")
+        cp "$file" "$day_dir/$new_name"
+        echo "Copied $(basename "$file") to $day_dir as $new_name."
     fi
 done
 
-# Call the fetch_aoc_inputs.sh script to import the input for the specific day
+# Call the fetch-aoc-inputs.sh script to import the input for the specific day
 script_dir=$(dirname "$0")
 "$script_dir/fetch_aoc_inputs.sh"
 
