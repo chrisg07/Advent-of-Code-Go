@@ -1,4 +1,4 @@
-package AoC2021
+package AoC2023
 
 import (
 	"log"
