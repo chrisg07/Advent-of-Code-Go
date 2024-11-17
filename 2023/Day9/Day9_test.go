@@ -26,7 +26,7 @@ func TestDay9PartA2023Example(t *testing.T) {
 }
 
 func TestDay9PartA2023Complete(t *testing.T) {
-	answer := 1887980197
+	answer := 2008960228
 	solution := Day92023(false, false)
 	if solution != answer {
 		t.Fatalf(`Comeplete solution = %d, should = %d`, solution, answer)
@@ -42,7 +42,7 @@ func TestDay9PartB2023Example(t *testing.T) {
 }
 
 func TestDay9PartB2023Complete(t *testing.T) {
-	answer := 990
+	answer := 1097
 	solution := Day92023(false, true)
 	if solution != answer {
 		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)

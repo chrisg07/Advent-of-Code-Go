@@ -43,7 +43,7 @@ func ParseKeyFromString(str string) int {
 	return key
 }
 
-func Day1PartA2021(useExample bool) int {
+func Day1PartA2023(useExample bool) int {
 	lines := getInput(useExample)
 	sum := 0
 	for _, line := range lines {
@@ -118,7 +118,7 @@ func ParseKeyFromStringPartB(str string) int {
 	return key
 }
 
-func Day1PartB2021(useExample bool) int {
+func Day1PartB2023(useExample bool) int {
 	lines := getInput(useExample)
 	sum := 0
 	for _, line := range lines {

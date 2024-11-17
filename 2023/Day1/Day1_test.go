@@ -11,7 +11,7 @@ import (
 func init() {
 	filter := &logutils.LevelFilter{
 		Levels:   []logutils.LogLevel{"DEBUG", "WARN", "ERROR"},
-		MinLevel: logutils.LogLevel("WARN"),
+		MinLevel: logutils.LogLevel("ERROR"),
 		Writer:   os.Stderr,
 	}
 	log.SetOutput(filter)
@@ -33,17 +33,17 @@ func TestParseKeyFromString(t *testing.T) {
 	}
 }
 
-func TestDay1PartA2021Example(t *testing.T) {
+func TestDay1PartA2023Example(t *testing.T) {
 	answer := 209
-	solution := Day1PartA2021(true)
+	solution := Day1PartA2023(true)
 	if solution != answer {
 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
 	}
 }
 
-func TestDay1PartA2021Complete(t *testing.T) {
-	answer := 55386
-	solution := Day1PartA2021(false)
+func TestDay1PartA2023Complete(t *testing.T) {
+	answer := 56042
+	solution := Day1PartA2023(false)
 	if solution != answer {
 		t.Fatalf(`Comeplete solution = %d, should = %d`, solution, answer)
 	}
@@ -57,17 +57,17 @@ func TestParseKeyFromStringPartB(t *testing.T) {
 	}
 }
 
-func TestDay1PartB2021Example(t *testing.T) {
+func TestDay1PartB2023Example(t *testing.T) {
 	answer := 281
-	solution := Day1PartB2021(true)
+	solution := Day1PartB2023(true)
 	if solution != answer {
 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
 	}
 }
 
-func TestDay1PartB2021Complete(t *testing.T) {
-	answer := 54824
-	solution := Day1PartB2021(false)
+func TestDay1PartB2023Complete(t *testing.T) {
+	answer := 55358
+	solution := Day1PartB2023(false)
 	if solution != answer {
 		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
 	}

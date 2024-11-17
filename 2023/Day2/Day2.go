@@ -31,7 +31,7 @@ func getInput(useExample bool) []string {
 	return lines
 }
 
-func Day2PartA2021(useExample bool) int {
+func Day2PartA2023(useExample bool) int {
 	lines := getInput(useExample)
 
 	availableCubes := Cubes{
@@ -89,7 +89,7 @@ func Day2PartA2021(useExample bool) int {
 	return sumOfIDs
 }
 
-func Day2PartB2021(useExample bool) int {
+func Day2PartB2023(useExample bool) int {
 	lines := getInput(useExample)
 
 	minimumCubes := Cubes{

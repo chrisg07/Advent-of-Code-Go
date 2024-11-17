@@ -26,6 +26,8 @@ This script requires the creation of an `.env` file at the root directory with a
 #### All Complete Problems
 - Add the required `complete.txt` inputs (can use the script for this)
 - Run 2021 tests: `go test ./2021/... -run 'TestDay[0-9]+Part[AB]2021Complete'`
+- Run 2023 tests: `go test ./2023/... -run 'TestDay[0-9]+Part[AB]2023Complete'`
+    - Day 5 Part B takes a while to run (~5 mins)
  
 
 ## Solutions with visualizations

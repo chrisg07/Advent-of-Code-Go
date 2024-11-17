@@ -11,7 +11,7 @@ import (
 func init() {
 	filter := &logutils.LevelFilter{
 		Levels:   []logutils.LogLevel{"DEBUG", "WARN", "ERROR"},
-		MinLevel: logutils.LogLevel("WARN"),
+		MinLevel: logutils.LogLevel("ERROR"),
 		Writer:   os.Stderr,
 	}
 	log.SetOutput(filter)
@@ -26,7 +26,7 @@ func TestDay7PartA2023Example(t *testing.T) {
 }
 
 func TestDay7PartA2023Complete(t *testing.T) {
-	answer := 248453531
+	answer := 252295678
 	solution := Day7PartA2023(false)
 	if solution != answer {
 		t.Fatalf(`Comeplete solution = %d, should = %d`, solution, answer)
@@ -93,7 +93,7 @@ func TestCompareHands(t *testing.T) {
 }
 
 func TestDay7PartB2023Complete(t *testing.T) {
-	answer := 248781813
+	answer := 250577259
 	solution := Day7PartB2023(false)
 	if solution <= 248366140 {
 		t.Fatalf(`The answer is too low`)
