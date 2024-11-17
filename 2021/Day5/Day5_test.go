@@ -41,7 +41,7 @@ func TestDay5PartB2021Example(t *testing.T) {
 	}
 }
 
-func TestDay5PartBComplete(t *testing.T) {
+func TestDay5PartB2021Complete(t *testing.T) {
 	answer := 21104
 	solution := Day5PartB2021(false)
 	if solution != answer {

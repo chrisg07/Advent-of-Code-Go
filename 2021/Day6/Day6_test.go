@@ -49,7 +49,7 @@ func TestDay6PartB2021Example(t *testing.T) {
 	}
 }
 
-func TestDay6PartBComplete(t *testing.T) {
+func TestDay6PartB2021Complete(t *testing.T) {
 	answer := 1689540415957
 	solution := Day62021(false, 256)
 	if solution != answer {

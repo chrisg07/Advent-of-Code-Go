@@ -84,7 +84,7 @@ func TestDay132021Complete(t *testing.T) {
 	}
 }
 
-func TestDay132021PartBExample(t *testing.T) {
+func TestDay13PartB2021Example(t *testing.T) {
 	answer := 16
 	solution := Day132021(true, 15, 11, 0)
 	if solution != answer {
@@ -92,7 +92,7 @@ func TestDay132021PartBExample(t *testing.T) {
 	}
 }
 
-func TestDay132021PartBomplete(t *testing.T) {
+func TestDay13PartB2021Complete(t *testing.T) {
 	answer := 98
 	solution := Day132021(false, 895, 1311, 0)
 	if solution != answer {

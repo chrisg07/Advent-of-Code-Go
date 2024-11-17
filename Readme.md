@@ -18,10 +18,15 @@ This script requires the creation of an `.env` file at the root directory with a
 
 ### Running Tests
 
-To execute the tests for a particular day's solution:
+#### For a Particular Day
 - Add the required `inputs` (`example.txt` and `complete.txt`)
 - Navigate to that day's directory, e.g. `2021/Day9`
 - Run `go test`
+
+#### All Complete Problems
+- Add the required `complete.txt` inputs (can use the script for this)
+- Run 2021 tests: `go test ./2021/... -run 'TestDay[0-9]+Part[AB]2021Complete'`
+ 
 
 ## Solutions with visualizations
 d

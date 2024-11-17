@@ -13,7 +13,7 @@ func TestPartAExample(t *testing.T) {
 	}
 }
 
-func TestPartAComplete(t *testing.T) {
+func TestDay3PartA2021Complete(t *testing.T) {
 	answer := 1307354
 	solution := PartA(false)
 	if solution != answer {
@@ -60,7 +60,7 @@ func TestPartBExample(t *testing.T) {
 	}
 }
 
-func TestPartBComplete(t *testing.T) {
+func TestDay3PartB2021Complete(t *testing.T) {
 	answer := 482500
 	solution := PartB(false)
 	if solution != answer {
