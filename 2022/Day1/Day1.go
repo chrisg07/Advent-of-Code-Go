@@ -1,8 +1,9 @@
-package AoCScaffold
+package AoC2022
 
 import (
 	_ "embed"
-	"log"
+	"sort"
+	"strconv"
 	"strings"
 )
 
@@ -31,22 +32,69 @@ func parseInput(lines []string) []string {
 		// 	log.Print(string(char))
 		// }
 
-		log.Printf("[CONSOLE] %v", line)
+		// log.Printf("[CONSOLE] %v", line)
 		input = append(input, line)
 	}
 	return input
+}
+
+type Elf struct {
+	food     []int
+	calories int
 }
 
 func PartA(useExample bool) int {
 	lines := getInput(useExample)
 	input := parseInput(lines)
 
-	return len(input)
+	elves := []Elf{}
+	maxCalories := 0
+	currentElf := Elf{food: []int{}, calories: 0}
+	for _, line := range input {
+		if line == "" {
+			elves = append(elves, currentElf)
+			if currentElf.calories > maxCalories {
+				maxCalories = currentElf.calories
+			}
+			currentElf = Elf{food: []int{}, calories: 0}
+		} else {
+			food, _ := strconv.Atoi(line)
+			currentElf.calories += food
+		}
+	}
+	elves = append(elves, currentElf)
+	if currentElf.calories > maxCalories {
+		maxCalories = currentElf.calories
+	}
+
+	return maxCalories
 }
 
 func PartB(useExample bool) int {
 	lines := getInput(useExample)
 	input := parseInput(lines)
 
-	return len(input)
+	elves := []Elf{}
+	maxCalories := 0
+	currentElf := Elf{food: []int{}, calories: 0}
+	for _, line := range input {
+		if line == "" {
+			elves = append(elves, currentElf)
+			if currentElf.calories > maxCalories {
+				maxCalories = currentElf.calories
+			}
+			currentElf = Elf{food: []int{}, calories: 0}
+		} else {
+			food, _ := strconv.Atoi(line)
+			currentElf.calories += food
+		}
+	}
+
+	elves = append(elves, currentElf)
+
+	sort.Slice(elves, func(i, j int) bool {
+		return elves[i].calories > elves[j].calories
+	})
+
+	return elves[0].calories + elves[1].calories + elves[2].calories
 }
