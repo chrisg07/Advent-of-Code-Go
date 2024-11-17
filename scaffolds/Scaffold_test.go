@@ -34,6 +34,8 @@ func TestPartAComplete(t *testing.T) {
 	solution := PartA(false)
 	if solution != answer {
 		t.Fatalf(`Comeplete solution = %d, should = %d`, solution, answer)
+	} else {
+		log.Printf("[CONSOLE] Find the Elf carrying the most Calories: %v", solution)
 	}
 }
 
@@ -50,5 +52,7 @@ func TestPartBComplete(t *testing.T) {
 	solution := PartB(false)
 	if solution != answer {
 		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
+	} else {
+		log.Printf("[CONSOLE] Find the Elf carrying the most Calories: %v", solution)
 	}
 }
