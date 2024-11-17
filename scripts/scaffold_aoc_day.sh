@@ -42,8 +42,9 @@ for file in $scaffold_dir/*; do
     fi
 done
 
-# Call the fetch-aoc-inputs.sh script to import the input for the specific day
-./fetch_aoc_inputs.sh
+# Call the fetch_aoc_inputs.sh script to import the input for the specific day
+script_dir=$(dirname "$0")
+"$script_dir/fetch_aoc_inputs.sh"
 
 # Inform user of completion
 echo "Scaffold files copied and input fetched for Year $year, Day $day."
