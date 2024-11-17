@@ -1,4 +1,4 @@
-package AoC2021
+package AoCScaffold
 
 import (
 	_ "embed"
@@ -24,7 +24,7 @@ func getInput(useExample bool) []string {
 	return lines
 }
 
-func DayXPartA2021(useExample bool) int {
+func PartA(useExample bool) int {
 	lines := getInput(useExample)
 	for _, line := range lines {
 		for _, char := range line {
@@ -36,7 +36,7 @@ func DayXPartA2021(useExample bool) int {
 	return 0
 }
 
-func DayXPartB2021(useExample bool) int {
+func PartB(useExample bool) int {
 	lines := getInput(useExample)
 	for _, line := range lines {
 		for _, char := range line {
