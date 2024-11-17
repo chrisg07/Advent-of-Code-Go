@@ -14,8 +14,11 @@ func init() {
 		MinLevel: logutils.LogLevel("WARN"),
 		Writer:   os.Stderr,
 	}
+	log.SetFlags(0)
 	log.SetOutput(filter)
-	log.Print("[CONSOLE] Executing scaffold tests.\n")
+	log.Print("[CONSOLE] --------------------------\n")
+	log.Print("[CONSOLE] Advent of Code YEAR Day ##:\n")
+	log.Print("[CONSOLE] --------------------------\n")
 }
 
 func TestPartAExample(t *testing.T) {
