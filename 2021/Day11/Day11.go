@@ -54,7 +54,7 @@ func printOctopi(octopi []*octopus) {
 		log.Printf("[WARN] |  %s", printStr)
 	}
 
-	log.Println("")
+	log.Print("[WARN]\n")
 }
 
 func flashOctopus(cephalopod *octopus) *octopus {

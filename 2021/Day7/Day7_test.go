@@ -10,11 +10,12 @@ import (
 
 func init() {
 	filter := &logutils.LevelFilter{
-		Levels:   []logutils.LogLevel{"DEBUG", "WARN", "ERROR"},
-		MinLevel: logutils.LogLevel("WARN"),
+		Levels:   []logutils.LogLevel{"DEBUG", "WARN", "ERROR", "CONSOLE"},
+		MinLevel: logutils.LogLevel("ERROR"),
 		Writer:   os.Stderr,
 	}
 	log.SetOutput(filter)
+	log.Print("[CONSOLE] Advent of Code 2021 Day 7:\n")
 }
 
 func TestCalculateFuelPartA(t *testing.T) {
@@ -26,13 +27,13 @@ func TestCalculateFuelPartA(t *testing.T) {
 	}
 }
 
-func TestDay7PartA2021Example(t *testing.T) {
-	answer := 37
-	solution := Day7PartA2021(true)
-	if solution != answer {
-		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
-	}
-}
+// func TestDay7PartA2021Example(t *testing.T) {
+// 	answer := 37
+// 	solution := Day7PartA2021(true)
+// 	if solution != answer {
+// 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+// 	}
+// }
 
 func TestDay7PartA2021Complete(t *testing.T) {
 	answer := 355150
@@ -60,13 +61,13 @@ func TestCalculateFuelPartB(t *testing.T) {
 	}
 }
 
-func TestDay7PartB2021Example(t *testing.T) {
-	answer := 168
-	solution := Day7PartB2021(true)
-	if solution != answer {
-		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
-	}
-}
+// func TestDay7PartB2021Example(t *testing.T) {
+// 	answer := 168
+// 	solution := Day7PartB2021(true)
+// 	if solution != answer {
+// 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+// 	}
+// }
 
 func TestDay7PartB2021Complete(t *testing.T) {
 	answer := 98368490

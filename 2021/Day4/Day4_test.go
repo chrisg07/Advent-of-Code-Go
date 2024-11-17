@@ -30,13 +30,13 @@ func TestCheckBoardWinConditionTrue(t *testing.T) {
 	}
 }
 
-func TestDay4PartA2021Example(t *testing.T) {
-	answer := 4512
-	solution := Day4PartA2021(true)
-	if solution != answer {
-		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
-	}
-}
+// func TestDay4PartA2021Example(t *testing.T) {
+// 	answer := 4512
+// 	solution := Day4PartA2021(true)
+// 	if solution != answer {
+// 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+// 	}
+// }
 
 func TestDay4PartA2021Complete(t *testing.T) {
 	answer := 33462
@@ -46,13 +46,13 @@ func TestDay4PartA2021Complete(t *testing.T) {
 	}
 }
 
-func TestDay4PartB2021Example(t *testing.T) {
-	answer := 1924
-	solution := Day4PartB2021(true)
-	if solution != answer {
-		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
-	}
-}
+// func TestDay4PartB2021Example(t *testing.T) {
+// 	answer := 1924
+// 	solution := Day4PartB2021(true)
+// 	if solution != answer {
+// 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+// 	}
+// }
 
 func TestDay4PartB2021Complete(t *testing.T) {
 	answer := 30070

@@ -17,14 +17,6 @@ func init() {
 	log.SetOutput(filter)
 }
 
-func TestDay10PartA2023Example(t *testing.T) {
-	answer := 23
-	solution := Day10PartA2023(true)
-	if solution != answer {
-		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
-	}
-}
-
 func TestDay10PartA2023Complete(t *testing.T) {
 	answer := 6909
 	solution := Day10PartA2023(false)

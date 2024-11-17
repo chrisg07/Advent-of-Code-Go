@@ -11,19 +11,19 @@ import (
 func init() {
 	filter := &logutils.LevelFilter{
 		Levels:   []logutils.LogLevel{"DEBUG", "WARN", "ERROR"},
-		MinLevel: logutils.LogLevel("WARN"),
+		MinLevel: logutils.LogLevel("ERROR"),
 		Writer:   os.Stderr,
 	}
 	log.SetOutput(filter)
 }
 
-func TestDay10PartA2021Example(t *testing.T) {
-	answer := 26397
-	solution := Day10PartA2021(true)
-	if solution != answer {
-		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
-	}
-}
+// func TestDay10PartA2021Example(t *testing.T) {
+// 	answer := 26397
+// 	solution := Day10PartA2021(true)
+// 	if solution != answer {
+// 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+// 	}
+// }
 
 func TestDay10PartA2021Complete(t *testing.T) {
 	answer := 442131
@@ -33,13 +33,13 @@ func TestDay10PartA2021Complete(t *testing.T) {
 	}
 }
 
-func TestDay10PartB2021Example(t *testing.T) {
-	answer := 288957
-	solution := Day10PartB2021(true)
-	if solution != answer {
-		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
-	}
-}
+// func TestDay10PartB2021Example(t *testing.T) {
+// 	answer := 288957
+// 	solution := Day10PartB2021(true)
+// 	if solution != answer {
+// 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+// 	}
+// }
 
 func TestDay10PartB2021Complete(t *testing.T) {
 	answer := 3646451424

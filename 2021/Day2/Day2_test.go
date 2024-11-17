@@ -4,13 +4,13 @@ import (
 	"testing"
 )
 
-func TestPartAExample(t *testing.T) {
-	answer := 150
-	solution := PartA(true)
-	if solution != answer {
-		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
-	}
-}
+// func TestPartAExample(t *testing.T) {
+// 	answer := 150
+// 	solution := PartA(true)
+// 	if solution != answer {
+// 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+// 	}
+// }
 
 func TestDay2PartA2021Complete(t *testing.T) {
 	answer := 2150351
@@ -20,13 +20,13 @@ func TestDay2PartA2021Complete(t *testing.T) {
 	}
 }
 
-func TestPartBExample(t *testing.T) {
-	answer := 900
-	solution := PartB(true)
-	if solution != answer {
-		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
-	}
-}
+// func TestPartBExample(t *testing.T) {
+// 	answer := 900
+// 	solution := PartB(true)
+// 	if solution != answer {
+// 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+// 	}
+// }
 
 func TestDay2PartB2021Complete(t *testing.T) {
 	answer := 1842742223

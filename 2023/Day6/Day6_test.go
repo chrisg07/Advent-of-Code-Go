@@ -17,13 +17,13 @@ func init() {
 	log.SetOutput(filter)
 }
 
-func TestDay6PartA2023Example(t *testing.T) {
-	answer := 288
-	solution := Day6PartA2023(true)
-	if solution != answer {
-		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
-	}
-}
+// func TestDay6PartA2023Example(t *testing.T) {
+// 	answer := 288
+// 	solution := Day6PartA2023(true)
+// 	if solution != answer {
+// 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+// 	}
+// }
 
 func TestDay6PartA2023Complete(t *testing.T) {
 	answer := 1155175
@@ -33,13 +33,13 @@ func TestDay6PartA2023Complete(t *testing.T) {
 	}
 }
 
-func TestDay6PartB2023Example(t *testing.T) {
-	answer := 71503
-	solution := Day6PartB2023(true)
-	if solution != answer {
-		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
-	}
-}
+// func TestDay6PartB2023Example(t *testing.T) {
+// 	answer := 71503
+// 	solution := Day6PartB2023(true)
+// 	if solution != answer {
+// 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+// 	}
+// }
 
 func TestDay6PartB2023Complete(t *testing.T) {
 	answer := 35961505

@@ -44,11 +44,11 @@ func Day7PartA2021(useExample bool) int {
 	for _, line := range lines {
 		crabsStr := strings.Split(line, ",")
 		for _, str := range crabsStr {
-			log.Print(string(str))
+			log.Printf("[DEBUG] %v", string(str))
 			value, _ := strconv.Atoi(string(str))
 			crabs = append(crabs, value)
 		}
-		log.Println("")
+		log.Print("[DEBUG]\n")
 	}
 
 	sort.Ints(crabs)
@@ -93,11 +93,11 @@ func Day7PartB2021(useExample bool) int {
 	for _, line := range lines {
 		crabsStr := strings.Split(line, ",")
 		for _, str := range crabsStr {
-			log.Print(string(str))
+			log.Printf("[DEBUG] %v", string(str))
 			value, _ := strconv.Atoi(string(str))
 			crabs = append(crabs, value)
 		}
-		log.Println("")
+		log.Print("[DEBUG]\n")
 	}
 
 	sort.Ints(crabs)

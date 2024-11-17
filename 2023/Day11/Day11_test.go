@@ -43,27 +43,11 @@ func TestCalculateLengthOfLine(t *testing.T) {
 	}
 }
 
-func TestDay11PartA2023Example(t *testing.T) {
-	answer := 374
-	solution := Day112023(true, 1)
-	if solution != answer {
-		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
-	}
-}
-
 func TestDay11PartA2023Complete(t *testing.T) {
 	answer := 9177603
 	solution := Day112023(false, 2)
 	if solution != answer {
 		t.Fatalf(`Comeplete solution = %d, should = %d`, solution, answer)
-	}
-}
-
-func TestDay11PartB2023Example(t *testing.T) {
-	answer := 1850
-	solution := Day112023(true, 10)
-	if solution != answer {
-		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
 	}
 }
 

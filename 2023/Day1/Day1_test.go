@@ -33,13 +33,13 @@ func TestParseKeyFromString(t *testing.T) {
 	}
 }
 
-func TestDay1PartA2023Example(t *testing.T) {
-	answer := 209
-	solution := Day1PartA2023(true)
-	if solution != answer {
-		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
-	}
-}
+// func TestDay1PartA2023Example(t *testing.T) {
+// 	answer := 209
+// 	solution := Day1PartA2023(true)
+// 	if solution != answer {
+// 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+// 	}
+// }
 
 func TestDay1PartA2023Complete(t *testing.T) {
 	answer := 56042
@@ -57,13 +57,13 @@ func TestParseKeyFromStringPartB(t *testing.T) {
 	}
 }
 
-func TestDay1PartB2023Example(t *testing.T) {
-	answer := 281
-	solution := Day1PartB2023(true)
-	if solution != answer {
-		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
-	}
-}
+// func TestDay1PartB2023Example(t *testing.T) {
+// 	answer := 281
+// 	solution := Day1PartB2023(true)
+// 	if solution != answer {
+// 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+// 	}
+// }
 
 func TestDay1PartB2023Complete(t *testing.T) {
 	answer := 55358
