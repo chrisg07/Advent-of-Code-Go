@@ -10,6 +10,12 @@ Each solution's directory requires an `input` directory with two files, `example
 
 `.txt` files are ignored due to AoC's preference that puzzle inputs not be shared publicly.
 
+### Fetching AoC Inputs
+
+The script found in `scripts/fetch-aoc-inputs.sh` can fetch and create `complete.txt` files in `input` folders for days defined according to the structure defined above.
+
+This script requires the creation of an `.env` file at the root directory with a `SESSION_TOKEN` variable. You can grab this from the cookie set in your browser after authenticating with the Advent of Code website.
+
 ### Running Tests
 
 To execute the tests for a particular day's solution:
