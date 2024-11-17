@@ -2,7 +2,6 @@ package AoC2019
 
 import (
 	_ "embed"
-	"log"
 	"strconv"
 	"strings"
 )
@@ -28,11 +27,6 @@ func getInput(useExample bool) []string {
 func parseInput(lines []string) []int {
 	input := []int{}
 	for _, line := range lines {
-		// for _, char := range line {
-		// 	log.Print(string(char))
-		// }
-
-		log.Printf("[CONSOLE] %v", line)
 		mass, _ := strconv.Atoi(line)
 		input = append(input, mass)
 	}
@@ -41,6 +35,15 @@ func parseInput(lines []string) []int {
 
 func calculateFuelCost(mass int) int {
 	return (mass / 3) - 2
+}
+
+func calculateTotalFuelCost(mass int) int {
+	fuelCost := (mass / 3) - 2
+	if fuelCost > 8 {
+		return fuelCost + calculateTotalFuelCost(fuelCost)
+	} else {
+		return fuelCost
+	}
 }
 
 func PartA(useExample bool) int {
@@ -59,5 +62,10 @@ func PartB(useExample bool) int {
 	lines := getInput(useExample)
 	input := parseInput(lines)
 
-	return len(input)
+	fuelRequirement := 0
+
+	for _, mass := range input {
+		fuelRequirement += calculateTotalFuelCost(mass)
+	}
+	return fuelRequirement
 }
