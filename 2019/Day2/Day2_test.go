@@ -29,13 +29,21 @@ func TestPartAExample(t *testing.T) {
 	}
 }
 
+func TestPartASmallPrograms(t *testing.T) {
+	answer := []int{2, 0, 0, 0, 99}
+	solution := compute(answer, 0)
+	if solution != answer {
+		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+	}
+}
+
 func TestPartAComplete(t *testing.T) {
 	answer := 1
 	solution := PartA(false)
 	if solution != answer {
 		t.Fatalf(`Comeplete solution = %d, should = %d`, solution, answer)
 	} else {
-		log.Printf("[CONSOLE] Find the Elf carrying the most Calories: %v", solution)
+		log.Printf("[CONSOLE] The value left at position 0 after the program halts is: %v", solution)
 	}
 }
 
