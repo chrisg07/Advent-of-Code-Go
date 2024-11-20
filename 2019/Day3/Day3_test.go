@@ -17,10 +17,29 @@ func init() {
 	log.SetFlags(0)
 	log.SetOutput(filter)
 	log.Print("[CONSOLE] --------------------------\n")
-	log.Print("[CONSOLE] Advent of Code YEAR Day ##:\n")
+	log.Print("[CONSOLE] Advent of Code 2019 Day 3:\n")
 	log.Print("[CONSOLE] --------------------------\n")
 }
 
+type Point struct {
+	x int
+	y int
+}
+
+// test that we can convert instructions to coordinates
+func TestConvertInstructionsToPoints(t *testing.T) {
+	answer := []Point{Point{0, 0}, Point{8, 0}}
+	solution := convertInstructionsToPoints("R8")
+	if solution != answer {
+		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+	}
+}
+
+// test that we can determine whether two lines intersect
+
+// test that we can determine where two lines intersect
+
+// test that if there are multiple intersections they are all reported
 func TestPartAExample(t *testing.T) {
 	answer := 1
 	solution := PartA(true)
