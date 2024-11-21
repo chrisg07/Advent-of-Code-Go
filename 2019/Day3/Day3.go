@@ -1,8 +1,9 @@
-package AoCScaffold
+package AoC2019
 
 import (
 	_ "embed"
 	"log"
+	"strconv"
 	"strings"
 )
 
@@ -35,6 +36,39 @@ func parseInput(lines []string) []string {
 		input = append(input, line)
 	}
 	return input
+}
+
+type Point struct {
+	x int
+	y int
+}
+
+func convertInstructionsToPoints(instructions string) []Point {
+	points := []Point{}
+	x := 0
+	y := 0
+	points = append(points, Point{x, y})
+
+	moves := strings.Split(instructions, ",")
+	for _, move := range moves {
+		direction := move[:1]
+		distance, _ := strconv.Atoi(move[1:])
+
+		switch direction {
+		case "R":
+			x += distance
+		case "U":
+			y += distance
+		case "L":
+			x -= distance
+		case "D":
+			y -= distance
+		default:
+		}
+
+		points = append(points, Point{x, y})
+	}
+	return points
 }
 
 func PartA(useExample bool) int {

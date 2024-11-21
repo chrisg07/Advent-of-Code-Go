@@ -1,8 +1,9 @@
-package AoCScaffold
+package AoC2019
 
 import (
 	"log"
 	"os"
+	"reflect"
 	"testing"
 
 	"github.com/hashicorp/logutils"
@@ -21,16 +22,11 @@ func init() {
 	log.Print("[CONSOLE] --------------------------\n")
 }
 
-type Point struct {
-	x int
-	y int
-}
-
 // test that we can convert instructions to coordinates
 func TestConvertInstructionsToPoints(t *testing.T) {
 	answer := []Point{Point{0, 0}, Point{8, 0}}
 	solution := convertInstructionsToPoints("R8")
-	if solution != answer {
+	if !reflect.DeepEqual(answer, solution) {
 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
 	}
 }
