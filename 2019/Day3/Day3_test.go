@@ -22,18 +22,41 @@ func init() {
 	log.Print("[CONSOLE] --------------------------\n")
 }
 
-// test that we can convert instructions to coordinates
 func TestConvertInstructionsToPoints(t *testing.T) {
-	answer := []Point{Point{0, 0}, Point{8, 0}}
-	solution := convertInstructionsToPoints("R8")
+	answer := []Point{{0, 0}, {8, 0}, {8, 5}, {3, 5}, {3, 2}}
+	solution := ConvertInstructionsToPoints("R8,U5,L5,D3")
 	if !reflect.DeepEqual(answer, solution) {
 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
 	}
 }
 
-// test that we can determine whether two lines intersect
+func TestTwoLinesDoNotIntersect(t *testing.T) {
+	line1 := []Point{{0, 0}, {8, 0}}
+	line2 := []Point{{0, 1}, {8, 1}}
+	solution := LinesIntersect(line1, line2)
+	if solution == true {
+		t.Fatalf(`Example solution = %v, should = false`, solution)
+	}
+}
 
-// test that we can determine where two lines intersect
+func TestTwoPairsOfCoordinatesIntersect(t *testing.T) {
+	p1 := Point{0, 0}
+	p2 := Point{8, 0}
+	p3 := Point{4, -4}
+	p4 := Point{4, 4}
+	solution := CoordinatesIntersect(p1, p2, p3, p4)
+	if solution == false {
+		t.Fatalf(`Example solution = %v, should = false`, solution)
+	}
+}
+func TestLinesIntersect(t *testing.T) {
+	line1 := []Point{{0, 0}, {8, 0}}
+	line2 := []Point{{4, -4}, {4, 4}}
+	solution := LinesIntersect(line1, line2)
+	if solution == false {
+		t.Fatalf(`Example solution = %v, should = false`, solution)
+	}
+}
 
 // test that if there are multiple intersections they are all reported
 func TestPartAExample(t *testing.T) {

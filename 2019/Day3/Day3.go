@@ -43,7 +43,7 @@ type Point struct {
 	y int
 }
 
-func convertInstructionsToPoints(instructions string) []Point {
+func ConvertInstructionsToPoints(instructions string) []Point {
 	points := []Point{}
 	x := 0
 	y := 0
@@ -69,6 +69,21 @@ func convertInstructionsToPoints(instructions string) []Point {
 		points = append(points, Point{x, y})
 	}
 	return points
+}
+
+func CoordinatesIntersect(p1 Point, p2 Point, p3 Point, p4 Point) bool {
+	xIntersects := (p1.x > p3.x && p1.x < p4.x) && (p2.x > p3.x && p2.x < p4.x) && (p3.x > p1.x) && (p3.x > p2.x && p3.x < p2.x)
+	yIntersects := (p1.y > p3.y && p1.y < p4.y) && (p2.y > p3.y && p2.y < p4.y) && (p3.y > p1.y) && (p3.y > p2.y && p3.y < p2.y)
+	return xIntersects && yIntersects
+}
+
+func LinesIntersect(a []Point, b []Point) bool {
+	for i := 0; i < len(a)-2; i++ {
+		for j := 0; j < len(b)-2; j++ {
+
+		}
+	}
+	return false
 }
 
 func PartA(useExample bool) int {
