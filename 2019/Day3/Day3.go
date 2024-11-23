@@ -2,7 +2,7 @@ package AoC2019
 
 import (
 	_ "embed"
-	"log"
+	"slices"
 	"strconv"
 	"strings"
 )
@@ -28,11 +28,6 @@ func getInput(useExample bool) []string {
 func parseInput(lines []string) []string {
 	input := []string{}
 	for _, line := range lines {
-		// for _, char := range line {
-		// 	log.Print(string(char))
-		// }
-
-		log.Printf("[CONSOLE] %v", line)
 		input = append(input, line)
 	}
 	return input
@@ -41,6 +36,46 @@ func parseInput(lines []string) []string {
 type Point struct {
 	x int
 	y int
+}
+
+func GetEasternPath(x int, y int, distance int) []Point {
+	path := []Point{}
+
+	for i := 1; i <= distance; i++ {
+		path = append(path, Point{x + i, y})
+	}
+
+	return path
+}
+
+func GetWesternPath(x int, y int, distance int) []Point {
+	path := []Point{}
+
+	for i := 1; i <= distance; i++ {
+		path = append(path, Point{x - i, y})
+	}
+
+	return path
+}
+
+func GetNorthernPath(x int, y int, distance int) []Point {
+	path := []Point{}
+
+	for i := 1; i <= distance; i++ {
+		path = append(path, Point{x, y + i})
+	}
+
+	return path
+}
+
+func GetSouthernPath(x int, y int, distance int) []Point {
+	path := []Point{}
+
+	for i := 1; i <= distance; i++ {
+		path = append(path, Point{x, y - i})
+	}
+
+	return path
 }
 
 func ConvertInstructionsToPoints(instructions string) []Point {
@@ -56,31 +91,77 @@ func ConvertInstructionsToPoints(instructions string) []Point {
 
 		switch direction {
 		case "R":
+			path := GetEasternPath(x, y, distance)
+			points = append(points, path...)
 			x += distance
 		case "U":
+			path := GetNorthernPath(x, y, distance)
+			points = append(points, path...)
 			y += distance
 		case "L":
+			path := GetWesternPath(x, y, distance)
+			points = append(points, path...)
 			x -= distance
 		case "D":
+			path := GetSouthernPath(x, y, distance)
+			points = append(points, path...)
 			y -= distance
 		default:
 		}
-
-		points = append(points, Point{x, y})
 	}
 	return points
 }
 
-func CoordinatesIntersect(p1 Point, p2 Point, p3 Point, p4 Point) bool {
-	xIntersects := (p1.x > p3.x && p1.x < p4.x) && (p2.x > p3.x && p2.x < p4.x) && (p3.x > p1.x) && (p3.x > p2.x && p3.x < p2.x)
-	yIntersects := (p1.y > p3.y && p1.y < p4.y) && (p2.y > p3.y && p2.y < p4.y) && (p3.y > p1.y) && (p3.y > p2.y && p3.y < p2.y)
-	return xIntersects && yIntersects
+func PathsIntersect(a []Point, b []Point) bool {
+	origin := Point{0, 0}
+
+	for _, point := range a {
+		if slices.Contains(b, point) && point != origin {
+			return true
+		}
+	}
+	return false
+}
+
+func GetIntersectionPoints(a []Point, b []Point) []Point {
+	intersections := []Point{}
+	origin := Point{0, 0}
+
+	for _, point := range a {
+		if slices.Contains(b, point) && point != origin {
+			intersections = append(intersections, point)
+		}
+	}
+	return intersections
+}
+
+func AbsInt(value int) int {
+	if value < 0 {
+		return value * -1
+	} else {
+		return value
+	}
+}
+
+func GetShortestDistance(a []Point) int {
+	shortestDistance := 10000000
+
+	for _, point := range a {
+		distance := AbsInt(point.x) + AbsInt(point.y)
+		if distance < shortestDistance {
+			shortestDistance = distance
+		}
+	}
+
+	return shortestDistance
 }
 
 func LinesIntersect(a []Point, b []Point) bool {
-	for i := 0; i < len(a)-2; i++ {
-		for j := 0; j < len(b)-2; j++ {
-
+	for i := 0; i < len(a); i++ {
+		for j := 0; j < len(b); j++ {
+			if a[i] == b[j] {
+				return true
+			}
 		}
 	}
 	return false
@@ -90,7 +171,12 @@ func PartA(useExample bool) int {
 	lines := getInput(useExample)
 	input := parseInput(lines)
 
-	return len(input)
+	line1 := ConvertInstructionsToPoints(input[0])
+	line2 := ConvertInstructionsToPoints(input[1])
+	intersections := GetIntersectionPoints(line1, line2)
+	solution := GetShortestDistance(intersections)
+
+	return solution
 }
 
 func PartB(useExample bool) int {
