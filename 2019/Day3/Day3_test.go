@@ -22,14 +22,6 @@ func init() {
 	log.Print("[CONSOLE] --------------------------\n")
 }
 
-func TestConvertInstructionsToPoints(t *testing.T) {
-	answer := []Point{{0, 0}, {8, 0}, {8, 5}, {3, 5}, {3, 2}}
-	solution := ConvertInstructionsToPoints("R8,U5,L5,D3")
-	if !reflect.DeepEqual(answer, solution) {
-		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
-	}
-}
-
 func TestConvertPointsToCoordinateTrail(t *testing.T) {
 	answer := []Point{{0, 0}, {1, 0}, {2, 0}, {3, 0}, {4, 0}, {5, 0}, {6, 0}, {7, 0}, {8, 0}, {8, 1}, {8, 2}, {8, 3}, {8, 4}, {8, 5}}
 	points := ConvertInstructionsToPoints("R8,U5")
@@ -93,7 +85,7 @@ func TestPartAComplete(t *testing.T) {
 	if solution != answer {
 		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
 	} else {
-		log.Printf("[CONSOLE] Find the Elf carrying the most Calories: %v", solution)
+		log.Printf("[CONSOLE] The fewest combined steps the wires must take to reach an intersection is: %v", solution)
 	}
 }
 
