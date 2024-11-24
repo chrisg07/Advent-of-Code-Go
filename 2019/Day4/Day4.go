@@ -2,7 +2,6 @@ package AoCScaffold
 
 import (
 	_ "embed"
-	"log"
 	"strconv"
 	"strings"
 )
@@ -76,7 +75,6 @@ func PartA(useExample bool) int {
 		}
 	}
 
-	log.Printf("[CONSOLE] potential passwords: %v", potentialPasswords)
 	return len(potentialPasswords)
 }
 
@@ -87,9 +85,46 @@ func IsPotentialPassword(password int) bool {
 	return hasAdjacentDuplicates && hasNoDecreasingDigits
 }
 
+func PasswordHasAdjacentDuplicatesPartB(password int) bool {
+	passwordString := strconv.Itoa(password)
+
+	for i := 0; i < len(passwordString)-1; i++ {
+		if i == 0 {
+			if passwordString[i] == passwordString[i+1] && passwordString[i] != passwordString[i+2] {
+				return true
+			}
+		} else if i < len(passwordString)-2 {
+			if passwordString[i] == passwordString[i+1] && passwordString[i] != passwordString[i+2] && passwordString[i+1] != passwordString[i-1] {
+				return true
+			}
+		} else {
+			if passwordString[i] == passwordString[i+1] && passwordString[i] != passwordString[i-1] {
+				return true
+			}
+		}
+	}
+
+	return false
+}
+
+func IsPotentialPasswordPartB(password int) bool {
+	hasAdjacentDuplicates := PasswordHasAdjacentDuplicatesPartB(password)
+	hasNoDecreasingDigits := PasswordHasNoDecreasingDigits(password)
+
+	return hasAdjacentDuplicates && hasNoDecreasingDigits
+}
+
 func PartB(useExample bool) int {
 	lines := getInput(useExample)
 	input := parseInput(lines)
 
-	return len(input)
+	potentialPasswords := []int{}
+
+	for password := input[0]; password < input[1]; password++ {
+		if IsPotentialPasswordPartB(password) {
+			potentialPasswords = append(potentialPasswords, password)
+		}
+	}
+
+	return len(potentialPasswords)
 }

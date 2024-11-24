@@ -83,7 +83,7 @@ func TestPotentialPasswords(t *testing.T) {
 }
 
 func TestPartAComplete(t *testing.T) {
-	answer := 278384
+	answer := 921
 	solution := PartA(false)
 	if solution != answer {
 		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
@@ -92,20 +92,25 @@ func TestPartAComplete(t *testing.T) {
 	}
 }
 
-// func TestPartBExample(t *testing.T) {
-// 	answer := 1
-// 	solution := PartB(true)
-// 	if solution != answer {
-// 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
-// 	}
-// }
+func TestPotentialPasswordsPartB(t *testing.T) {
+	password := 278889
+	actual := IsPotentialPasswordPartB(password)
+	if actual != false {
+		t.Fatal(`Expected false`)
+	}
+	password = 278888
+	actual = IsPotentialPasswordPartB(password)
+	if actual != false {
+		t.Fatal(`Expected false`)
+	}
+}
 
-// func TestPartBComplete(t *testing.T) {
-// 	answer := 1
-// 	solution := PartB(false)
-// 	if solution != answer {
-// 		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
-// 	} else {
-// 		log.Printf("[CONSOLE] Find the Elf carrying the most Calories: %v", solution)
-// 	}
-// }
+func TestPartBComplete(t *testing.T) {
+	answer := 603
+	solution := PartB(false)
+	if solution != answer {
+		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
+	} else {
+		log.Printf("[CONSOLE] There are %v different passwords within the provided range that meet all the criteria.", solution)
+	}
+}
