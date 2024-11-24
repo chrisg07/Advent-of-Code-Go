@@ -50,6 +50,7 @@ func compute(instructions []int, index int) []int {
 		// Halt instruction
 		break
 	default:
+		log.Printf("[ERROR] Unsupported instruction encountered: %v", instructions[index])
 	}
 	return instructions
 }
@@ -58,9 +59,11 @@ func PartA(useExample bool) int {
 	lines := getInput(useExample)
 	input := parseInput(lines)
 
-	// restore computer
-	input[1] = 12
-	input[2] = 2
+	// provide 1 as the only input
+	// support op codes with 5 digits
+	// support immediate mode
+	// support op code 3: input
+	// support op code 4: output
 
 	input = parseInstructions(input)
 
