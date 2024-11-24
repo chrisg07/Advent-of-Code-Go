@@ -179,9 +179,29 @@ func PartA(useExample bool) int {
 	return solution
 }
 
+func DetermineDistancesToIntersections(intersections []Point, line1 []Point, line2 []Point) []int {
+	distances := []int{}
+
+	for _, intersection := range intersections {
+		distanceToLine1Intersection := slices.Index(line1, intersection)
+		distanceToLine2Intersection := slices.Index(line2, intersection)
+		distances = append(distances, distanceToLine1Intersection+distanceToLine2Intersection)
+	}
+
+	return distances
+}
+
 func PartB(useExample bool) int {
 	lines := getInput(useExample)
 	input := parseInput(lines)
 
-	return len(input)
+	line1 := ConvertInstructionsToPoints(input[0])
+	line2 := ConvertInstructionsToPoints(input[1])
+	intersections := GetIntersectionPoints(line1, line2)
+	travelDistance := DetermineDistancesToIntersections(intersections, line1, line2)
+
+	slices.Sort(travelDistance)
+	// sort travel distances
+	// return shortest
+	return travelDistance[0]
 }
