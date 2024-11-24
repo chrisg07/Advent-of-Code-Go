@@ -1,8 +1,11 @@
 package AoCScaffold
 
 import (
+	"bufio"
 	_ "embed"
+	"fmt"
 	"log"
+	"os"
 	"slices"
 	"strconv"
 	"strings"
@@ -46,6 +49,23 @@ func compute(instructions []int, index int) []int {
 	case 2:
 		instructions[instructions[index+3]] = instructions[instructions[index+1]] * instructions[instructions[index+2]]
 		break
+	case 3:
+		// Create a new reader to read input from the standard input
+		reader := bufio.NewReader(os.Stdin)
+
+		fmt.Print("Enter the input instruction: ")
+
+		// Read input until the user presses Enter
+		input, err := reader.ReadString('\n')
+		if err != nil {
+			fmt.Println("Error reading input:", err)
+		}
+
+		// Trim the newline character from the input
+		input = strings.TrimSpace(input)
+		inputValue, _ := strconv.Atoi(input)
+
+		instructions[instructions[index+1]] = inputValue
 	case 99:
 		// Halt instruction
 		break
