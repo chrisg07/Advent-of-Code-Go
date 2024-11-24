@@ -18,6 +18,8 @@ This script requires the creation of an `.env` file at the root directory with a
 
 ### Running Tests
 
+To run all tests in parallel from the root directory run: `go test -v -parallel 8 ./...`
+
 #### For a Particular Day
 - Add the required `inputs` (`example.txt` and `complete.txt`)
 - Navigate to that day's directory, e.g. `2021/Day9`
