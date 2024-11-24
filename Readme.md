@@ -27,8 +27,9 @@ To run all tests in parallel from the root directory run: `go test -v -parallel 
 
 #### All Complete Problems
 - Add the required `complete.txt` inputs (can use the script for this)
-- Run 2021 tests: `go test ./2021/... -run 'TestDay[0-9]+Part[AB]2021Complete'`
-- Run 2023 tests: `go test ./2023/... -run 'TestDay[0-9]+Part[AB]2023Complete'`
+- Run 2019 tests: `go test -v ./2019/... -run 'TestPart[AB]Complete'`
+- Run 2021 tests: `go test -v ./2021/... -run 'TestDay[0-9]+Part[AB]2021Complete'`
+- Run 2023 tests: `go test -v ./2023/... -run 'TestDay[0-9]+Part[AB]2023Complete'`
     - Day 5 Part B takes a while to run (~5 mins)
 
 ## Solutions with visualizations
