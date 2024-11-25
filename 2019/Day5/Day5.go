@@ -111,7 +111,6 @@ func compute(instructions []int, index int) ([]int, int) {
 	case 3:
 		// Create a new reader to read input from the standard input
 		reader := bufio.NewReader(os.Stdin)
-		log.Println("Enter the input instruction: ")
 
 		// Read input until the user presses Enter
 		input, err := reader.ReadString('\n')

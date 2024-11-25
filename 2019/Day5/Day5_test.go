@@ -1,9 +1,11 @@
 package AoC2019
 
 import (
+	"bytes"
 	"log"
 	"os"
 	"reflect"
+	"strings"
 	"testing"
 
 	Utils "github.com/chrisg07/Advent-of-Code-Go/Utils"
@@ -23,33 +25,21 @@ func init() {
 	log.Print("[CONSOLE] --------------------------\n")
 }
 
-func TestInputInstruction(t *testing.T) {
-	instructions := []int{3, 0, 99}
+func TestInputOutputInstruction(t *testing.T) {
+	instructions := []int{3, 0, 4, 0, 99}
 
 	cleanup, _ := Utils.MockStdin("1337\n")
 	defer cleanup()
 
-	answer := []int{1337, 0, 99}
-	solution, index := compute(instructions, 0)
-	if !reflect.DeepEqual(answer, solution) || index != 2 {
-		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+	var str bytes.Buffer
+	log.SetOutput(&str)
+	expectedOutput := "[CONSOLE] Output: 1337"
+	parseInstructions(instructions)
+	output := str.String()
+	if strings.Contains(output, expectedOutput) {
+		t.Fatalf(`Expected output "%v", actual = "%v"`, expectedOutput, output)
 	}
 }
-
-// func TestOutputInstruction(t *testing.T) {
-// 	instructions := []int{4, 50, 99}
-
-// 	var str bytes.Buffer
-// 	log.SetOutput(&str)
-// 	expectedOutput := "[CONSOLE] Output: 50\n"
-// 	_, index := compute(instructions, 0)
-
-// 	// Read the output
-// 	output := str.String()
-// 	if output != expectedOutput || index != 2 {
-// 		t.Fatalf("Expected %q but got %q", expectedOutput, output)
-// 	}
-// }
 
 func TestOpcodeParsing(t *testing.T) {
 	opcode := 1002
