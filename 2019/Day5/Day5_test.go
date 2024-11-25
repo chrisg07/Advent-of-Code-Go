@@ -74,6 +74,16 @@ func TestImmediateMode(t *testing.T) {
 	}
 }
 
+func TestPartAComplete(t *testing.T) {
+	answer := 13547311
+	solution := PartA(false)
+	if solution != answer {
+		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
+	} else {
+		log.Printf("[CONSOLE] the diagnostic code for system ID 1: %v", solution)
+	}
+}
+
 func TestJumpInstructionUsingPosition(t *testing.T) {
 	// output should be 0 if 0 is provided as input
 	instructions := []int{3, 12, 6, 12, 15, 1, 13, 14, 13, 4, 13, 99, -1, 0, 1, 9}
@@ -114,22 +124,69 @@ func TestJumpInstructionUsingImmediate(t *testing.T) {
 	}
 }
 
-func TestPartAComplete(t *testing.T) {
-	answer := 13547311
-	solution := PartA(false)
-	if solution != answer {
-		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
-	} else {
-		log.Printf("[CONSOLE] Diagnostic code: %v", solution)
+func TestLessThanInstructionUsingPosition(t *testing.T) {
+	// consider whether the input is less than 8; output 1 (if it is) or 0 (if it is not)
+	instructions := []int{3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8}
+	cleanup, _ := Utils.MockStdin("0\n")
+	defer cleanup()
+	solution := parseInstructionsPartB(instructions)
+	if solution != 1 {
+		t.Fatalf(`Example output to be 1 was %v`, solution)
+	}
+
+	instructions = []int{3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8}
+	cleanup, _ = Utils.MockStdin("8\n")
+	defer cleanup()
+	solution = parseInstructionsPartB(instructions)
+	if solution != 0 {
+		t.Fatalf(`Example output to be 0`)
+	}
+}
+
+func TestLessThanInstructionUsingImmediate(t *testing.T) {
+	// consider whether the input is less than 8; output 1 (if it is) or 0 (if it is not)
+	instructions := []int{3, 3, 1107, -1, 8, 3, 4, 3, 99}
+	cleanup, _ := Utils.MockStdin("0\n")
+	defer cleanup()
+	solution := parseInstructionsPartB(instructions)
+	if solution != 1 {
+		t.Fatalf(`Example output to be 1 was %v`, solution)
+	}
+
+	instructions = []int{3, 3, 1107, -1, 8, 3, 4, 3, 99}
+	cleanup, _ = Utils.MockStdin("8\n")
+	defer cleanup()
+	solution = parseInstructionsPartB(instructions)
+	if solution != 0 {
+		t.Fatalf(`Example output to be 0`)
+	}
+}
+
+func TestEqualityInstructionUsingPosition(t *testing.T) {
+	// consider whether the input is less than 8; output 1 (if it is) or 0 (if it is not)
+	instructions := []int{3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8}
+	cleanup, _ := Utils.MockStdin("0\n")
+	defer cleanup()
+	solution := parseInstructionsPartB(instructions)
+	if solution != 0 {
+		t.Fatalf(`Example output to be 0 was %v`, solution)
+	}
+
+	instructions = []int{3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8}
+	cleanup, _ = Utils.MockStdin("8\n")
+	defer cleanup()
+	solution = parseInstructionsPartB(instructions)
+	if solution != 1 {
+		t.Fatalf(`Example output to be 1`)
 	}
 }
 
 func TestPartBComplete(t *testing.T) {
-	answer := 1
+	answer := 236453
 	solution := PartB(false)
 	if solution != answer {
 		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
 	} else {
-		log.Printf("[CONSOLE] Find the Elf carrying the most Calories: %v", solution)
+		log.Printf("[CONSOLE] The diagnostic code for system ID 5: %v", solution)
 	}
 }

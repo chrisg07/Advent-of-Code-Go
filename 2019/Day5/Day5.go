@@ -192,6 +192,7 @@ func computePartB(instructions []int, index int) ([]int, int) {
 
 		if parameter1 != 0 {
 			index = parameter2
+			log.Printf("[DEBUG] Moved instruction pointer to address %v", index)
 		} else {
 			index += 3
 		}
@@ -201,9 +202,36 @@ func computePartB(instructions []int, index int) ([]int, int) {
 
 		if parameter1 == 0 {
 			index = parameter2
+			log.Printf("[DEBUG] Moved instruction pointer to address %v", index)
 		} else {
 			index += 3
 		}
+	case 7:
+		parameter1 := getParameter(mode1, instructions, index+1)
+		parameter2 := getParameter(mode2, instructions, index+2)
+		parameter3 := getParameter(0, instructions, index+3)
+
+		if parameter1 < parameter2 {
+			instructions[instructions[index+3]] = 1
+			log.Printf("[DEBUG] Parameter 1 (%v) is less than parameter 2 (%v). Storing 1 at %v", parameter1, parameter2, parameter3)
+		} else {
+			instructions[instructions[index+3]] = 0
+			log.Printf("[DEBUG] Parameter 1 (%v) is not less than parameter 2 (%v). Storing 0 at %v", parameter1, parameter2, parameter3)
+		}
+		index += 4
+	case 8:
+		parameter1 := getParameter(mode1, instructions, index+1)
+		parameter2 := getParameter(mode2, instructions, index+2)
+		parameter3 := getParameter(0, instructions, index+3)
+
+		if parameter1 == parameter2 {
+			instructions[instructions[index+3]] = 1
+			log.Printf("[DEBUG] Parameter 1 (%v) is equal to parameter 2 (%v). Storing 1 at %v", parameter1, parameter2, parameter3)
+		} else {
+			instructions[instructions[index+3]] = 0
+			log.Printf("[DEBUG] Parameter 1 (%v) is not equal to parameter 2 (%v). Storing 0 at %v", parameter1, parameter2, parameter3)
+		}
+		index += 4
 	case 99:
 		// Halt instruction
 	default:
