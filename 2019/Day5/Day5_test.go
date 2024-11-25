@@ -43,11 +43,13 @@ func TestInputOutputInstruction(t *testing.T) {
 
 func TestOpcodeParsing(t *testing.T) {
 	opcode := 1002
-	actualOpcode, mode1, mode2, mode3 := ParseOpcode(opcode)
+	actualOpcode := ParseOpcode(opcode)
+	mode1, mode2, mode3 := ParseModes(opcode)
 	if actualOpcode != 2 || mode1 != 0 || mode2 != 1 || mode3 != 0 {
 		t.Fatalf(`Opcode was not parsed correctly`)
 	}
 }
+
 func TestImmediateMode(t *testing.T) {
 	instructions := []int{1002, 4, 3, 4, 33}
 	answer := []int{1002, 4, 3, 4, 99}

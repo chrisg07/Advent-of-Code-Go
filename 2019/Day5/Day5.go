@@ -5,6 +5,7 @@ import (
 	_ "embed"
 	"fmt"
 	"log"
+	"math"
 	"os"
 	"strconv"
 	"strings"
@@ -42,19 +43,11 @@ func parseInput(lines []string) []int {
 	return instructions
 }
 
-func getParameter(mode1 int, instructions []int, index int) int {
-	parameter := 0
-	if mode1 == 0 {
-		parameter = instructions[instructions[index]]
-	} else {
-		parameter = instructions[index]
-	}
-	return parameter
+func ParseOpcode(fullCode int) int {
+	return fullCode % 100
 }
 
-func ParseOpcode(fullCode int) (opcode int, mode1 int, mode2 int, mode3 int) {
-	// extract opcode
-	opcode = fullCode % 100
+func ParseModes(fullCode int) (mode1 int, mode2 int, mode3 int) {
 	fullCode /= 100
 
 	// extract modes
@@ -64,7 +57,7 @@ func ParseOpcode(fullCode int) (opcode int, mode1 int, mode2 int, mode3 int) {
 	fullCode /= 10
 	mode3 = fullCode % 10
 
-	return opcode, mode1, mode2, mode3
+	return mode1, mode2, mode3
 }
 
 func PartA(useExample bool) int {
@@ -91,38 +84,17 @@ func parseInstructions(input []int) int {
 }
 
 func compute(instructions []int, index int) ([]int, int) {
-	opcode, mode1, mode2, _ := ParseOpcode(instructions[index])
+	opcode := ParseOpcode(instructions[index])
 
 	switch opcode {
 	case 1:
-		parameter1 := getParameter(mode1, instructions, index+1)
-		parameter2 := getParameter(mode2, instructions, index+2)
-
-		log.Printf("[DEBUG] Adding %v + %v and storing it at address %v", parameter1, parameter2, instructions[index+3])
-		instructions[instructions[index+3]] = parameter1 + parameter2
+		add(instructions, index)
 		index += 4
 	case 2:
-		parameter1 := getParameter(mode1, instructions, index+1)
-		parameter2 := getParameter(mode2, instructions, index+2)
-
-		log.Printf("[DEBUG] Multiplying %v * %v and storing it at address %v", parameter1, parameter2, instructions[index+3])
-		instructions[instructions[index+3]] = parameter1 * parameter2
+		multiply(instructions, index)
 		index += 4
 	case 3:
-		// Create a new reader to read input from the standard input
-		reader := bufio.NewReader(os.Stdin)
-
-		// Read input until the user presses Enter
-		input, err := reader.ReadString('\n')
-		if err != nil {
-			fmt.Println("Error reading input:", err)
-		}
-
-		input = strings.TrimSpace(input)
-		inputValue, _ := strconv.Atoi(input)
-
-		log.Printf("[DEBUG] Input %v and stored it at address %v", input, instructions[index+1])
-		instructions[instructions[index+1]] = inputValue
+		recieveInput(instructions, index)
 		index += 2
 	case 4:
 		log.Printf("[DEBUG] Output: %v\n", instructions[instructions[index+1]])
@@ -133,30 +105,10 @@ func compute(instructions []int, index int) ([]int, int) {
 	case 6:
 		index = jumpIfFalse(instructions, index)
 	case 7:
-		parameter1 := getParameter(mode1, instructions, index+1)
-		parameter2 := getParameter(mode2, instructions, index+2)
-		parameter3 := getParameter(0, instructions, index+3)
-
-		if parameter1 < parameter2 {
-			instructions[instructions[index+3]] = 1
-			log.Printf("[DEBUG] Parameter 1 (%v) is less than parameter 2 (%v). Storing 1 at %v", parameter1, parameter2, parameter3)
-		} else {
-			instructions[instructions[index+3]] = 0
-			log.Printf("[DEBUG] Parameter 1 (%v) is not less than parameter 2 (%v). Storing 0 at %v", parameter1, parameter2, parameter3)
-		}
+		lessThan(instructions, index)
 		index += 4
 	case 8:
-		parameter1 := getParameter(mode1, instructions, index+1)
-		parameter2 := getParameter(mode2, instructions, index+2)
-		parameter3 := getParameter(0, instructions, index+3)
-
-		if parameter1 == parameter2 {
-			instructions[instructions[index+3]] = 1
-			log.Printf("[DEBUG] Parameter 1 (%v) is equal to parameter 2 (%v). Storing 1 at %v", parameter1, parameter2, parameter3)
-		} else {
-			instructions[instructions[index+3]] = 0
-			log.Printf("[DEBUG] Parameter 1 (%v) is not equal to parameter 2 (%v). Storing 0 at %v", parameter1, parameter2, parameter3)
-		}
+		equals(instructions, index)
 		index += 4
 	case 99:
 		// Halt instruction
@@ -166,10 +118,65 @@ func compute(instructions []int, index int) ([]int, int) {
 	return instructions, index
 }
 
+func getParameter(instructions []int, instructionIndex int, parameterIndex int) int {
+	mode := (instructions[instructionIndex] / int(math.Pow(10, float64(parameterIndex)+1)))
+	mode %= 10
+
+	if mode == 0 || parameterIndex == 3 {
+		return instructions[instructions[instructionIndex+parameterIndex]]
+	} else {
+		return instructions[instructionIndex+parameterIndex]
+	}
+}
+
+func equals(instructions []int, index int) {
+	parameter1 := getParameter(instructions, index, 1)
+	parameter2 := getParameter(instructions, index, 2)
+	parameter3 := getParameter(instructions, index, 3)
+
+	if parameter1 == parameter2 {
+		instructions[instructions[index+3]] = 1
+		log.Printf("[DEBUG] Parameter 1 (%v) is equal to parameter 2 (%v). Storing 1 at %v", parameter1, parameter2, parameter3)
+	} else {
+		instructions[instructions[index+3]] = 0
+		log.Printf("[DEBUG] Parameter 1 (%v) is not equal to parameter 2 (%v). Storing 0 at %v", parameter1, parameter2, parameter3)
+	}
+}
+
+func recieveInput(instructions []int, index int) {
+	reader := bufio.NewReader(os.Stdin)
+
+	input, err := reader.ReadString('\n')
+	if err != nil {
+		fmt.Println("Error reading input:", err)
+	}
+
+	input = strings.TrimSpace(input)
+	inputValue, _ := strconv.Atoi(input)
+
+	log.Printf("[DEBUG] Input %v and stored it at address %v", input, instructions[index+1])
+	instructions[instructions[index+1]] = inputValue
+}
+
+func add(instructions []int, index int) {
+	parameter1 := getParameter(instructions, index, 1)
+	parameter2 := getParameter(instructions, index, 2)
+
+	log.Printf("[DEBUG] Adding %v + %v and storing it at address %v", parameter1, parameter2, instructions[index+3])
+	instructions[instructions[index+3]] = parameter1 + parameter2
+}
+
+func multiply(instructions []int, index int) {
+	parameter1 := getParameter(instructions, index, 1)
+	parameter2 := getParameter(instructions, index, 2)
+
+	log.Printf("[DEBUG] Multiplying %v * %v and storing it at address %v", parameter1, parameter2, instructions[index+3])
+	instructions[instructions[index+3]] = parameter1 * parameter2
+}
+
 func jumpIfTrue(instructions []int, index int) int {
-	_, mode1, mode2, _ := ParseOpcode(instructions[index])
-	parameter1 := getParameter(mode1, instructions, index+1)
-	parameter2 := getParameter(mode2, instructions, index+2)
+	parameter1 := getParameter(instructions, index, 1)
+	parameter2 := getParameter(instructions, index, 2)
 
 	if parameter1 != 0 {
 		index = parameter2
@@ -181,9 +188,8 @@ func jumpIfTrue(instructions []int, index int) int {
 }
 
 func jumpIfFalse(instructions []int, index int) int {
-	_, mode1, mode2, _ := ParseOpcode(instructions[index])
-	parameter1 := getParameter(mode1, instructions, index+1)
-	parameter2 := getParameter(mode2, instructions, index+2)
+	parameter1 := getParameter(instructions, index, 1)
+	parameter2 := getParameter(instructions, index, 2)
 
 	if parameter1 == 0 {
 		index = parameter2
@@ -192,6 +198,20 @@ func jumpIfFalse(instructions []int, index int) int {
 		index += 3
 	}
 	return index
+}
+
+func lessThan(instructions []int, index int) {
+	parameter1 := getParameter(instructions, index, 1)
+	parameter2 := getParameter(instructions, index, 2)
+	parameter3 := getParameter(instructions, index, 3)
+
+	if parameter1 < parameter2 {
+		instructions[instructions[index+3]] = 1
+		log.Printf("[DEBUG] Parameter 1 (%v) is less than parameter 2 (%v). Storing 1 at %v", parameter1, parameter2, parameter3)
+	} else {
+		instructions[instructions[index+3]] = 0
+		log.Printf("[DEBUG] Parameter 1 (%v) is not less than parameter 2 (%v). Storing 0 at %v", parameter1, parameter2, parameter3)
+	}
 }
 
 func PartB(useExample bool) int {
