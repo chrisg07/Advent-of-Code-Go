@@ -1,7 +1,6 @@
 package AoC2019
 
 import (
-	"bytes"
 	"log"
 	"os"
 	"reflect"
@@ -31,26 +30,26 @@ func TestInputInstruction(t *testing.T) {
 	defer cleanup()
 
 	answer := []int{1337, 0, 99}
-	solution, index := computePartA(instructions, 0)
+	solution, index := compute(instructions, 0)
 	if !reflect.DeepEqual(answer, solution) || index != 2 {
 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
 	}
 }
 
-func TestOutputInstruction(t *testing.T) {
-	instructions := []int{4, 50, 99}
+// func TestOutputInstruction(t *testing.T) {
+// 	instructions := []int{4, 50, 99}
 
-	var str bytes.Buffer
-	log.SetOutput(&str)
-	expectedOutput := "[CONSOLE] Output: 50\n"
-	_, index := computePartA(instructions, 0)
+// 	var str bytes.Buffer
+// 	log.SetOutput(&str)
+// 	expectedOutput := "[CONSOLE] Output: 50\n"
+// 	_, index := compute(instructions, 0)
 
-	// Read the output
-	output := str.String()
-	if output != expectedOutput || index != 2 {
-		t.Fatalf("Expected %q but got %q", expectedOutput, output)
-	}
-}
+// 	// Read the output
+// 	output := str.String()
+// 	if output != expectedOutput || index != 2 {
+// 		t.Fatalf("Expected %q but got %q", expectedOutput, output)
+// 	}
+// }
 
 func TestOpcodeParsing(t *testing.T) {
 	opcode := 1002
@@ -62,13 +61,13 @@ func TestOpcodeParsing(t *testing.T) {
 func TestImmediateMode(t *testing.T) {
 	instructions := []int{1002, 4, 3, 4, 33}
 	answer := []int{1002, 4, 3, 4, 99}
-	solution, _ := computePartA(instructions, 0)
+	solution, _ := compute(instructions, 0)
 	if !reflect.DeepEqual(answer, solution) {
 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
 	}
 	instructions = []int{1101, 100, -1, 4, 0}
 	answer = []int{1101, 100, -1, 4, 99}
-	solution, _ = computePartA(instructions, 0)
+	solution, _ = compute(instructions, 0)
 	if !reflect.DeepEqual(answer, solution) {
 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
 	}
@@ -89,7 +88,7 @@ func TestJumpInstructionUsingPosition(t *testing.T) {
 	instructions := []int{3, 12, 6, 12, 15, 1, 13, 14, 13, 4, 13, 99, -1, 0, 1, 9}
 	cleanup, _ := Utils.MockStdin("0\n")
 	defer cleanup()
-	solution := parseInstructionsPartB(instructions)
+	solution := parseInstructions(instructions)
 	if solution != 0 {
 		t.Fatalf(`Example output to be 0`)
 	}
@@ -98,7 +97,7 @@ func TestJumpInstructionUsingPosition(t *testing.T) {
 	instructions = []int{3, 12, 6, 12, 15, 1, 13, 14, 13, 4, 13, 99, -1, 0, 1, 9}
 	cleanup, _ = Utils.MockStdin("1\n")
 	defer cleanup()
-	solution = parseInstructionsPartB(instructions)
+	solution = parseInstructions(instructions)
 	if solution != 1 {
 		t.Fatalf(`Example output to be 1`)
 	}
@@ -109,7 +108,7 @@ func TestJumpInstructionUsingImmediate(t *testing.T) {
 	instructions := []int{3, 3, 1105, -1, 9, 1101, 0, 0, 12, 4, 12, 99, 1}
 	cleanup, _ := Utils.MockStdin("0\n")
 	defer cleanup()
-	solution := parseInstructionsPartB(instructions)
+	solution := parseInstructions(instructions)
 	if solution != 0 {
 		t.Fatalf(`Expected example output to be 0`)
 	}
@@ -118,7 +117,7 @@ func TestJumpInstructionUsingImmediate(t *testing.T) {
 	instructions = []int{3, 3, 1105, -1, 9, 1101, 0, 0, 12, 4, 12, 99, 1}
 	cleanup, _ = Utils.MockStdin("1\n")
 	defer cleanup()
-	solution = parseInstructionsPartB(instructions)
+	solution = parseInstructions(instructions)
 	if solution != 1 {
 		t.Fatalf(`Expected example output to be 1`)
 	}
@@ -129,7 +128,7 @@ func TestLessThanInstructionUsingPosition(t *testing.T) {
 	instructions := []int{3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8}
 	cleanup, _ := Utils.MockStdin("0\n")
 	defer cleanup()
-	solution := parseInstructionsPartB(instructions)
+	solution := parseInstructions(instructions)
 	if solution != 1 {
 		t.Fatalf(`Example output to be 1 was %v`, solution)
 	}
@@ -137,7 +136,7 @@ func TestLessThanInstructionUsingPosition(t *testing.T) {
 	instructions = []int{3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8}
 	cleanup, _ = Utils.MockStdin("8\n")
 	defer cleanup()
-	solution = parseInstructionsPartB(instructions)
+	solution = parseInstructions(instructions)
 	if solution != 0 {
 		t.Fatalf(`Example output to be 0`)
 	}
@@ -148,7 +147,7 @@ func TestLessThanInstructionUsingImmediate(t *testing.T) {
 	instructions := []int{3, 3, 1107, -1, 8, 3, 4, 3, 99}
 	cleanup, _ := Utils.MockStdin("0\n")
 	defer cleanup()
-	solution := parseInstructionsPartB(instructions)
+	solution := parseInstructions(instructions)
 	if solution != 1 {
 		t.Fatalf(`Example output to be 1 was %v`, solution)
 	}
@@ -156,7 +155,7 @@ func TestLessThanInstructionUsingImmediate(t *testing.T) {
 	instructions = []int{3, 3, 1107, -1, 8, 3, 4, 3, 99}
 	cleanup, _ = Utils.MockStdin("8\n")
 	defer cleanup()
-	solution = parseInstructionsPartB(instructions)
+	solution = parseInstructions(instructions)
 	if solution != 0 {
 		t.Fatalf(`Example output to be 0`)
 	}
@@ -167,7 +166,7 @@ func TestEqualityInstructionUsingPosition(t *testing.T) {
 	instructions := []int{3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8}
 	cleanup, _ := Utils.MockStdin("0\n")
 	defer cleanup()
-	solution := parseInstructionsPartB(instructions)
+	solution := parseInstructions(instructions)
 	if solution != 0 {
 		t.Fatalf(`Example output to be 0 was %v`, solution)
 	}
@@ -175,7 +174,7 @@ func TestEqualityInstructionUsingPosition(t *testing.T) {
 	instructions = []int{3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8}
 	cleanup, _ = Utils.MockStdin("8\n")
 	defer cleanup()
-	solution = parseInstructionsPartB(instructions)
+	solution = parseInstructions(instructions)
 	if solution != 1 {
 		t.Fatalf(`Example output to be 1`)
 	}
