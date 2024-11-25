@@ -221,3 +221,26 @@ func RotateMatrix[T constraints.Ordered](X [][]T, n int) [][]T {
 	}
 	return X
 }
+
+func mockStdin(input string) (cleanup func(), writer *os.File) {
+	reader, writer, _ := os.Pipe()
+	originalStdin := os.Stdin
+	os.Stdin = reader
+
+	// Cleanup function to restore the original state
+	cleanup = func() {
+		reader.Close()
+		writer.Close()
+		os.Stdin = originalStdin
+	}
+
+	// Optionally write initial input
+	if input != "" {
+		go func() {
+			writer.Write([]byte(input))
+			writer.Close()
+		}()
+	}
+
+	return cleanup, writer
+}

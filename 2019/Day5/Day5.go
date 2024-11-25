@@ -1,4 +1,4 @@
-package AoCScaffold
+package AoC2019
 
 import (
 	"bufio"
@@ -41,16 +41,28 @@ func parseInput(lines []string) []int {
 	return instructions
 }
 
+func getParameter(mode1 int, instructions []int, index int) int {
+	parameter := 0
+	if mode1 == 0 {
+		parameter = instructions[instructions[index]]
+	} else {
+		parameter = instructions[index]
+	}
+	return parameter
+}
+
 func ParseOpcode(fullCode int) (opcode int, mode1 int, mode2 int, mode3 int) {
 	// extract opcode
 	opcode = fullCode % 100
 	fullCode /= 100
+
 	// extract modes
 	mode1 = fullCode % 10
 	fullCode /= 10
 	mode2 = fullCode % 10
 	fullCode /= 10
 	mode3 = fullCode % 10
+
 	return opcode, mode1, mode2, mode3
 }
 
@@ -60,44 +72,20 @@ func compute(instructions []int, index int) ([]int, int) {
 
 	switch opcode {
 	case 1:
-		parameter1 := 0
-		if mode1 == 0 {
-			parameter1 = instructions[instructions[index+1]]
-		} else {
-			parameter1 = instructions[index+1]
-		}
-
-		parameter2 := 0
-		if mode2 == 0 {
-			parameter2 = instructions[instructions[index+2]]
-		} else {
-			parameter2 = instructions[index+2]
-		}
+		parameter1 := getParameter(mode1, instructions, index+1)
+		parameter2 := getParameter(mode2, instructions, index+2)
 
 		log.Printf("[DEBUG] Adding %v + %v and storing it at address %v", parameter1, parameter2, instructions[index+3])
 		instructions[instructions[index+3]] = parameter1 + parameter2
 		index += 4
-		break
 	case 2:
-		parameter1 := 0
-		if mode1 == 0 {
-			parameter1 = instructions[instructions[index+1]]
-		} else {
-			parameter1 = instructions[index+1]
-		}
-
-		parameter2 := 0
-		if mode2 == 0 {
-			parameter2 = instructions[instructions[index+2]]
-		} else {
-			parameter2 = instructions[index+2]
-		}
+		parameter1 := getParameter(mode1, instructions, index+1)
+		parameter2 := getParameter(mode2, instructions, index+2)
 
 		log.Printf("[DEBUG] Multiplying %v * %v and storing it at address %v", parameter1, parameter2, instructions[index+3])
 
 		instructions[instructions[index+3]] = parameter1 * parameter2
 		index += 4
-		break
 	case 3:
 		// Create a new reader to read input from the standard input
 		reader := bufio.NewReader(os.Stdin)
@@ -116,14 +104,11 @@ func compute(instructions []int, index int) ([]int, int) {
 		log.Printf("[DEBUG] Input %v and stored it at address %v", input, instructions[index+1])
 		instructions[instructions[index+1]] = inputValue
 		index += 2
-		break
 	case 4:
 		log.Printf("[DEBUG] Output: %v\n", instructions[instructions[index+1]])
 		index += 2
-		break
 	case 99:
 		// Halt instruction
-		break
 	default:
 		log.Fatalf("[ERROR] Unsupported instruction encountered: %v", instructions[index])
 	}
@@ -134,28 +119,28 @@ func PartA(useExample bool) int {
 	lines := getInput(useExample)
 	input := parseInput(lines)
 
-	// provide 1 as the only input
-	// Create a pipe to mock os.Stdin
-	reader, writer, _ := os.Pipe()
-	defer reader.Close()
-	defer writer.Close()
-
-	// Backup the original Stdin and defer its restoration
-	originalStdin := os.Stdin
-	defer func() { os.Stdin = originalStdin }()
-
-	// Replace os.Stdin with our pipe reader
-	os.Stdin = reader
-
-	// Write the mock input to the writer end of the pipe
-	go func() {
-		writer.Write([]byte("1\n"))
-		writer.Close()
-	}()
+	cleanup, _ := Utils.mockStdin("1\n")
+	defer cleanup() // Ensure cleanup is called
 
 	diagnosticCode := parseInstructions(input)
 
 	return diagnosticCode
+}
+
+func mockUserInput(input string) func() {
+	reader, writer, _ := os.Pipe()
+	defer reader.Close()
+	defer writer.Close()
+
+	originalStdin := os.Stdin
+	defer func() { os.Stdin = originalStdin }()
+
+	os.Stdin = reader
+
+	return func() {
+		writer.Write([]byte(input))
+		writer.Close()
+	}
 }
 
 func parseInstructions(input []int) int {

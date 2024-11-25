@@ -1,4 +1,4 @@
-package AoCScaffold
+package AoC2019
 
 import (
 	"bytes"
