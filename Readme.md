@@ -32,10 +32,11 @@ To run all tests in parallel from the root directory run: `go test -v -parallel 
 - Run 2023 tests: `go test -v ./2023/... -run 'TestDay[0-9]+Part[AB]2023Complete'`
     - Day 5 Part B takes a while to run (~5 mins)
 
-## Solutions with visualizations
-
+## Highlights
+### 2019
+#### Day 5
+Example of mocking user input and output
 ### 2021 
-
 #### Day 9
 
 Display basins: `go test -timeout 30s -run ^TestDay9PartB2021Complete$ github.com/chrisg07/Advent-of-Code-Go/2021/Day9 -v`

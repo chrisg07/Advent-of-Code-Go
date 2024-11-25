@@ -1,6 +1,7 @@
 package AoCScaffold
 
 import (
+	"bytes"
 	"log"
 	"os"
 	"reflect"
@@ -12,7 +13,7 @@ import (
 func init() {
 	filter := &logutils.LevelFilter{
 		Levels:   []logutils.LogLevel{"DEBUG", "WARN", "ERROR", "CONSOLE"},
-		MinLevel: logutils.LogLevel("WARN"),
+		MinLevel: logutils.LogLevel("DEBUG"),
 		Writer:   os.Stderr,
 	}
 	log.SetFlags(0)
@@ -22,7 +23,7 @@ func init() {
 	log.Print("[CONSOLE] --------------------------\n")
 }
 
-func TestPartASmallPrograms(t *testing.T) {
+func TestInputInstruction(t *testing.T) {
 	instructions := []int{3, 0, 99}
 
 	// Create a pipe to mock os.Stdin
@@ -44,7 +45,44 @@ func TestPartASmallPrograms(t *testing.T) {
 	}()
 
 	answer := []int{1337, 0, 99}
-	solution := compute(instructions, 0)
+	solution, index := compute(instructions, 0)
+	if !reflect.DeepEqual(answer, solution) || index != 2 {
+		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+	}
+}
+
+func TestOutputInstruction(t *testing.T) {
+	instructions := []int{4, 50, 99}
+
+	var str bytes.Buffer
+	log.SetOutput(&str)
+	expectedOutput := "[CONSOLE] Output: 50\n"
+	_, index := compute(instructions, 0)
+
+	// Read the output
+	output := str.String()
+	if output != expectedOutput || index != 2 {
+		t.Fatalf("Expected %q but got %q", expectedOutput, output)
+	}
+}
+
+func TestOpcodeParsing(t *testing.T) {
+	opcode := 1002
+	actualOpcode, mode1, mode2, mode3 := ParseOpcode(opcode)
+	if actualOpcode != 2 || mode1 != 0 || mode2 != 1 || mode3 != 0 {
+		t.Fatalf(`Opcode was not parsed correctly`)
+	}
+}
+func TestImmediateMode(t *testing.T) {
+	instructions := []int{1002, 4, 3, 4, 33}
+	answer := []int{1002, 4, 3, 4, 99}
+	solution, _ := compute(instructions, 0)
+	if !reflect.DeepEqual(answer, solution) {
+		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+	}
+	instructions = []int{1101, 100, -1, 4, 0}
+	answer = []int{1101, 100, -1, 4, 99}
+	solution, _ = compute(instructions, 0)
 	if !reflect.DeepEqual(answer, solution) {
 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
 	}
@@ -60,20 +98,20 @@ func TestPartAComplete(t *testing.T) {
 	}
 }
 
-func TestPartBExample(t *testing.T) {
-	answer := 1
-	solution := PartB(true)
-	if solution != answer {
-		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
-	}
-}
+// func TestPartBExample(t *testing.T) {
+// 	answer := 1
+// 	solution := PartB(true)
+// 	if solution != answer {
+// 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+// 	}
+// }
 
-func TestPartBComplete(t *testing.T) {
-	answer := 1
-	solution := PartB(false)
-	if solution != answer {
-		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
-	} else {
-		log.Printf("[CONSOLE] Find the Elf carrying the most Calories: %v", solution)
-	}
-}
+// func TestPartBComplete(t *testing.T) {
+// 	answer := 1
+// 	solution := PartB(false)
+// 	if solution != answer {
+// 		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
+// 	} else {
+// 		log.Printf("[CONSOLE] Find the Elf carrying the most Calories: %v", solution)
+// 	}
+// }
