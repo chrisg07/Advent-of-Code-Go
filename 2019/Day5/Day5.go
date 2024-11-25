@@ -129,15 +129,7 @@ func compute(instructions []int, index int) ([]int, int) {
 		index += 2
 	case 5:
 		// if the first parameter is non-zero, it sets the instruction pointer to the value from the second parameter. Otherwise, it does nothing.
-		parameter1 := getParameter(mode1, instructions, index+1)
-		parameter2 := getParameter(mode2, instructions, index+2)
-
-		if parameter1 != 0 {
-			index = parameter2
-			log.Printf("[DEBUG] Moved instruction pointer to address %v", index)
-		} else {
-			index += 3
-		}
+		index = jumpIfTrue(instructions, index)
 	case 6:
 		index = jumpIfFalse(instructions, index)
 	case 7:
@@ -172,6 +164,20 @@ func compute(instructions []int, index int) ([]int, int) {
 		log.Fatalf("[ERROR] Unsupported instruction encountered: %v", instructions[index])
 	}
 	return instructions, index
+}
+
+func jumpIfTrue(instructions []int, index int) int {
+	_, mode1, mode2, _ := ParseOpcode(instructions[index])
+	parameter1 := getParameter(mode1, instructions, index+1)
+	parameter2 := getParameter(mode2, instructions, index+2)
+
+	if parameter1 != 0 {
+		index = parameter2
+		log.Printf("[DEBUG] Moved instruction pointer to address %v", index)
+	} else {
+		index += 3
+	}
+	return index
 }
 
 func jumpIfFalse(instructions []int, index int) int {
