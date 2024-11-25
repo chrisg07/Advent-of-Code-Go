@@ -118,7 +118,7 @@ func compute(instructions []int, index int) ([]int, int) {
 		index += 2
 		break
 	case 4:
-		log.Printf("[CONSOLE] Output: %v\n", instructions[index+1])
+		log.Printf("[DEBUG] Output: %v\n", instructions[instructions[index+1]])
 		index += 2
 		break
 	case 99:
@@ -153,20 +153,20 @@ func PartA(useExample bool) int {
 		writer.Close()
 	}()
 
-	input = parseInstructions(input)
+	diagnosticCode := parseInstructions(input)
 
-	return input[0]
+	return diagnosticCode
 }
 
-func parseInstructions(input []int) []int {
+func parseInstructions(input []int) int {
 	index := 0
 	for index < len(input) {
 		if input[index] == 99 {
-			break
+			return input[input[index-1]]
 		}
 		input, index = compute(input, index)
 	}
-	return input
+	return -1
 }
 
 func PartB(useExample bool) int {
