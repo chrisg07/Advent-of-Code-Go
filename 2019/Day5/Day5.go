@@ -9,6 +9,8 @@ import (
 	"slices"
 	"strconv"
 	"strings"
+
+	Utils "github.com/chrisg07/Advent-of-Code-Go/Utils"
 )
 
 //go:embed inputs/example.txt
@@ -119,28 +121,12 @@ func PartA(useExample bool) int {
 	lines := getInput(useExample)
 	input := parseInput(lines)
 
-	cleanup, _ := Utils.mockStdin("1\n")
+	cleanup, _ := Utils.MockStdin("1\n")
 	defer cleanup() // Ensure cleanup is called
 
 	diagnosticCode := parseInstructions(input)
 
 	return diagnosticCode
-}
-
-func mockUserInput(input string) func() {
-	reader, writer, _ := os.Pipe()
-	defer reader.Close()
-	defer writer.Close()
-
-	originalStdin := os.Stdin
-	defer func() { os.Stdin = originalStdin }()
-
-	os.Stdin = reader
-
-	return func() {
-		writer.Write([]byte(input))
-		writer.Close()
-	}
 }
 
 func parseInstructions(input []int) int {

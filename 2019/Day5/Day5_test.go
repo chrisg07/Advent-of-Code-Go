@@ -7,6 +7,7 @@ import (
 	"reflect"
 	"testing"
 
+	Utils "github.com/chrisg07/Advent-of-Code-Go/Utils"
 	"github.com/hashicorp/logutils"
 )
 
@@ -26,23 +27,8 @@ func init() {
 func TestInputInstruction(t *testing.T) {
 	instructions := []int{3, 0, 99}
 
-	// Create a pipe to mock os.Stdin
-	reader, writer, _ := os.Pipe()
-	defer reader.Close()
-	defer writer.Close()
-
-	// Backup the original Stdin and defer its restoration
-	originalStdin := os.Stdin
-	defer func() { os.Stdin = originalStdin }()
-
-	// Replace os.Stdin with our pipe reader
-	os.Stdin = reader
-
-	// Write the mock input to the writer end of the pipe
-	go func() {
-		writer.Write([]byte("1337\n"))
-		writer.Close()
-	}()
+	cleanup, _ := Utils.MockStdin("1337\n")
+	defer cleanup()
 
 	answer := []int{1337, 0, 99}
 	solution, index := compute(instructions, 0)
