@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"slices"
 	"strconv"
 	"strings"
 
@@ -68,8 +67,7 @@ func ParseOpcode(fullCode int) (opcode int, mode1 int, mode2 int, mode3 int) {
 	return opcode, mode1, mode2, mode3
 }
 
-func compute(instructions []int, index int) ([]int, int) {
-	// take instruction at index and extract op code and parameter modes, if any
+func computePartA(instructions []int, index int) ([]int, int) {
 	opcode, mode1, mode2, _ := ParseOpcode(instructions[index])
 
 	switch opcode {
@@ -85,7 +83,6 @@ func compute(instructions []int, index int) ([]int, int) {
 		parameter2 := getParameter(mode2, instructions, index+2)
 
 		log.Printf("[DEBUG] Multiplying %v * %v and storing it at address %v", parameter1, parameter2, instructions[index+3])
-
 		instructions[instructions[index+3]] = parameter1 * parameter2
 		index += 4
 	case 3:
@@ -99,7 +96,6 @@ func compute(instructions []int, index int) ([]int, int) {
 			fmt.Println("Error reading input:", err)
 		}
 
-		// Trim the newline character from the input
 		input = strings.TrimSpace(input)
 		inputValue, _ := strconv.Atoi(input)
 
@@ -122,43 +118,108 @@ func PartA(useExample bool) int {
 	input := parseInput(lines)
 
 	cleanup, _ := Utils.MockStdin("1\n")
-	defer cleanup() // Ensure cleanup is called
+	defer cleanup()
 
-	diagnosticCode := parseInstructions(input)
+	diagnosticCode := parseInstructionsPartA(input)
 
 	return diagnosticCode
 }
 
-func parseInstructions(input []int) int {
+func parseInstructionsPartA(input []int) int {
 	index := 0
 	for index < len(input) {
 		if input[index] == 99 {
 			return input[input[index-1]]
 		}
-		input, index = compute(input, index)
+		input, index = computePartA(input, index)
 	}
 	return -1
+}
+
+func parseInstructionsPartB(input []int) int {
+	index := 0
+	for index < len(input) {
+		if input[index] == 99 {
+			return input[input[index-1]]
+		}
+		input, index = computePartB(input, index)
+	}
+	return -1
+}
+
+func computePartB(instructions []int, index int) ([]int, int) {
+	opcode, mode1, mode2, _ := ParseOpcode(instructions[index])
+
+	switch opcode {
+	case 1:
+		parameter1 := getParameter(mode1, instructions, index+1)
+		parameter2 := getParameter(mode2, instructions, index+2)
+
+		log.Printf("[DEBUG] Adding %v + %v and storing it at address %v", parameter1, parameter2, instructions[index+3])
+		instructions[instructions[index+3]] = parameter1 + parameter2
+		index += 4
+	case 2:
+		parameter1 := getParameter(mode1, instructions, index+1)
+		parameter2 := getParameter(mode2, instructions, index+2)
+
+		log.Printf("[DEBUG] Multiplying %v * %v and storing it at address %v", parameter1, parameter2, instructions[index+3])
+		instructions[instructions[index+3]] = parameter1 * parameter2
+		index += 4
+	case 3:
+		// Create a new reader to read input from the standard input
+		reader := bufio.NewReader(os.Stdin)
+		log.Println("Enter the input instruction: ")
+
+		// Read input until the user presses Enter
+		input, err := reader.ReadString('\n')
+		if err != nil {
+			fmt.Println("Error reading input:", err)
+		}
+
+		input = strings.TrimSpace(input)
+		inputValue, _ := strconv.Atoi(input)
+
+		log.Printf("[DEBUG] Input %v and stored it at address %v", input, instructions[index+1])
+		instructions[instructions[index+1]] = inputValue
+		index += 2
+	case 4:
+		log.Printf("[DEBUG] Output: %v\n", instructions[instructions[index+1]])
+		index += 2
+	case 5:
+		// if the first parameter is non-zero, it sets the instruction pointer to the value from the second parameter. Otherwise, it does nothing.
+		parameter1 := getParameter(mode1, instructions, index+1)
+		parameter2 := getParameter(mode2, instructions, index+2)
+
+		if parameter1 != 0 {
+			index = parameter2
+		} else {
+			index += 3
+		}
+	case 6:
+		parameter1 := getParameter(mode1, instructions, index+1)
+		parameter2 := getParameter(mode2, instructions, index+2)
+
+		if parameter1 == 0 {
+			index = parameter2
+		} else {
+			index += 3
+		}
+	case 99:
+		// Halt instruction
+	default:
+		log.Fatalf("[ERROR] Unsupported instruction encountered: %v", instructions[index])
+	}
+	return instructions, index
 }
 
 func PartB(useExample bool) int {
 	lines := getInput(useExample)
 	input := parseInput(lines)
 
-	for noun := 0; noun < len(input); noun++ {
-		for verb := 0; verb < len(input); verb++ {
-			temporaryInstructions := slices.Clone(input)
-			temporaryInstructions[1] = noun
-			temporaryInstructions[2] = verb
-			parseInstructions(temporaryInstructions)
-			if temporaryInstructions[0] == 19690720 {
-				log.Print("[CONSOLE] The noun and verb that cause the program to produce the output 19690720:\n")
-				log.Printf("[CONSOLE] Noun: %v\n", noun)
-				log.Printf("[CONSOLE] Verb: %v\n", verb)
+	cleanup, _ := Utils.MockStdin("5\n")
+	defer cleanup()
 
-				return 100*noun + verb
-			}
-		}
-	}
+	diagnosticCode := parseInstructionsPartB(input)
 
-	return -1
+	return diagnosticCode
 }
