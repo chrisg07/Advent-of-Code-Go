@@ -58,10 +58,10 @@ func parseInput(lines []string) map[string]*Planet {
 	return planets
 }
 
-func DFS(node *Planet, depth int) int {
+func PostOrderDFS(node *Planet, depth int) int {
 	orbits := 0
 	for _, planet := range node.orbits {
-		indirectOrbits := depth + DFS(planet, depth+1) + 1
+		indirectOrbits := depth + PostOrderDFS(planet, depth+1) + 1
 		orbits += indirectOrbits
 	}
 	return orbits
@@ -72,19 +72,19 @@ func PartA(useExample bool) int {
 	planets := parseInput(lines)
 
 	root := planets["COM"]
-	orbits := DFS(root, 0)
+	orbits := PostOrderDFS(root, 0)
 
 	return orbits
 }
 
-func Search(node *Planet, goal *Planet, depth int) int {
+func DFS(node *Planet, goal *Planet, depth int) int {
 	log.Printf("[DEBUG] Searching planet %v for node %v", node.identifier, goal.identifier)
 	if slices.Contains(node.orbits, goal) {
 		log.Printf("[DEBUG] Found %v at a depth of %v", goal.identifier, depth)
 		return depth
 	} else {
 		for _, planet := range node.orbits {
-			distance := Search(planet, goal, depth+1)
+			distance := DFS(planet, goal, depth+1)
 			if distance > 0 {
 				return distance
 			}
@@ -103,8 +103,8 @@ func PartB(useExample bool) int {
 	minTransfer := 10000000
 	for _, planet := range planets {
 		log.Printf("[DEBUG] Began search for path from root node %v", planet.identifier)
-		distanceToYou := Search(planet, root, 0)
-		distanceToSan := Search(planet, goal, 0)
+		distanceToYou := DFS(planet, root, 0)
+		distanceToSan := DFS(planet, goal, 0)
 		log.Printf("[DEBUG] Distance from root to YOU: %v", distanceToYou)
 		log.Printf("[DEBUG] Distance from root to SAN: %v", distanceToSan)
 		if distanceToSan > 0 && distanceToYou > 0 {
