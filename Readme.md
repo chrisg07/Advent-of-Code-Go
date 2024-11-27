@@ -37,7 +37,7 @@ To run all tests in parallel from the root directory run: `go test -v -parallel 
 #### Day 5
 Example of mocking user input and output
 #### Day 6
-DFS, BFS
+DFS
 ### 2021 
 #### Day 9
 
