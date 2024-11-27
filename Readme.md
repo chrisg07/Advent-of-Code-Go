@@ -34,6 +34,10 @@ To run all tests in parallel from the root directory run: `go test -v -parallel 
 
 ## Highlights
 ### 2019
+#### Intcode Computer
+- Day 2
+- Day 5
+- Day 7
 #### Day 5
 Example of mocking user input and output
 #### Day 6
