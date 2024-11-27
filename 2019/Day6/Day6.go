@@ -34,27 +34,6 @@ func createPlanet(identifier string) *Planet {
 	return &Planet{identifier: identifier}
 }
 
-func addIndirectOrbits(planets map[string]*Planet, mainPlanet *Planet, orbittingPlanet *Planet) map[string]*Planet {
-	for _, planet := range planets {
-		if slices.Contains(planet.orbits, mainPlanet) {
-			log.Printf("[CONSOLE] Adding indirect orbits for planet %v for all planets that %v orbits", orbittingPlanet.identifier, mainPlanet.identifier)
-
-			planet.orbits = append(planet.orbits, orbittingPlanet)
-			addIndirectOrbits(planets, planet, orbittingPlanet)
-		}
-	}
-
-	return planets
-}
-
-func printPlanet(planet Planet) {
-	orbits := ""
-	for _, orbittingPlanet := range planet.orbits {
-		orbits += orbittingPlanet.identifier + ", "
-	}
-	log.Printf("[CONSOLE] Planet %v has orbits: %v", planet.identifier, orbits)
-}
-
 func parseInput(lines []string) map[string]*Planet {
 	planets := make(map[string]*Planet)
 
@@ -83,7 +62,6 @@ func DFS(node *Planet, depth int) int {
 	orbits := 0
 	for _, planet := range node.orbits {
 		indirectOrbits := depth + DFS(planet, depth+1) + 1
-		log.Printf("[CONSOLE] Adding indirect orbits (%v) between planet %v and %v at depth %v", indirectOrbits, node.identifier, planet.identifier, depth)
 		orbits += indirectOrbits
 	}
 	return orbits
@@ -93,27 +71,49 @@ func PartA(useExample bool) int {
 	lines := getInput(useExample)
 	planets := parseInput(lines)
 
-	// for _, planet := range planets {
-	// 	for _, orbittingPlanet := range planet.orbits {
-	// 		planets = addIndirectOrbits(planets, planet, orbittingPlanet)
-	// 	}
-	// }
-
-	// depth first search
-
-	root, _ := planets["COM"]
+	root := planets["COM"]
 	orbits := DFS(root, 0)
-
-	for _, planet := range planets {
-		printPlanet(*planet)
-	}
 
 	return orbits
 }
 
+func Search(node *Planet, goal *Planet, depth int) int {
+	log.Printf("[DEBUG] Searching planet %v for node %v", node.identifier, goal.identifier)
+	if slices.Contains(node.orbits, goal) {
+		log.Printf("[DEBUG] Found %v at a depth of %v", goal.identifier, depth)
+		return depth
+	} else {
+		for _, planet := range node.orbits {
+			distance := Search(planet, goal, depth+1)
+			if distance > 0 {
+				return distance
+			}
+		}
+	}
+	return -1
+}
+
 func PartB(useExample bool) int {
 	lines := getInput(useExample)
-	input := parseInput(lines)
+	planets := parseInput(lines)
 
-	return len(input)
+	root := planets["YOU"]
+	goal := planets["SAN"]
+
+	minTransfer := 10000000
+	for _, planet := range planets {
+		log.Printf("[DEBUG] Began search for path from root node %v", planet.identifier)
+		distanceToYou := Search(planet, root, 0)
+		distanceToSan := Search(planet, goal, 0)
+		log.Printf("[DEBUG] Distance from root to YOU: %v", distanceToYou)
+		log.Printf("[DEBUG] Distance from root to SAN: %v", distanceToSan)
+		if distanceToSan > 0 && distanceToYou > 0 {
+			transferDistance := distanceToSan + distanceToYou
+			if transferDistance < minTransfer {
+				minTransfer = transferDistance
+			}
+		}
+	}
+
+	return minTransfer
 }

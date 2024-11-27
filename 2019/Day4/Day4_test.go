@@ -45,8 +45,8 @@ func TestPasswordWithAdjacentDuplicates(t *testing.T) {
 
 func TestPasswordWithDecreasingDigits(t *testing.T) {
 	solution := PasswordHasNoDecreasingDigits(223450)
-	if solution != true {
-		t.Fatal(`Expected true`)
+	if solution != false {
+		t.Fatal(`Expected false`)
 	}
 }
 

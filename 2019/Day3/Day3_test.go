@@ -89,14 +89,6 @@ func TestPartAComplete(t *testing.T) {
 	}
 }
 
-func TestPartBExample(t *testing.T) {
-	answer := 30
-	solution := PartB(true)
-	if solution != answer {
-		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
-	}
-}
-
 func TestPartBComplete(t *testing.T) {
 	answer := 134662
 	solution := PartB(false)

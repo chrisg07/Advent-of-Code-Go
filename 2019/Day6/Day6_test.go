@@ -31,20 +31,12 @@ func TestPartAComplete(t *testing.T) {
 	}
 }
 
-// func TestPartBExample(t *testing.T) {
-// 	answer := 1
-// 	solution := PartB(true)
-// 	if solution != answer {
-// 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
-// 	}
-// }
-
-// func TestPartBComplete(t *testing.T) {
-// 	answer := 1
-// 	solution := PartB(false)
-// 	if solution != answer {
-// 		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
-// 	} else {
-// 		log.Printf("[CONSOLE] Find the Elf carrying the most Calories: %v", solution)
-// 	}
-// }
+func TestPartBComplete(t *testing.T) {
+	answer := 277
+	solution := PartB(false)
+	if solution != answer {
+		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
+	} else {
+		log.Printf("[CONSOLE] The minimum number of orbital transfers required to move to SAN: %v", solution)
+	}
+}
