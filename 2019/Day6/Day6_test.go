@@ -21,23 +21,15 @@ func init() {
 	log.Print("[CONSOLE] --------------------------\n")
 }
 
-func TestPartAExample(t *testing.T) {
-	answer := 1
-	solution := PartA(true)
+func TestPartAComplete(t *testing.T) {
+	answer := 117672
+	solution := PartA(false)
 	if solution != answer {
-		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
+	} else {
+		log.Printf("[CONSOLE] The total number of direct and indirect orbits in the map data: %v", solution)
 	}
 }
-
-// func TestPartAComplete(t *testing.T) {
-// 	answer := 1
-// 	solution := PartA(false)
-// 	if solution != answer {
-// 		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
-// 	} else {
-// 		log.Printf("[CONSOLE] The total number of direct and indirect orbits in the map data: %v", solution)
-// 	}
-// }
 
 // func TestPartBExample(t *testing.T) {
 // 	answer := 1
