@@ -70,5 +70,21 @@ func PartB(useExample bool) int {
 	lines := getInput(useExample)
 	a, b := parseInput(lines)
 
-	return len(a) + len(b)
+	occurrences := make(map[int]int)
+
+	for _, value := range b {
+		if occurrences[value] != 0 {
+			occurrences[value]++
+		} else {
+			occurrences[value] = 1
+		}
+	}
+
+	similarityScore := 0
+	for _, value := range a {
+		appearences := occurrences[value]
+		similarityScore += (value * appearences)
+	}
+
+	return similarityScore
 }
