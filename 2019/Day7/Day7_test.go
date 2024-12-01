@@ -25,7 +25,7 @@ func TestPartAExample(t *testing.T) {
 	answer := 43210
 	program := []int{3, 15, 3, 16, 1002, 16, 10, 16, 1, 16, 15, 15, 4, 15, 99, 0, 0}
 	phaseSequence := []int{4, 3, 2, 1, 0}
-	solution := calculateThrusterSignal(program, phaseSequence)
+	solution := calculateThrusterSignal(program, phaseSequence, 0)
 	if solution != answer {
 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
 	}
@@ -41,8 +41,19 @@ func TestPartAComplete(t *testing.T) {
 	}
 }
 
+func TestPartBExampleB(t *testing.T) {
+	answer := 18216
+	program := []int{3, 52, 1001, 52, -5, 52, 3, 53, 1, 52, 56, 54, 1007, 54, 5, 55, 1005, 55, 26, 1001, 54,
+		-5, 54, 1105, 1, 12, 1, 53, 54, 53, 1008, 54, 0, 55, 1001, 55, 1, 55, 2, 53, 55, 53, 4,
+		53, 1001, 56, -1, 56, 1005, 56, 6, 99, 0, 0, 0, 0, 10}
+	phaseSequence := []int{9, 7, 8, 5, 6}
+	solution := calculateThrusterSignal(program, phaseSequence, 0)
+	if solution != answer {
+		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+	}
+}
 func TestPartBExample(t *testing.T) {
-	answer := 1
+	answer := 18216
 	solution := PartB(true)
 	if solution != answer {
 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
