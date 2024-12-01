@@ -40,7 +40,7 @@ To run all tests in parallel from the root directory run: `go test -v -parallel 
 #### Intcode Computer
 - Day 2
 - Day 5
-- Day 7
+- Day 7 (Utilizes [Channels](https://go.dev/tour/concurrency/2))
 #### Day 5
 Example of mocking user input and output
 #### Day 6
