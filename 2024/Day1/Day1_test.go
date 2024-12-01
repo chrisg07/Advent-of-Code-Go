@@ -35,7 +35,7 @@ func TestPartAComplete(t *testing.T) {
 	if solution != answer {
 		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
 	} else {
-		log.Printf("[CONSOLE] Find the Elf carrying the most Calories: %v", solution)
+		log.Printf("[CONSOLE] Total distance between lists: %v", solution)
 	}
 }
 
@@ -53,6 +53,6 @@ func TestPartBComplete(t *testing.T) {
 	if solution != answer {
 		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
 	} else {
-		log.Printf("[CONSOLE] Find the Elf carrying the most Calories: %v", solution)
+		log.Printf("[CONSOLE] Similarity score: %v", solution)
 	}
 }
