@@ -2,6 +2,7 @@ package AoCScaffold
 
 import (
 	_ "embed"
+	"log"
 	"strconv"
 	"strings"
 )
@@ -96,9 +97,49 @@ func PartA(useExample bool) int {
 	return numOnes * numTwos
 }
 
-func PartB(useExample bool) int {
+func displayLayer(layer [][]int) {
+	for _, row := range layer {
+		displayString := ""
+		for _, pixel := range row {
+			switch pixel {
+			case 0:
+				displayString += "▓"
+			case 1:
+				displayString += "░"
+			case 2:
+				displayString += " "
+			default:
+			}
+		}
+		log.Printf("[CONSOLE] %v\n", displayString)
+	}
+}
+
+func PartB(useExample bool) [][]int {
 	lines := getInput(useExample)
 	input := parseInput(lines)
+	layers := ConvertImageDataToLayers(25, 6, input[0])
 
-	return len(input)
+	// need to determine pixel value at each position
+	width := 25
+	height := 6
+
+	decodedLayer := [][]int{}
+	for y := 0; y < height; y++ {
+		decodedRow := make([]int, width)
+		for x := 0; x < width; x++ {
+			for _, layer := range layers {
+				decodedRow[x] = layer[y][x]
+
+				if layer[y][x] != 2 {
+					break
+				}
+			}
+		}
+		decodedLayer = append(decodedLayer, decodedRow)
+	}
+
+	displayLayer(decodedLayer)
+
+	return decodedLayer
 }

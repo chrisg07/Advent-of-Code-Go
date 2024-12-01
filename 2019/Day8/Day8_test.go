@@ -1,9 +1,11 @@
 package AoCScaffold
 
 import (
+	"bytes"
 	"log"
 	"os"
 	"reflect"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/logutils"
@@ -18,7 +20,7 @@ func init() {
 	log.SetFlags(0)
 	log.SetOutput(filter)
 	log.Print("[CONSOLE] --------------------------\n")
-	log.Print("[CONSOLE] Advent of Code YEAR Day ##:\n")
+	log.Print("[CONSOLE] Advent of Code 2019 Day 8:\n")
 	log.Print("[CONSOLE] --------------------------\n")
 }
 
@@ -48,14 +50,6 @@ func TestFindLayerWithFewestZeroes(t *testing.T) {
 	}
 }
 
-func TestPartAExample(t *testing.T) {
-	answer := 1
-	solution := PartA(true)
-	if solution != answer {
-		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
-	}
-}
-
 func TestPartAComplete(t *testing.T) {
 	answer := 1806
 	solution := PartA(false)
@@ -66,20 +60,25 @@ func TestPartAComplete(t *testing.T) {
 	}
 }
 
-func TestPartBExample(t *testing.T) {
-	answer := 1
-	solution := PartB(true)
-	if solution != answer {
-		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
-	}
-}
-
 func TestPartBComplete(t *testing.T) {
-	answer := 1
-	solution := PartB(false)
-	if solution != answer {
-		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
-	} else {
-		log.Printf("[CONSOLE] Find the Elf carrying the most Calories: %v", solution)
+	var str bytes.Buffer
+	log.SetOutput(&str)
+	expectedOutput := []string{
+		"[CONSOLE] ▓▓░░▓▓░░▓▓░░░░▓░░░▓▓▓░░▓▓",
+		"[CONSOLE] ▓▓▓░▓░▓▓░▓░▓▓▓▓░▓▓░▓░▓▓░▓",
+		"[CONSOLE] ▓▓▓░▓░▓▓░▓░░░▓▓░▓▓░▓░▓▓░▓",
+		"[CONSOLE] ▓▓▓░▓░░░░▓░▓▓▓▓░░░▓▓░░░░▓",
+		"[CONSOLE] ░▓▓░▓░▓▓░▓░▓▓▓▓░▓░▓▓░▓▓░▓",
+		"[CONSOLE] ▓░░▓▓░▓▓░▓░▓▓▓▓░▓▓░▓░▓▓░▓",
+	}
+
+	PartB(false)
+
+	output := str.String()
+
+	for _, line := range expectedOutput {
+		if strings.Contains(output, line) == false {
+			t.Fatal(`Captured output didn't include expected output\n`)
+		}
 	}
 }
