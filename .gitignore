@@ -3,3 +3,4 @@
 *.test
 inputs/
 .env
+**/__debug_*

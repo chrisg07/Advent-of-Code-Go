@@ -17,7 +17,7 @@ func init() {
 	log.SetFlags(0)
 	log.SetOutput(filter)
 	log.Print("[CONSOLE] --------------------------\n")
-	log.Print("[CONSOLE] Advent of Code YEAR Day ##:\n")
+	log.Print("[CONSOLE] Advent of Code 2024 Day 1:\n")
 	log.Print("[CONSOLE] --------------------------\n")
 }
 
