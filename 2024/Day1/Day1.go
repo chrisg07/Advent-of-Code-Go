@@ -2,7 +2,8 @@ package AoCScaffold
 
 import (
 	_ "embed"
-	"log"
+	"slices"
+	"strconv"
 	"strings"
 )
 
@@ -24,29 +25,50 @@ func getInput(useExample bool) []string {
 	return lines
 }
 
-func parseInput(lines []string) []string {
-	input := []string{}
-	for _, line := range lines {
-		// for _, char := range line {
-		// 	log.Print(string(char))
-		// }
+func parseInput(lines []string) ([]int, []int) {
+	leftSide := []int{}
+	rightSide := []int{}
 
-		log.Printf("[CONSOLE] %v", line)
-		input = append(input, line)
+	for _, line := range lines {
+		intStrings := strings.Split(line, "   ")
+		a, _ := strconv.Atoi(intStrings[0])
+		b, _ := strconv.Atoi(intStrings[1])
+		leftSide = append(leftSide, a)
+		rightSide = append(rightSide, b)
 	}
-	return input
+
+	slices.Sort(leftSide)
+	slices.Sort(rightSide)
+
+	return leftSide, rightSide
 }
 
 func PartA(useExample bool) int {
 	lines := getInput(useExample)
-	input := parseInput(lines)
+	a, b := parseInput(lines)
 
-	return len(input)
+	deltas := []int{}
+	for index := range a {
+		delta := a[index] - b[index]
+
+		if delta < 0 {
+			delta *= -1
+		}
+
+		deltas = append(deltas, delta)
+	}
+
+	deltaSum := 0
+	for _, delta := range deltas {
+		deltaSum += delta
+	}
+
+	return deltaSum
 }
 
 func PartB(useExample bool) int {
 	lines := getInput(useExample)
-	input := parseInput(lines)
+	a, b := parseInput(lines)
 
-	return len(input)
+	return len(a) + len(b)
 }

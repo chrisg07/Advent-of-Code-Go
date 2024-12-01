@@ -22,7 +22,7 @@ func init() {
 }
 
 func TestPartAExample(t *testing.T) {
-	answer := 1
+	answer := 11
 	solution := PartA(true)
 	if solution != answer {
 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
