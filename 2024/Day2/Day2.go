@@ -50,7 +50,7 @@ func determineSafetyDecreasing(levels []int) bool {
 		}
 	}
 
-	log.Printf("[CONSOLE] Safe report: %v", levels)
+	log.Printf("[DEBUG] Safe report: %v", levels)
 	return true
 }
 
@@ -64,7 +64,7 @@ func determineSafetyIncreasing(levels []int) bool {
 		}
 	}
 
-	log.Printf("[CONSOLE] Safe report: %v", levels)
+	log.Printf("[DEBUG] Safe report: %v", levels)
 	return true
 }
 

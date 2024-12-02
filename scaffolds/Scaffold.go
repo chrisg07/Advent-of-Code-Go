@@ -31,7 +31,7 @@ func parseInput(lines []string) []string {
 		// 	log.Print(string(char))
 		// }
 
-		log.Printf("[CONSOLE] %v", line)
+		log.Printf("[DEBUG] %v", line)
 		input = append(input, line)
 	}
 	return input
