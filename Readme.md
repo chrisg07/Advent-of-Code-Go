@@ -35,6 +35,7 @@ To run all tests in parallel from the root directory run: `go test -v -parallel 
 ## To-do
 
 - Queue implementation
+- Update `ReverseArray` utility to not edit array in place
 ## Highlights
 ### 2019
 #### Intcode Computer

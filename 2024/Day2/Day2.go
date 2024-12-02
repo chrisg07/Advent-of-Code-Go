@@ -5,6 +5,8 @@ import (
 	"log"
 	"strconv"
 	"strings"
+
+	"github.com/chrisg07/Advent-of-Code-Go/Utils"
 )
 
 //go:embed inputs/example.txt
@@ -39,21 +41,6 @@ func parseInput(lines []string) [][]int {
 	return reports
 }
 
-func determineSafetyDecreasing(levels []int) bool {
-	for i := 1; i < len(levels); i++ {
-		previousLevel := levels[i-1]
-		level := levels[i]
-		delta := (previousLevel - level)
-
-		if !(previousLevel >= level && (delta >= 1 && delta <= 3)) {
-			return false
-		}
-	}
-
-	log.Printf("[DEBUG] Safe report: %v", levels)
-	return true
-}
-
 func determineSafetyIncreasing(levels []int) bool {
 	for i := 1; i < len(levels); i++ {
 		previousLevel := levels[i-1]
@@ -74,7 +61,11 @@ func PartA(useExample bool) int {
 
 	safeReports := 0
 	for _, report := range input {
-		if determineSafetyIncreasing(report) || determineSafetyDecreasing(report) {
+		reportCopy := make([]int, len(report))
+		copy(reportCopy, report)
+
+		Utils.ReverseArray(reportCopy)
+		if determineSafetyIncreasing(report) || determineSafetyIncreasing(reportCopy) {
 			safeReports++
 		}
 	}
@@ -87,7 +78,10 @@ func PartB(useExample bool) int {
 
 	safeReports := 0
 	for _, report := range input {
-		if determineSafetyIncreasing(report) || determineSafetyDecreasing(report) {
+		reportCopy := make([]int, len(report))
+		copy(reportCopy, report)
+		Utils.ReverseArray(reportCopy)
+		if determineSafetyIncreasing(report) || determineSafetyIncreasing(reportCopy) {
 			safeReports++
 			continue
 		}
@@ -104,8 +98,12 @@ func PartB(useExample bool) int {
 			slice := []int{}
 			slice = append(slice, leftSlice...)
 			slice = append(slice, rightSlice...)
+
+			sliceCopy := make([]int, len(slice))
+			copy(sliceCopy, slice)
+			Utils.ReverseArray(sliceCopy)
 			log.Printf("[DEBUG] Checking safety of slice %v from report %v", slice, report)
-			if determineSafetyIncreasing(slice) || determineSafetyDecreasing(slice) {
+			if determineSafetyIncreasing(slice) || determineSafetyIncreasing(sliceCopy) {
 				safeReports++
 				break
 			}
