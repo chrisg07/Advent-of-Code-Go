@@ -11,13 +11,13 @@ import (
 func init() {
 	filter := &logutils.LevelFilter{
 		Levels:   []logutils.LogLevel{"DEBUG", "WARN", "ERROR", "CONSOLE"},
-		MinLevel: logutils.LogLevel("DEBUG"),
+		MinLevel: logutils.LogLevel("CONSOLE"),
 		Writer:   os.Stderr,
 	}
 	log.SetFlags(0)
 	log.SetOutput(filter)
 	log.Print("[CONSOLE] --------------------------\n")
-	log.Print("[CONSOLE] Advent of Code YEAR Day ##:\n")
+	log.Print("[CONSOLE] Advent of Code 2024 Day 2:\n")
 	log.Print("[CONSOLE] --------------------------\n")
 }
 
