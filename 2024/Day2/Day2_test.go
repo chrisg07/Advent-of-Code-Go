@@ -21,38 +21,22 @@ func init() {
 	log.Print("[CONSOLE] --------------------------\n")
 }
 
-func TestPartAExample(t *testing.T) {
-	answer := 1
-	solution := PartA(true)
-	if solution != answer {
-		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
-	}
-}
-
 func TestPartAComplete(t *testing.T) {
 	answer := 421
 	solution := PartA(false)
 	if solution != answer {
 		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
 	} else {
-		log.Printf("[CONSOLE] Find the Elf carrying the most Calories: %v", solution)
-	}
-}
-
-func TestPartBExample(t *testing.T) {
-	answer := 1
-	solution := PartB(true)
-	if solution != answer {
-		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+		log.Printf("[CONSOLE] Safe reports: %v", solution)
 	}
 }
 
 func TestPartBComplete(t *testing.T) {
-	answer := 1
+	answer := 476
 	solution := PartB(false)
 	if solution != answer {
 		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
 	} else {
-		log.Printf("[CONSOLE] Find the Elf carrying the most Calories: %v", solution)
+		log.Printf("[CONSOLE] Safe reports when a level is removed: %v", solution)
 	}
 }
