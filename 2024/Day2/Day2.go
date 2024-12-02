@@ -75,10 +75,6 @@ func PartA(useExample bool) int {
 
 	safeReports := 0
 	for _, report := range input {
-		reportCopy := make([]int, len(report))
-		copy(reportCopy, report)
-
-		Utils.ReverseArray(reportCopy)
 		if determineSafety(report) {
 			safeReports++
 		}
