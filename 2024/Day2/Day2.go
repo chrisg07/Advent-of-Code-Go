@@ -41,7 +41,7 @@ func parseInput(lines []string) [][]int {
 	return reports
 }
 
-func determineSafetyIncreasing(levels []int) bool {
+func isSafe(levels []int) bool {
 	for i := 1; i < len(levels); i++ {
 		previousLevel := levels[i-1]
 		level := levels[i]
@@ -50,9 +50,23 @@ func determineSafetyIncreasing(levels []int) bool {
 			return false
 		}
 	}
-
-	log.Printf("[DEBUG] Safe report: %v", levels)
 	return true
+}
+
+func determineSafety(levels []int) bool {
+	levelsReversed := make([]int, len(levels))
+	copy(levelsReversed, levels)
+	Utils.ReverseArray(levelsReversed)
+
+	safeFromLeftToRight := isSafe(levels)
+	safeFromRightToLeft := isSafe(levelsReversed)
+
+	safe := safeFromLeftToRight || safeFromRightToLeft
+	if safe {
+		log.Printf("[DEBUG] Safe report: %v", levels)
+	}
+
+	return safe
 }
 
 func PartA(useExample bool) int {
@@ -65,7 +79,7 @@ func PartA(useExample bool) int {
 		copy(reportCopy, report)
 
 		Utils.ReverseArray(reportCopy)
-		if determineSafetyIncreasing(report) || determineSafetyIncreasing(reportCopy) {
+		if determineSafety(report) {
 			safeReports++
 		}
 	}
@@ -78,10 +92,7 @@ func PartB(useExample bool) int {
 
 	safeReports := 0
 	for _, report := range input {
-		reportCopy := make([]int, len(report))
-		copy(reportCopy, report)
-		Utils.ReverseArray(reportCopy)
-		if determineSafetyIncreasing(report) || determineSafetyIncreasing(reportCopy) {
+		if determineSafety(report) {
 			safeReports++
 			continue
 		}
@@ -99,11 +110,8 @@ func PartB(useExample bool) int {
 			slice = append(slice, leftSlice...)
 			slice = append(slice, rightSlice...)
 
-			sliceCopy := make([]int, len(slice))
-			copy(sliceCopy, slice)
-			Utils.ReverseArray(sliceCopy)
 			log.Printf("[DEBUG] Checking safety of slice %v from report %v", slice, report)
-			if determineSafetyIncreasing(slice) || determineSafetyIncreasing(sliceCopy) {
+			if determineSafety(slice) {
 				safeReports++
 				break
 			}
