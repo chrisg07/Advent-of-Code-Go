@@ -25,49 +25,59 @@ func getInput(useExample bool) []string {
 	return lines
 }
 
-func parseInput(lines []string) int {
-	input := []string{}
+func parseInstructions(instruction string) int {
 	sum := 0
-	for _, line := range lines {
-		// for _, char := range line {
-		// 	log.Print(string(char))
-		// }
+	parts := strings.Split(instruction, "mul")
 
-		// log.Printf("[DEBUG] Line: %v", line)
-		parts := strings.Split(line, "mul")
+	for _, part := range parts {
+		end := strings.Index(part, ")")
+		if end != -1 && end != 0 {
 
-		for _, part := range parts {
-			// log.Printf("[DEBUG] Part: %v", part)
-			end := strings.Index(part, ")")
-			if end != -1 {
-
-				instruction := part[1:end]
-				variables := strings.Split(instruction, ",")
-				if len(variables) == 2 {
-					left, leftOk := strconv.Atoi(variables[0])
-					right, rightOk := strconv.Atoi(variables[1])
-					if leftOk == nil && rightOk == nil {
-						sum += (left * right)
-						log.Printf("[DEBUG] Instruction: %v", instruction)
-					}
+			instruction := part[1:end]
+			variables := strings.Split(instruction, ",")
+			if len(variables) == 2 {
+				left, leftOk := strconv.Atoi(variables[0])
+				right, rightOk := strconv.Atoi(variables[1])
+				if leftOk == nil && rightOk == nil {
+					sum += (left * right)
+					log.Printf("[DEBUG] Instruction: %v", instruction)
 				}
 			}
 		}
-		input = append(input, line)
 	}
 	return sum
+}
+
+func parseInput(lines []string) string {
+	enabledInstructions := []string{}
+	input := strings.Join(lines, "")
+
+	log.Printf("[DEBUG] Enabled Instructions: \n%v", strings.Join(enabledInstructions, "\n"))
+
+	return input
 }
 
 func PartA(useExample bool) int {
 	lines := getInput(useExample)
 	input := parseInput(lines)
 
-	return input
+	return parseInstructions(input)
 }
 
 func PartB(useExample bool) int {
 	lines := getInput(useExample)
 	input := parseInput(lines)
 
-	return input
+	parts := strings.Split(input, "do()")
+	sum := 0
+
+	for _, part := range parts {
+		end := strings.Index(part, "don't()")
+		validMults := part
+		if end != -1 {
+			validMults = part[:end]
+		}
+		sum += parseInstructions(validMults)
+	}
+	return sum
 }

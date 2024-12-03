@@ -11,7 +11,7 @@ import (
 func init() {
 	filter := &logutils.LevelFilter{
 		Levels:   []logutils.LogLevel{"DEBUG", "WARN", "ERROR", "CONSOLE"},
-		MinLevel: logutils.LogLevel("DEBUG"),
+		MinLevel: logutils.LogLevel("CONSOLE"),
 		Writer:   os.Stderr,
 	}
 	log.SetFlags(0)
@@ -21,38 +21,22 @@ func init() {
 	log.Print("[CONSOLE] --------------------------\n")
 }
 
-func TestPartAExample(t *testing.T) {
-	answer := 1
-	solution := PartA(true)
-	if solution != answer {
-		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
-	}
-}
-
 func TestPartAComplete(t *testing.T) {
-	answer := 1
+	answer := 190604937
 	solution := PartA(false)
 	if solution != answer {
 		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
 	} else {
-		log.Printf("[CONSOLE] Find the Elf carrying the most Calories: %v", solution)
-	}
-}
-
-func TestPartBExample(t *testing.T) {
-	answer := 1
-	solution := PartB(true)
-	if solution != answer {
-		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
+		log.Printf("[CONSOLE] Result of all multiplications: %v", solution)
 	}
 }
 
 func TestPartBComplete(t *testing.T) {
-	answer := 1
+	answer := 82857512
 	solution := PartB(false)
-	if solution != answer {
+	if solution != answer || solution == 87020895 {
 		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
 	} else {
-		log.Printf("[CONSOLE] Find the Elf carrying the most Calories: %v", solution)
+		log.Printf("[CONSOLE] Result of all enabled multiplications: %v", solution)
 	}
 }
