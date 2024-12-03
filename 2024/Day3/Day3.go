@@ -49,12 +49,7 @@ func parseInstructions(instruction string) int {
 }
 
 func parseInput(lines []string) string {
-	enabledInstructions := []string{}
-	input := strings.Join(lines, "")
-
-	log.Printf("[DEBUG] Enabled Instructions: \n%v", strings.Join(enabledInstructions, "\n"))
-
-	return input
+	return strings.Join(lines, "")
 }
 
 func PartA(useExample bool) int {
@@ -67,7 +62,6 @@ func PartA(useExample bool) int {
 func PartB(useExample bool) int {
 	lines := getInput(useExample)
 	input := parseInput(lines)
-
 	parts := strings.Split(input, "do()")
 	sum := 0
 
@@ -79,5 +73,6 @@ func PartB(useExample bool) int {
 		}
 		sum += parseInstructions(validMults)
 	}
+
 	return sum
 }
