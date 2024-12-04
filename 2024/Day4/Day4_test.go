@@ -11,7 +11,7 @@ import (
 func init() {
 	filter := &logutils.LevelFilter{
 		Levels:   []logutils.LogLevel{"DEBUG", "WARN", "ERROR", "CONSOLE"},
-		MinLevel: logutils.LogLevel("WARN"),
+		MinLevel: logutils.LogLevel("DEBUG"),
 		Writer:   os.Stderr,
 	}
 	log.SetFlags(0)
@@ -22,7 +22,7 @@ func init() {
 }
 
 func TestPartAExample(t *testing.T) {
-	answer := 1
+	answer := 9
 	solution := PartA(true)
 	if solution != answer {
 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
