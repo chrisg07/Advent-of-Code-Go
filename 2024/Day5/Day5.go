@@ -55,40 +55,34 @@ func parsePagesToProduce(lines []string) [][]int {
 	return pages
 }
 
+func isValidUpdate(rules map[int][]int, update []int) bool {
+	valid := true
+	for i, left := range update {
+		for j, right := range update {
+			if i != j && i < j {
+				validUpdate := slices.Contains(rules[left], right) && !slices.Contains(rules[right], left)
+				if !validUpdate {
+					log.Printf("[DEBUG] Invalid update: %v", update)
+					return false
+				}
+			}
+		}
+		if !valid {
+			break
+		}
+	}
+
+	return true
+}
+
 func PartA(useExample bool) int {
 	lines := getInput(useExample)
 	rules := parseOrderingRules(lines)
 	pages := parsePagesToProduce(lines)
-	log.Printf("[DEBUG] Rules: %v", rules)
-	log.Printf("[DEBUG] Updates: %v", pages)
 
 	sum := 0
 	for _, update := range pages {
-		valid := true
-		for i, left := range update {
-			for j, right := range update {
-				if i != j && i < j {
-					log.Printf("[DEBUG] Checking: %v against %v", left, right)
-					log.Printf("[DEBUG] Rules left: %v", rules[left])
-					log.Printf("[DEBUG] Rules right: %v", rules[right])
-
-					// if rules[right] != 0 && rules[right] == left {
-					// 	valid = false
-					// 	break
-					// }
-					validUpdate := slices.Contains(rules[left], right) && !slices.Contains(rules[right], left)
-					if !validUpdate {
-						log.Printf("[DEBUG] ----> Invalid update: %v", update)
-						valid = false
-						break
-					}
-				}
-			}
-			if !valid {
-				break
-			}
-		}
-		if valid {
+		if isValidUpdate(rules, update) {
 			middle := len(update) / 2
 			sum += update[middle]
 			log.Printf("[DEBUG] Valid update: %v with middle %v", update, update[middle])
@@ -97,9 +91,50 @@ func PartA(useExample bool) int {
 	return sum
 }
 
+func correctUpdate(rules map[int][]int, incorrectUpdate []int) []int {
+	update := make([]int, len(incorrectUpdate))
+	copy(update, incorrectUpdate)
+
+	for i, left := range incorrectUpdate {
+		for j, right := range incorrectUpdate {
+			if i != j && i < j {
+				validUpdate := slices.Contains(rules[left], right) && !slices.Contains(rules[right], left)
+				if !validUpdate {
+					tmp := update[i]
+					update[i] = update[j]
+					update[j] = tmp
+					log.Printf("[DEBUG] Update after swaps: %v", update)
+					return update
+				}
+			}
+		}
+	}
+	log.Printf("[DEBUG] Update was already valid: %v", update)
+
+	return update
+}
+
 func PartB(useExample bool) int {
 	lines := getInput(useExample)
-	// input := parseInput(lines)
+	rules := parseOrderingRules(lines)
+	pages := parsePagesToProduce(lines)
 
-	return len(lines)
+	sum := 0
+	for _, update := range pages {
+		cpy := make([]int, len(update))
+		copy(cpy, update)
+		valid := isValidUpdate(rules, cpy)
+		if !valid {
+			validUpdate := false
+			for !validUpdate {
+				cpy = correctUpdate(rules, cpy)
+				validUpdate = isValidUpdate(rules, cpy)
+			}
+			middle := len(cpy) / 2
+			sum += cpy[middle]
+			log.Printf("[DEBUG] Valid update: %v with middle %v", update, update[middle])
+
+		}
+	}
+	return sum
 }

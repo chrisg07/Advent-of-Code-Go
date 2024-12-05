@@ -11,7 +11,7 @@ import (
 func init() {
 	filter := &logutils.LevelFilter{
 		Levels:   []logutils.LogLevel{"DEBUG", "WARN", "ERROR", "CONSOLE"},
-		MinLevel: logutils.LogLevel("DEBUG"),
+		MinLevel: logutils.LogLevel("CONSOLE"),
 		Writer:   os.Stderr,
 	}
 	log.SetFlags(0)
@@ -35,12 +35,12 @@ func TestPartAComplete(t *testing.T) {
 	if solution != answer {
 		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
 	} else {
-		log.Printf("[CONSOLE] Find the Elf carrying the most Calories: %v", solution)
+		log.Printf("[CONSOLE] If you add up the middle page number from the correctly ordered updates: %v", solution)
 	}
 }
 
 func TestPartBExample(t *testing.T) {
-	answer := 1
+	answer := 123
 	solution := PartB(true)
 	if solution != answer {
 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
@@ -48,11 +48,11 @@ func TestPartBExample(t *testing.T) {
 }
 
 func TestPartBComplete(t *testing.T) {
-	answer := 1
+	answer := 5331
 	solution := PartB(false)
 	if solution != answer {
 		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
 	} else {
-		log.Printf("[CONSOLE] Find the Elf carrying the most Calories: %v", solution)
+		log.Printf("[CONSOLE] If you add up the middle page numbers after correctly ordering the originally incorrect updates: %v", solution)
 	}
 }
