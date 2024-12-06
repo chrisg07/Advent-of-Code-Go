@@ -50,13 +50,6 @@ func parseObstructionLocations(lines []string) map[Coordinates]int {
 	return coords
 }
 
-type State interface {
-	Move() State
-	IsFacingObstacle() bool
-	Turn() State
-	InBounds() bool
-}
-
 type Coordinates struct {
 	x int
 	y int
@@ -69,22 +62,19 @@ func coordinatesAreInBounds(width, height int, coords Coordinates) bool {
 	return xInBounds && yInBounds
 }
 
-func PartA(useExample bool) int {
-	lines := getInput(useExample)
-	guard := parseGuardLocation(lines)
-	obstructions := parseObstructionLocations(lines)
+func simulateGuard(width, height int, guard Coordinates, obstructions map[Coordinates]int) map[Coordinates]int {
+	steps := 0
 	visited := make(map[Coordinates]int)
-	width := len(lines[0])
-	height := len(lines)
 	guardIsInBounds := coordinatesAreInBounds(width, height, guard)
 	currentDirection := 'N'
 
 	for guardIsInBounds {
-		// update guard position
+		steps++
 		visited[guard]++
 
 		switch currentDirection {
 		case 'N':
+			// moving North is the negative Y direction due to map orientation
 			nextPosition := Coordinates{guard.x, guard.y - 1}
 			if obstructions[nextPosition] != 0 {
 				log.Printf("[DEBUG] Encountered obstacle at: %v, %v", nextPosition.x, nextPosition.y)
@@ -93,6 +83,7 @@ func PartA(useExample bool) int {
 				guard = nextPosition
 			}
 		case 'S':
+			// moving South is the positive Y direction due to map orientation
 			nextPosition := Coordinates{guard.x, guard.y + 1}
 			if obstructions[nextPosition] != 0 {
 				log.Printf("[DEBUG] Encountered obstacle at: %v, %v", nextPosition.x, nextPosition.y)
@@ -122,17 +113,52 @@ func PartA(useExample bool) int {
 		guardIsInBounds = coordinatesAreInBounds(width, height, guard)
 	}
 
-	for _, line := range lines {
-		log.Printf("[DEBUG] %v", line)
+	return visited
+}
+
+func loopOccurred(visited map[Coordinates]int) bool {
+	for _, visits := range visited {
+		if visits > 3 {
+			return true
+		}
 	}
 
-	log.Printf("[DEBUG] Obstruction positions: %v", obstructions)
-	log.Printf("[DEBUG] Visited: %v", visited)
+	return false
+}
+
+func PartA(useExample bool) int {
+	lines := getInput(useExample)
+	guard := parseGuardLocation(lines)
+	obstructions := parseObstructionLocations(lines)
+	width := len(lines[0])
+	height := len(lines)
+	visited := simulateGuard(width, height, guard, obstructions)
+
 	return len(visited) - 1
 }
 
 func PartB(useExample bool) int {
 	lines := getInput(useExample)
+	guard := parseGuardLocation(lines)
+	width := len(lines[0])
+	height := len(lines)
 
-	return len(lines)
+	loops := 0
+	for x := 0; x < width; x++ {
+		for y := 0; y < height; y++ {
+			cell := lines[y][x]
+			if cell != '#' && cell != '^' {
+				sovereignGlueTank := Coordinates{x, y}
+				obstructions := parseObstructionLocations(lines)
+				obstructions[sovereignGlueTank]++
+				visited := simulateGuard(width, height, guard, obstructions)
+
+				if loopOccurred(visited) {
+					loops++
+				}
+			}
+		}
+	}
+
+	return loops
 }

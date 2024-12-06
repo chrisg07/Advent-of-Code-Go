@@ -31,7 +31,7 @@ func TestPartAComplete(t *testing.T) {
 }
 
 func TestPartBExample(t *testing.T) {
-	answer := 1
+	answer := 6
 	solution := PartB(true)
 	if solution != answer {
 		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
