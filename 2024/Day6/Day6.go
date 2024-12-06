@@ -62,8 +62,8 @@ func coordinatesAreInBounds(width, height int, coords Coordinates) bool {
 	return xInBounds && yInBounds
 }
 
-var MAX_GUARD_STEPS = 6000
-var MIN_VISITS_FOR_LOOP = 4
+var MAX_GUARD_STEPS = 75000
+var MIN_VISITS_FOR_LOOP = 20
 
 func simulateGuard(width, height int, guard Coordinates, obstructions map[Coordinates]int) map[Coordinates]int {
 	steps := 0

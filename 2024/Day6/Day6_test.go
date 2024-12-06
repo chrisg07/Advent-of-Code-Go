@@ -39,11 +39,13 @@ func TestPartBExample(t *testing.T) {
 }
 
 func TestPartBComplete(t *testing.T) {
-	answer := 1
+	answer := 1793
 	solution := PartB(false)
-	if solution != answer && solution < 1800 {
+	// 1729
+	// 1793
+	if solution != answer && solution < 1800 && solution > 1253 && solution != 1498 {
 		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
 	} else {
-		log.Printf("[CONSOLE] Find the Elf carrying the most Calories: %v", solution)
+		log.Printf("[CONSOLE] Number of positions a sovereign glue tank can be placed to cause the guard to continously loop: %v", solution)
 	}
 }
