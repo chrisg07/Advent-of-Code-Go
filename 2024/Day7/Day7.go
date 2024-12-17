@@ -1,6 +1,8 @@
 package AoCScaffold
 
 import (
+	"fmt"
+
 	_ "embed"
 	"log"
 	"strconv"
@@ -40,11 +42,15 @@ func getInput(useExample bool) []string {
 func evaluate(left uint64, nums []uint64, results chan uint64) {
 	// log.Printf("[DEBUG] Left: %v Nums: %v Results: %v", left, nums, len(results))
 	sum := left
+	concatenate := left
 	product := left
 
 	if len(nums) > 1 {
 		sum += nums[0]
 		evaluate(sum, nums[1:], results)
+
+		concatenate = concatenateInts(left, nums[0])
+		evaluate(concatenate, nums[1:], results)
 
 		product *= nums[0]
 		evaluate(product, nums[1:], results)
@@ -54,12 +60,30 @@ func evaluate(left uint64, nums []uint64, results chan uint64) {
 		sum += nums[0]
 		results <- sum
 
+		concatenate = concatenateInts(left, nums[0])
+		results <- concatenate
+
 		product *= nums[0]
 		results <- product
 	}
 }
 
-func parseInput(lines []string) uint64 {
+func concatenateInts(left, right uint64) uint64 {
+	leftStr := fmt.Sprint(left)
+	rightStr := fmt.Sprint(right)
+
+	concatenated := leftStr + rightStr
+	val, err := strconv.ParseUint(concatenated, 10, 64)
+
+	if err != nil {
+		log.Fatalf("[ERROR] Failed to convert string to int: %v", err)
+	}
+
+	return val
+
+}
+
+func parseInputPartB(lines []string) uint64 {
 	var sum uint64 = 0
 
 	for _, line := range lines {
@@ -75,25 +99,22 @@ func parseInput(lines []string) uint64 {
 		nums := []uint64{}
 
 		for _, str := range rightNumbers {
-			num, _ := strconv.Atoi(str)
+			num, _ := strconv.Atoi(str) // parseUint???
 			nums = append(nums, uint64(num))
 		}
 
-		// log.Printf("[DEBUG] Evaluating: %v", left)
-		// first operation
 		sumLeft := nums[0] + nums[1]
-		// log.Printf("[DEBUG] First sum: %v", sumLeft)
+		concatenateLeft := concatenateInts(nums[0], nums[1])
 		productLeft := nums[0] * nums[1]
-		// log.Printf("[DEBUG] First product: %v", productLeft)
 
 		calibrated := false
 		if len(nums) > 2 {
 			nums := nums[2:]
 			results := make(chan uint64, 1000000)
 			evaluate(sumLeft, nums, results)
+			evaluate(concatenateLeft, nums, results)
 			evaluate(productLeft, nums, results)
 
-			// time.Sleep(5 * time.Millisecond)
 			close(results)
 
 			for result := range results {
@@ -104,7 +125,7 @@ func parseInput(lines []string) uint64 {
 			}
 
 		} else {
-			calibrated = sumLeft == uint64(left) || productLeft == uint64(left)
+			calibrated = sumLeft == uint64(left) || productLeft == uint64(left) || concatenateLeft == uint64(left)
 		}
 
 		if calibrated {
@@ -119,16 +140,9 @@ func parseInput(lines []string) uint64 {
 	return sum
 }
 
-func PartA(useExample bool) uint64 {
-	lines := getInput(useExample)
-	result := parseInput(lines)
-
-	return result
-}
-
 func PartB(useExample bool) uint64 {
 	lines := getInput(useExample)
-	input := parseInput(lines)
+	input := parseInputPartB(lines)
 
 	return input
 }
