@@ -5,7 +5,6 @@ import (
 	"log"
 	"strconv"
 	"strings"
-	"time"
 )
 
 //go:embed inputs/example.txt
@@ -17,16 +16,28 @@ var input string
 func getInput(useExample bool) []string {
 	var lines []string
 	var unsplitLines string
+
 	if useExample {
-		unsplitLines = strings.TrimRight(exampleInput, "\n")
+		unsplitLines = exampleInput
 	} else {
-		unsplitLines = strings.TrimRight(input, "\n")
+		unsplitLines = input
 	}
+
+	// Normalize line endings: replace all \r\n with \n
+	unsplitLines = strings.ReplaceAll(unsplitLines, "\r\n", "\n")
+
+	// Trim any trailing newlines (whether \n or \r\n)
+	unsplitLines = strings.TrimRight(unsplitLines, "\n")
+
+	log.Printf("[DEBUG] Raw input lines: %q", unsplitLines)
+
+	// Split into lines by \n
 	lines = strings.Split(unsplitLines, "\n")
+
 	return lines
 }
 
-func evaluate(left int, nums []int, results chan int) {
+func evaluate(left uint64, nums []uint64, results chan uint64) {
 	// log.Printf("[DEBUG] Left: %v Nums: %v Results: %v", left, nums, len(results))
 	sum := left
 	product := left
@@ -48,19 +59,24 @@ func evaluate(left int, nums []int, results chan int) {
 	}
 }
 
-func parseInput(lines []string) int {
-	sum := 0
+func parseInput(lines []string) uint64 {
+	var sum uint64 = 0
 
 	for _, line := range lines {
 		log.Printf("[DEBUG] Evaluating: %v", line)
 		sides := strings.Split(line, ": ")
-		left, _ := strconv.Atoi(sides[0])
-		rightNumbers := strings.Split(sides[1][:len(sides[1])-1], " ")
-		nums := []int{}
+		left, err := strconv.ParseUint(sides[0], 10, 64)
+		if err != nil {
+			log.Fatalf("[ERROR] Failed to parse left side: %v", err)
+		}
+		rightNumbers := strings.Fields(sides[1])
+
+		log.Printf("[DEBUG] Right numbers: %v", rightNumbers)
+		nums := []uint64{}
 
 		for _, str := range rightNumbers {
 			num, _ := strconv.Atoi(str)
-			nums = append(nums, num)
+			nums = append(nums, uint64(num))
 		}
 
 		// log.Printf("[DEBUG] Evaluating: %v", left)
@@ -73,28 +89,28 @@ func parseInput(lines []string) int {
 		calibrated := false
 		if len(nums) > 2 {
 			nums := nums[2:]
-			results := make(chan int, 10000)
+			results := make(chan uint64, 1000000)
 			evaluate(sumLeft, nums, results)
 			evaluate(productLeft, nums, results)
 
-			time.Sleep(10 * time.Millisecond)
+			// time.Sleep(5 * time.Millisecond)
 			close(results)
 
 			for result := range results {
-				if result == left {
+				if result == uint64(left) {
 					calibrated = true
 					break
 				}
 			}
 
 		} else {
-			calibrated = sumLeft == left || productLeft == left
+			calibrated = sumLeft == uint64(left) || productLeft == uint64(left)
 		}
 
 		if calibrated {
 			log.Printf("[DEBUG] Calibrated result: %v", line)
 			log.Printf("[DEBUG] Previous sum: %v", sum)
-			sum += left
+			sum += uint64(left)
 			log.Printf("[DEBUG] Updated sum : %v", sum)
 		}
 
@@ -103,14 +119,14 @@ func parseInput(lines []string) int {
 	return sum
 }
 
-func PartA(useExample bool) int {
+func PartA(useExample bool) uint64 {
 	lines := getInput(useExample)
 	result := parseInput(lines)
 
 	return result
 }
 
-func PartB(useExample bool) int {
+func PartB(useExample bool) uint64 {
 	lines := getInput(useExample)
 	input := parseInput(lines)
 
