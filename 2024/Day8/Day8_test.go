@@ -11,31 +11,23 @@ import (
 func init() {
 	filter := &logutils.LevelFilter{
 		Levels:   []logutils.LogLevel{"DEBUG", "WARN", "ERROR", "CONSOLE"},
-		MinLevel: logutils.LogLevel("WARN"),
+		MinLevel: logutils.LogLevel("DEBUG"),
 		Writer:   os.Stderr,
 	}
 	log.SetFlags(0)
 	log.SetOutput(filter)
 	log.Print("[CONSOLE] --------------------------\n")
-	log.Print("[CONSOLE] Advent of Code YEAR Day ##:\n")
+	log.Print("[CONSOLE] Advent of Code 2024 Day 8:\n")
 	log.Print("[CONSOLE] --------------------------\n")
 }
 
-func TestPartAExample(t *testing.T) {
-	answer := 1
-	solution := PartA(true)
-	if solution != answer {
-		t.Fatalf(`Example solution = %d, should = %d`, solution, answer)
-	}
-}
-
 func TestPartAComplete(t *testing.T) {
-	answer := 1
+	answer := 423
 	solution := PartA(false)
-	if solution != answer {
+	if solution != answer || solution >= 431 {
 		t.Fatalf(`Complete solution = %d, should = %d`, solution, answer)
 	} else {
-		log.Printf("[CONSOLE] Find the Elf carrying the most Calories: %v", solution)
+		log.Printf("[CONSOLE] Unique locations that contain an antinode: %v", solution)
 	}
 }
 
